@@ -475,10 +475,13 @@ completion:(completion_block _Nullable)completion;
  @param pos 媒体流的位置
  */
 - (int)seekMediaFile:(NSTimeInterval)pos;
+
 /**
- 设置声音
- 
- @param volume 音量 1-10
+ 设置用户音量
+
+ @param volume 音量 0 - 1
+ @param peerId 用户ID
+ @param type 视频类型 （包括摄像头采集的视频、共享的多媒体视频）
  */
 - (int)setRemoteAudioVolume:(CGFloat)volume peerId:(NSString *)peerId type:(TKMediaType)type;
 /**

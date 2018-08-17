@@ -325,7 +325,7 @@ typedef NS_ENUM(NSInteger, TKNetQuality) {
 /**
  房间文档服务器备份地址
  */
-@property (nonatomic, copy) NSString *ClassDocServerAddrBackup;
+@property (nonatomic, strong) NSArray *ClassDocServerAddrBackup;
 /**
  当前连接的服务器
  */
