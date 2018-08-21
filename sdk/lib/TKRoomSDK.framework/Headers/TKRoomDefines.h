@@ -322,10 +322,15 @@ typedef NS_ENUM(NSInteger, TKNetQuality) {
  房间文档服务器地址
  */
 @property (nonatomic, copy) NSString *ClassDocServerAddr;
+
 /**
  房间文档服务器备份地址
  */
 @property (nonatomic, strong) NSArray *ClassDocServerAddrBackup;
+/**
+ 房间web服务器地址
+ */
+@property (nonatomic, copy) NSString *currentWebAddr;
 /**
  当前连接的服务器
  */

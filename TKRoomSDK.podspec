@@ -137,10 +137,11 @@ Pod::Spec.new do |s|
    #            'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/sdk/zlib',
    #            "ENABLE_BITCODE" => "NO"
    #           }
-  s.user_target_xcconfig = {
-       'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/sdk/zlib',"ENABLE_BITCODE" => "NO"
-  }
-  s.preserve_paths = 'sdk/zlib/*'
+   s.user_target_xcconfig = {
+       'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/sdk/zlib',
+       'ENABLE_BITCODE' => 'NO'
+   }
+  # s.preserve_paths = 'sdk/zlib/*'
   # s.dependency "JSONKit", "~> 1.4"
 
 end
