@@ -7,13 +7,13 @@ TalkCloud SDK for iOS 是专为iOS平台研发，基于WebRTC协议架构的。�
 
 ### 1、集成TalkCloud SDK for iOS
 #### 1.1、Cocoapods安装
-```pod 'TKRoomSDK', '~> 2.2.9'```
+```pod 'TKRoomSDK', '~> 2.3.0'```
 #### 1.2、工程设置
 1. Build Settings: 
-- Build Settings -> Linking -> Other Linker Flags -> -all_load
+- Build Settings -> Linking -> Other Linker Flags -> -Objc 
 - Build Settings -> Build Options -> Enable Bitcode -> NO
 - Build Settings -> Build Options -> Alway Embed Swift Standard Libraries -> YES
-
+- 如果是swift工程，需要设置 Build Settings -> Swift Compiler Search Paths -> Import Path -> 文件zib的路径
 
 2. Build Phases:
 - Build Phases->Copy FIles->Destination->选择为Frameworks

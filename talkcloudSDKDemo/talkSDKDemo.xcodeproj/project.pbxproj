@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		58129F3A2118559100BEFA66 /* TKRoomSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58129F392118559100BEFA66 /* TKRoomSDK.framework */; };
-		58129F3B211855BA00BEFA66 /* TKRoomSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 58129F392118559100BEFA66 /* TKRoomSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5899BB2421070F70006F3B23 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5899BB2321070F70006F3B23 /* VideoToolbox.framework */; };
 		5899BB2621070F77006F3B23 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5899BB2521070F77006F3B23 /* GLKit.framework */; };
 		5899BB2821070F7E006F3B23 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5899BB2721070F7E006F3B23 /* libc++.tbd */; };
 		58A0756020EF86C300658C1C /* VideosBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A0755F20EF86C300658C1C /* VideosBlock.m */; };
+		58BD1151212AD044003A8A27 /* TKRoomSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58BD1150212AD044003A8A27 /* TKRoomSDK.framework */; };
+		58BD1152212AD04E003A8A27 /* TKRoomSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 58BD1150212AD044003A8A27 /* TKRoomSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		58C9D52E20FC8A64000376C1 /* TKTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C9D52C20FC8A64000376C1 /* TKTableViewCell.m */; };
 		58C9D52F20FC8A64000376C1 /* TKTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 58C9D52D20FC8A64000376C1 /* TKTableViewCell.xib */; };
 		5E2C93431F023D26005D4300 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E2C93421F023D26005D4300 /* main.m */; };
@@ -70,20 +70,20 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				58129F3B211855BA00BEFA66 /* TKRoomSDK.framework in CopyFiles */,
+				58BD1152212AD04E003A8A27 /* TKRoomSDK.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		58129F392118559100BEFA66 /* TKRoomSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TKRoomSDK.framework; sourceTree = "<group>"; };
 		587D8C812101DF8700C08F32 /* talkSDKDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = talkSDKDemo.entitlements; sourceTree = "<group>"; };
 		5899BB2321070F70006F3B23 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		5899BB2521070F77006F3B23 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		5899BB2721070F7E006F3B23 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		58A0755E20EF86C300658C1C /* VideosBlock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideosBlock.h; sourceTree = "<group>"; };
 		58A0755F20EF86C300658C1C /* VideosBlock.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideosBlock.m; sourceTree = "<group>"; };
+		58BD1150212AD044003A8A27 /* TKRoomSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TKRoomSDK.framework; sourceTree = "<group>"; };
 		58C9D52B20FC8A64000376C1 /* TKTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKTableViewCell.h; sourceTree = "<group>"; };
 		58C9D52C20FC8A64000376C1 /* TKTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKTableViewCell.m; sourceTree = "<group>"; };
 		58C9D52D20FC8A64000376C1 /* TKTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TKTableViewCell.xib; sourceTree = "<group>"; };
@@ -167,7 +167,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5899BB2821070F7E006F3B23 /* libc++.tbd in Frameworks */,
-				58129F3A2118559100BEFA66 /* TKRoomSDK.framework in Frameworks */,
+				58BD1151212AD044003A8A27 /* TKRoomSDK.framework in Frameworks */,
 				5899BB2621070F77006F3B23 /* GLKit.framework in Frameworks */,
 				5899BB2421070F70006F3B23 /* VideoToolbox.framework in Frameworks */,
 			);
@@ -193,7 +193,7 @@
 		587D8BFD21008D0E00C08F32 /* lib */ = {
 			isa = PBXGroup;
 			children = (
-				58129F392118559100BEFA66 /* TKRoomSDK.framework */,
+				58BD1150212AD044003A8A27 /* TKRoomSDK.framework */,
 			);
 			path = lib;
 			sourceTree = "<group>";

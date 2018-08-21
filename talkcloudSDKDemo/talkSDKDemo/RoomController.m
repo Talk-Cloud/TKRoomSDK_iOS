@@ -7,7 +7,8 @@
 //
 
 #import "RoomController.h"
-#import <TKRoomSDK/TKRoomSDK.h>
+
+//#import <TKRoomSDK/TKRoomSDK.h>
 #import <AVFoundation/AVFoundation.h>
 #import "VideoView.h"
 #import <AudioUnit/AudioUnit.h>
@@ -339,9 +340,13 @@ typedef void (^ButtonAction)(UIButton* button);
         self.name = @"global.talk-cloud.net";
     }
     [TKRoomManager setLogLevel:TKLog_Info logPath:nil debugToConsole:YES];
-    
-    [_roomMgr joinRoomWithHost:self.name port:80 nickName:@"ios" roomParams:@{@"serial":self.roomid,@"userrole":self.role, @"password" : password,@"autoSubscribeAV" : @(YES)} userParams:nil];
-    [_roomMgr setVideoOrientation:UIDeviceOrientationPortrait];
+    TKVideoProfile *profile = [TKVideoProfile new];
+    profile.width = 640;
+    profile.height = 480;
+    profile.maxfps = 10;
+    [_roomMgr setVideoProfile:profile];
+    [_roomMgr joinRoomWithHost:self.name port:80 nickName:nil roomParams:@{@"serial":self.roomid,@"userrole":self.role, @"password" : password,@"clientType":@(3), @"autoSubscribeAV" : @(YES)} userParams:nil];
+    [_roomMgr setVideoOrientation:UIDeviceOrientationPortrait]; 
     
 }
 #pragma mark - 初始化课堂按钮

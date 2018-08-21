@@ -14,6 +14,7 @@
 @class TKRoomProperty;
  
 NS_ASSUME_NONNULL_BEGIN
+
 @interface TKRoomManager : NSObject
 ///-----------------------------------
 /// @name Properties

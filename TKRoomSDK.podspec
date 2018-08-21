@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "TKRoomSDK"
-  s.version      = "2.2.9"
+  s.version      = "2.3.0"
   s.summary      = "A Framework for audio and video ."
 
   # This description is used to generate tags and improve search results.
@@ -130,8 +130,12 @@ Pod::Spec.new do |s|
   #  you can include multiple dependencies to ensure it works.
 
    s.requires_arc = true
-
-   #s.xcconfig = { "OTHER_LDFLAGS" => "-ObjC" }
+  # s.xcconfig = { "ENABLE_BITCODE" => "NO" }
+   s.pod_target_xcconfig = {
+       'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/zlib',
+       "ENABLE_BITCODE" => "NO"
+  }
+  s.preserve_paths = 'sdk/zlib/*'
   # s.dependency "JSONKit", "~> 1.4"
 
 end

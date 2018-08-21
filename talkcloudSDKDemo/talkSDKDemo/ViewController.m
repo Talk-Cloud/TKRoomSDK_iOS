@@ -25,17 +25,8 @@
     // Do any additional setup after loading the view, typically from a nib.
     _autoSubscribe = YES;
 
-    NSString *str;
-    for (int i = 0; i < 512; i++) {
-        int b = (arc4random() % 26) + 97;
-        NSString *string = [NSString stringWithFormat:@"%c",b]; // A
-        
-        if (i > 0) {
-            str = [str stringByAppendingString:string];
-        } else {
-           str = [string copy];
-        }
-    }
+    NSString *str = @"111001100000001110001001001000110101011011111001111111101111011111101110011000011010100000001100010110100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001100001111110000000000000000000000000000000000000000000";
+    str = [str substringWithRange:NSMakeRange(0, 1)];
     
 }
 

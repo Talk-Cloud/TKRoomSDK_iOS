@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <TKRoomSDK/TKRoomSDK.h>
+//#import <TKRoomSDK/TKRoomSDK.h>
 @class VideoView;
 
 @interface VideosBlock : UIView

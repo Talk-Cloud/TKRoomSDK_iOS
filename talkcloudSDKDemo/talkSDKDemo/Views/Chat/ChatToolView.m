@@ -7,7 +7,7 @@
 //
 
 #import "ChatToolView.h"
-#import <TKRoomSDK/TKRoomSDK.h>
+//#import <TKRoomSDK/TKRoomSDK.h>
 
 #define SEND_BTN_WIDTH 40
 

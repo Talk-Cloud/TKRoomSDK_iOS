@@ -444,7 +444,16 @@ typedef NS_ENUM(NSInteger, TKNetQuality) {
  自定义奖杯
  */
 @property (nonatomic, assign) BOOL customTrophyFlag;
- 
+
+/**
+ 巡课身份隐藏下课按钮
+ */
+@property (assign, nonatomic) BOOL hideClassEndBtn;
+
+/**
+ 课件全屏同步
+ */
+@property (assign, nonatomic) BOOL coursewareFullSynchronize;
 @end
 
 #

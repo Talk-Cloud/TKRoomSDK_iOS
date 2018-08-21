@@ -13,7 +13,7 @@
 #import "ChatToolView.h"
 #import "ChatModel.h"
 #import "NSString+sizeHeight.h"
-#import <TKRoomSDK/TKRoomSDK.h>
+//#import <TKRoomSDK/TKRoomSDK.h>
 
 #define INPUT_VIEW_HEIGHT 60 // 底部输入视图高度
 static NSString * const otherCellID = @"ChatMessageOtherCell";
