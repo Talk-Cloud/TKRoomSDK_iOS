@@ -133,11 +133,14 @@ Pod::Spec.new do |s|
   #  you can include multiple dependencies to ensure it works.
 
    s.requires_arc = true
-  # s.xcconfig = { "ENABLE_BITCODE" => "NO" }
-   s.pod_target_xcconfig = {
-       'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/zlib',
-       "ENABLE_BITCODE" => "NO"
-  }
+   s.xcconfig = {  
+              'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/sdk/zlib',
+              "ENABLE_BITCODE" => "NO"
+             }
+  #  s.pod_target_xcconfig = {
+  #      'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/sdk/zlib',
+  #      "ENABLE_BITCODE" => "NO"
+  # }
   s.preserve_paths = 'sdk/zlib/*'
   # s.dependency "JSONKit", "~> 1.4"
 
