@@ -93,7 +93,7 @@ Pod::Spec.new do |s|
   #  Not including the public_header_files will make all headers public.
   #
 
-  #s.source_files  = "Classes", "Classes/**/*.{h,m}"
+  s.source_files  = "sdk/zlib/*"
   #s.exclude_files = "Classes/Exclude"
   s.vendored_frameworks = 'sdk/lib/TKRoomSDK.framework'
   # s.public_header_files = "Classes/**/*.h"
@@ -137,8 +137,8 @@ Pod::Spec.new do |s|
    #            'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/sdk/zlib',
    #            "ENABLE_BITCODE" => "NO"
    #           }
-  s.pod_target_xcconfig = {
-       'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/sdk/zlib'
+  s.user_target_xcconfig = {
+       'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/sdk/zlib',"ENABLE_BITCODE" => "NO"
   }
   s.preserve_paths = 'sdk/zlib/*'
   # s.dependency "JSONKit", "~> 1.4"
