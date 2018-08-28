@@ -30,7 +30,7 @@
 /**
  该用户是否有摄像头
  */
-@property (nonatomic) BOOL hasVideo;
+@property (nonatomic) BOOL hasVideo; 
 /**
  该用户是否有权在白板和文档上进行绘制
  */

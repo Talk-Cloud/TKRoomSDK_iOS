@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "TKRoomSDK"
-  s.version      = "2.2.10"
+  s.version      = "2.2.11"
   s.summary      = "A Framework for audio and video ."
   s.module_name  = "TKRoomSDK"
   # This description is used to generate tags and improve search results.
@@ -93,7 +93,9 @@ Pod::Spec.new do |s|
   #  Not including the public_header_files will make all headers public.
   #
 
-  s.source_files  = "sdk/zlib/*"
+  # s.source_files  = "sdk", "sdk/zlib/*"
+  s.exclude_files = "sdk/zlib"
+   #s.source_files  = "Classes", "Classes/**/*.{h,m}"
   #s.exclude_files = "Classes/Exclude"
   s.vendored_frameworks = 'sdk/lib/TKRoomSDK.framework'
   # s.public_header_files = "Classes/**/*.h"

@@ -196,7 +196,7 @@ typedef NS_ENUM(NSInteger, TKNetQuality) {
 /**
  data buffer
  */
-@property (nonatomic) const void *buffer;
+@property (nonatomic) void *buffer;
 @end
 #
 #pragma mark - TKVideoFrame 视频数据
@@ -231,17 +231,17 @@ typedef NS_ENUM(NSInteger, TKNetQuality) {
 /**
  Y data buffer
  */
-@property (nonatomic) const void *yBuffer;
+@property (nonatomic) void *yBuffer;
 
 /**
  U data buffer
  */
-@property (nonatomic) const void *uBuffer;
+@property (nonatomic) void *uBuffer;
 
 /**
  V data buffer
  */
-@property (nonatomic) const void *vBuffer;
+@property (nonatomic) void *vBuffer;
 
 /**
  rotation of this frame (0, 90, 180, 270)

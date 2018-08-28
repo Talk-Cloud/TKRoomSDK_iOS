@@ -21,6 +21,11 @@
  */
 - (void)roomManagerRoomLeft;
 
+/**
+ 失去连接
+ */
+- (void)roomManagerOnConnectionLost;
+
 // 发生错误 回调
 - (void)roomManagerDidOccuredError:(NSError *)error;
 // 发生警告 回调

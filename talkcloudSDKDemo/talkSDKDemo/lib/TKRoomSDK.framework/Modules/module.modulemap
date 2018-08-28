@@ -4,8 +4,3 @@ framework module TKRoomSDK {
   export *
   module * { export * }
 }
-
-module TKRoomSDK.Swift {
-    header "TKRoomSDK-Swift.h"
-    requires objc
-}

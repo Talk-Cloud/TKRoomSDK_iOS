@@ -356,7 +356,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (int)pubMsg:(NSString *)msgName
          msgID:(NSString *)msgID
           toID:(NSString *)toID
-          data:(NSObject *)data
+          data:(NSObject * _Nullable)data
           save:(BOOL)save
     completion:(completion_block _Nullable)completion;
 
@@ -364,7 +364,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (int)pubMsg:(NSString *)msgName
          msgID:(NSString *)msgID
           toID:(NSString *)toID
-          data:(NSObject *)data
+          data:(NSObject * _Nullable)data
           save:(BOOL)save
 associatedMsgID:(NSString * _Nullable)associatedMsgID
 associatedUserID:(NSString * _Nullable)associatedUserID
@@ -375,7 +375,7 @@ associatedUserID:(NSString * _Nullable)associatedUserID
 - (int)pubMsg:(NSString *)msgName
         msgID:(NSString *)msgID
         toID:(NSString *)toID
-        data:(NSObject *)data
+        data:(NSObject * _Nullable)data
         save:(BOOL)save
 extensionData:(NSDictionary * _Nullable)extensionData
 completion:(completion_block _Nullable)completion;
@@ -391,7 +391,7 @@ completion:(completion_block _Nullable)completion;
 - (int)delMsg:(NSString *)msgName
         msgID:(NSString *)msgID
          toID:(NSString *)toID
-         data:(NSObject *)data
+         data:(NSObject * _Nullable)data
    completion:(completion_block _Nullable)completion;
 /**
  对同一个用户，可以调用多次此函数。当传入的view和上次传入的一致时，函数不执行任何操作，直接返回成功；当传入的view和上次传入的不一致时，换用新的view播放该用户的视频
