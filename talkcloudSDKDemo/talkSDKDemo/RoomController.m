@@ -162,7 +162,6 @@ typedef void (^ButtonAction)(UIButton* button);
                        @{@"imageNomal":[UIImage imageNamed:@"switchCamera"],
                              @"imageSelect":[UIImage imageNamed:@"switchCamera"],
                              @"block":^(UIButton* button){
-                                 [_roomMgr pubMsg:@"ClassBegin" msgID:@"ClassBegin" toID:@"__all" data:@"" save:YES completion:nil];
                                  //切换摄像头2
                                  if (!button.selected) {
                                      _timerCount = 0;
@@ -345,7 +344,7 @@ typedef void (^ButtonAction)(UIButton* button);
     profile.height = 480;
     profile.maxfps = 10;
     [_roomMgr setVideoProfile:profile];
-    [_roomMgr joinRoomWithHost:self.name port:80 nickName:nil roomParams:@{@"serial":self.roomid,@"userrole":self.role, @"password" : password,@"clientType":@(3), @"autoSubscribeAV" : @(YES)} userParams:nil];
+    [_roomMgr joinRoomWithHost:self.name port:80 nickName:@"ios" roomParams:@{TKJoinRoomParamsRoomIDKey:self.roomid,TKJoinRoomParamsUserRoleKey:self.role, TKJoinRoomParamsPasswordKey : password,@"clientType":@(3), @"autoSubscribeAV" : @(YES)} userParams:nil];
     [_roomMgr setVideoOrientation:UIDeviceOrientationPortrait]; 
     
 }

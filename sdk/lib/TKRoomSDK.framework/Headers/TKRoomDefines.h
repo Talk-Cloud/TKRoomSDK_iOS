@@ -9,8 +9,35 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-
 #define TK_Deprecated(string) __attribute__((deprecated(string)))
+
+#
+#pragma mark - TKRoom 相关定义
+#
+//******调用joinroom 接口进入房间，roomParams字典参数所需 Key值******//
+//房间ID @required
+FOUNDATION_EXTERN NSString * const TKJoinRoomParamsRoomIDKey;
+//密码key值 @required，如果该房间或者该用户角色没有密码，value：@""
+FOUNDATION_EXTERN NSString * const TKJoinRoomParamsPasswordKey;
+
+//用户角色key值 @optional
+FOUNDATION_EXTERN NSString * const TKJoinRoomParamsUserRoleKey;
+//用户ID的key值 @optional，如果不传用户ID，sdk会自动生成用户ID
+FOUNDATION_EXTERN NSString * const TKJoinRoomParamsUserIDKey;
+
+
+//******调用pubMsg以及delMsg 接口发送信令，toID参数相关传值；表示：此信令需要通知的对象******//
+//所有人
+FOUNDATION_EXTERN NSString * const TKRoomPubMsgTellAll;
+//除自己以外的所有人
+FOUNDATION_EXTERN NSString * const TKRoomPubMsgTellAllExceptSender;
+//除旁听用户以外的所有人
+FOUNDATION_EXTERN NSString * const TKRoomPubMsgTellAllExceptAuditor;
+//不通知任何人
+FOUNDATION_EXTERN NSString * const TKRoomPubMsgTellNone;
+
+
+
 typedef void (^completion_block)(NSError *error);
 
 #

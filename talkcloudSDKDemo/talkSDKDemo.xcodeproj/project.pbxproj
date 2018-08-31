@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		586D9FF421342F9E00898B0A /* TKRoomSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 586D9FF321342F9E00898B0A /* TKRoomSDK.framework */; };
-		586D9FF521342FAD00898B0A /* TKRoomSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 586D9FF321342F9E00898B0A /* TKRoomSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		58952B7021393BAF005CF4D8 /* TKRoomSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58952B6F21393BAF005CF4D8 /* TKRoomSDK.framework */; };
+		58952B7121393BDF005CF4D8 /* TKRoomSDK.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 58952B6F21393BAF005CF4D8 /* TKRoomSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5899BB2421070F70006F3B23 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5899BB2321070F70006F3B23 /* VideoToolbox.framework */; };
 		5899BB2621070F77006F3B23 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5899BB2521070F77006F3B23 /* GLKit.framework */; };
 		5899BB2821070F7E006F3B23 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5899BB2721070F7E006F3B23 /* libc++.tbd */; };
@@ -70,15 +70,15 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				586D9FF521342FAD00898B0A /* TKRoomSDK.framework in CopyFiles */,
+				58952B7121393BDF005CF4D8 /* TKRoomSDK.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		586D9FF321342F9E00898B0A /* TKRoomSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TKRoomSDK.framework; sourceTree = "<group>"; };
 		587D8C812101DF8700C08F32 /* talkSDKDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = talkSDKDemo.entitlements; sourceTree = "<group>"; };
+		58952B6F21393BAF005CF4D8 /* TKRoomSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TKRoomSDK.framework; sourceTree = "<group>"; };
 		5899BB2321070F70006F3B23 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		5899BB2521070F77006F3B23 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		5899BB2721070F7E006F3B23 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
@@ -167,7 +167,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5899BB2821070F7E006F3B23 /* libc++.tbd in Frameworks */,
-				586D9FF421342F9E00898B0A /* TKRoomSDK.framework in Frameworks */,
+				58952B7021393BAF005CF4D8 /* TKRoomSDK.framework in Frameworks */,
 				5899BB2621070F77006F3B23 /* GLKit.framework in Frameworks */,
 				5899BB2421070F70006F3B23 /* VideoToolbox.framework in Frameworks */,
 			);
@@ -193,7 +193,7 @@
 		587D8BFD21008D0E00C08F32 /* lib */ = {
 			isa = PBXGroup;
 			children = (
-				586D9FF321342F9E00898B0A /* TKRoomSDK.framework */,
+				58952B6F21393BAF005CF4D8 /* TKRoomSDK.framework */,
 			);
 			path = lib;
 			sourceTree = "<group>";

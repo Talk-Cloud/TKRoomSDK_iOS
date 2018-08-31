@@ -122,7 +122,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param host 服务器地址
  @param port 服务器端口
  @param nickname 本地用户的昵称
- @param roomParams Dic格式，内含进入房间所需的基本参数，比如：NSDictionary类型，键值需要传递serial（房间号）、host（服务器地址）、port（服务器端口号）、nickname（用户昵称）,uiserid(用户ID，可选),type（房间类型，需要去管理系统查看回放链接，截取type参数）, path (录制件地址，需要去管理系统查看回放链接，截取path参数)
+ @param roomParams Dic格式，内含进入房间所需的基本参数，比如：NSDictionary类型，key值详情见 TKRoomDefines.h 相关定义
  @param userParams  Dic格式，内含进入房间时用户的初始化的信息。比如 giftNumber（礼物数）
  @param lowConsume  BOOL格式 是否低功率模式
  */
@@ -139,7 +139,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param host 服务器地址
  @param port 服务器端口
  @param nickname 本地用户的昵称
- @param roomParams Dic格式，内含进入房间所需的基本参数，比如：NSDictionary类型，键值需要传递serial（房间号）、host（服务器地址）、port（服务器端口号）、nickname（用户昵称）,userid(用户ID，可选),type（房间类型，需要去管理系统查看回放链接，截取type参数）, path (录制件地址，需要去管理系统查看回放链接，截取path参数)
+ @param roomParams Dic格式，内含进入房间所需的基本参数，比如：NSDictionary类型，key值详情见 TKRoomDefines.h 相关定义
  @param userParams  Dic格式，内含进入房间时用户的初始化的信息。比如 giftNumber（礼物数）
  */
 - (int)joinRoomWithHost:(NSString *)host
@@ -154,9 +154,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param host 服务器地址
  @param port 服务器端口
  @param nickname 本地用户的昵称
- @param roomParams Dic格式，内含进入房间所需的基本参数，比如：NSDictionary类型，键值需要传递serial（房间号）、host（服务器地址）、port（服务器端口号）、nickname（用户昵称）,userid(用户ID，可选),type（房间类型，需要去管理系统查看回放链接，截取type参数）, path (录制件地址，需要去管理系统查看回放链接，截取path参数)
- @param userParams  Dic格式，内含进入房间时用户的初始化的信息。比如 giftNumber（礼物数）
- @param lowConsume  BOOL格式 是否低功率模式
+ @param roomParams Dic格式，内含进入房间所需的基本参数，比如：NSDictionary类型，key值详情见 TKRoomDefines.h 相关定义
+ @param userParams Dic格式，内含进入房间时用户的初始化的信息。比如 giftNumber（礼物数）
+ @param lowConsume BOOL格式 是否低功率模式
  */
 - (int)joinPlaybackRoomWithHost:(NSString *)host
                             port:(int)port
@@ -172,8 +172,8 @@ NS_ASSUME_NONNULL_BEGIN
  @param host 服务器地址
  @param port 服务器端口
  @param nickname 本地用户的昵称
- @param roomParams Dic格式，内含进入房间所需的基本参数，比如：NSDictionary类型，键值需要传递serial（房间号）、host（服务器地址）、port（服务器端口号）、nickname（用户昵称）,uiserid(用户ID，可选),type（房间类型，需要去管理系统查看回放链接，截取type参数）, path (录制件地址，需要去管理系统查看回放链接，截取path参数)
- @param userParams  Dic格式，内含进入房间时用户的初始化的信息。比如 giftNumber（礼物数）
+ @param roomParams Dic格式，内含进入房间所需的基本参数，比如：NSDictionary类型，key值详情见 TKRoomDefines.h 相关定义
+ @param userParams Dic格式，内含进入房间时用户的初始化的信息。比如 giftNumber（礼物数）
  */
 - (int)joinPlaybackRoomWithHost:(NSString *)host
                             port:(int)port
@@ -246,7 +246,7 @@ NS_ASSUME_NONNULL_BEGIN
  修改某个用户的一个属性
  
  @param peerID 要修改的用户ID
- @param tellWhom 要将此修改通知给谁。“__all”：所有人；“__allExceptSender”：除自己以外的所有人；“__allExceptAuditor”：除旁听用户以外的所有人；“__None”：不通知任何人；某用户的peerID：只发给该用户
+ @param tellWhom 要将此修改通知给谁。NSString类型，详情见 TKRoomDefines.h 相关定义. 可以是某一用户ID，表示此信令只发送给该用户
  @param key 要修改的用户属性名字，可以是您自定义的名字
  @param value 要修改的用户属性，可以是Number、String、NSDictionary或NSArray
  @param completion 完成的回调
@@ -261,7 +261,7 @@ NS_ASSUME_NONNULL_BEGIN
  修改某个用户的一个属性
  
  @param peerID 要修改的用户ID
- @param tellWhom 要将此修改通知给谁。“__all”：所有人；“__allExceptSender”：除自己以外的所有人；“__allExceptAuditor”：除旁听用户以外的所有人；“__None”：不通知任何人；某用户的peerID：只发给该用户
+ @param tellWhom 要将此修改通知给谁。NSString类型，详情见 TKRoomDefines.h 相关定义. 可以是某一用户ID，表示此信令只发送给该用户
  @param data 更改的属性 NSDictionary
  @param completion 完成的回调
  */
@@ -273,7 +273,7 @@ NS_ASSUME_NONNULL_BEGIN
  改变指定了角色的用户属性（适用于高并发房间）
  
  @param roles 指定的用户角色的数组
- @param tellWhom 要将此修改通知给谁。“__all”：所有人；“__allExceptSender”：除自己以外的所有人；“__allExceptAuditor”：除旁听用户以外的所有人；“__None”：不通知任何人；某用户的peerID：只发给该用户
+ @param tellWhom 要将此修改通知给谁。NSString类型，详情见 TKRoomDefines.h 相关定义. 可以是某一用户ID，表示此信令只发送给该用户
  @param properties 要修改的属性
  @param completion 完成的回调
  */
@@ -286,7 +286,7 @@ NS_ASSUME_NONNULL_BEGIN
  批量改变指定了用户ID的用户属性（适用于高并发房间）
  
  @param peerIDs 指定了用户ID的用户ID数组
- @param tellWhom 要将此修改通知给谁。“__all”：所有人；“__allExceptSender”：除自己以外的所有人；“__allExceptAuditor”：除旁听用户以外的所有人；“__None”：不通知任何人；某用户的peerID：只发给该用户
+ @param tellWhom 要将此修改通知给谁。NSString类型，详情见 TKRoomDefines.h 相关定义. 可以是某一用户ID，表示此信令只发送给该用户
  @param properties 要修改的属性
  @param completion 完成的回调
  */
@@ -336,7 +336,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  发送聊天信息功能函数
  @param message 发送的聊天消息文本 , 支持 NSString 、NSDictionary
- @param toID 发送给谁 , NSString  要通知给哪些用户。“__all”：所有人；“__allExceptSender”：除自己以外的所有人；“__allExceptAuditor”：除旁听用户以外的所有人；“__None”：不通知任何人；某用户的peerID：只发给该用户
+ @param toID 发送给谁 , NSString类型，详情见 TKRoomDefines.h 相关定义. 可以是某一用户ID，表示此信令只发送给该用户
  @param extension 扩展的发送的聊天消息数据,例如：消息类型； 支持 NSString(JSON字符串string) 、NSDictionary
  */
 - (int)sendMessage:(NSObject *)message
@@ -348,7 +348,7 @@ NS_ASSUME_NONNULL_BEGIN
  
  @param msgName 消息名字
  @param msgID ：消息id
- @param toID 要通知给哪些用户。“__all”：所有人；“__allExceptSender”：除自己以外的所有人；“__allExceptAuditor”：除旁听用户以外的所有人；“__None”：不通知任何人；某用户的peerID：只发给该用户
+ @param toID 要通知给哪些用户。NSString类型，详情见 TKRoomDefines.h 相关定义. 可以是某一用户ID，表示此信令只发送给该用户
  @param data 消息数据，可以是Number、String、NSDictionary或NSArray
  @param save ：是否保存，详见3.5：自定义信令
  @param completion 完成的回调
@@ -384,7 +384,7 @@ completion:(completion_block _Nullable)completion;
  删除自定义消息
  @param msgName 消息名字
  @param msgID ：消息id
- @param toID 要通知给哪些用户。“__all”：所有人；“__allExceptSender”：除自己以外的所有人；“__allExceptAuditor”：除旁听用户以外的所有人；“__None”：不通知任何人；某用户的peerID：只发给该用户
+ @param toID 要通知给哪些用户。NSString类型，详情见 TKRoomDefines.h 相关定义. 可以是某一用户ID，表示此信令只发送给该用户
  @param data 消息数据，可以是Number、String、NSDictionary或NSArray
  @param completion 完成的回调
  */
@@ -430,7 +430,7 @@ completion:(completion_block _Nullable)completion;
  发布流媒体
  
  @param mediaPath 文件的url
- @param toID 发布媒体流给谁 @"__all":所有人 @"__none":谁都不发 @"__allExceptSender":除了自己 其他：某个特用户
+ @param toID 发布媒体流给谁 NSString类型，详情见 TKRoomDefines.h 相关定义. 可以是某一用户ID，表示此信令只发送给该用户
  @param attributes 参数
  @param completion 发布媒体流后的回调
  */
