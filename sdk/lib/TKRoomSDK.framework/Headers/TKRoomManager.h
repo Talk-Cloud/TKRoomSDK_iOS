@@ -393,6 +393,13 @@ completion:(completion_block _Nullable)completion;
          toID:(NSString *)toID
          data:(NSObject * _Nullable)data
    completion:(completion_block _Nullable)completion;
+
+/**
+ 该方法设置本地视频镜像
+ 
+ @param mode 镜像模式
+ */
+- (int)setLocalVideoMirrorMode:(TKVideoMirrorMode)mode;
 /**
  对同一个用户，可以调用多次此函数。当传入的view和上次传入的一致时，函数不执行任何操作，直接返回成功；当传入的view和上次传入的不一致时，换用新的view播放该用户的视频
  须在主线程调用。

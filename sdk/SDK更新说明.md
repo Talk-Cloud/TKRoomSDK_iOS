@@ -4,8 +4,14 @@
         3、Installation with CocoaPods
             Podfile
             platform:ios,'8.0'
-            pod 'TKRoomSDK', '~> 2.2.12'
+            pod 'TKRoomSDK', '~> 2.2.13'
 #  SDK版本更新说明
+时间：2018.09.10
+版本号：2.2.13
+1、优化音视频统计数据上报
+2、修复低端iPad分辨率设置过高问题
+3、优化远端视频原始数据回调
+
 
 时间：2018.08.31
 版本号：2.2.12

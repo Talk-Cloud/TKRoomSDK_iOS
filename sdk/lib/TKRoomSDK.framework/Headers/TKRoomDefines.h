@@ -58,6 +58,7 @@ typedef NS_ENUM(NSInteger, TKRoomWarningCode) {
     
     TKRoomWarning_CheckRoom_Success                = 5001,    //CheckRoom 成功
     TKRoomWarning_ReConnectSocket_ServerChanged    = 5002,   //切换了服务器
+    TKRoomWarning_DevicePerformance_Low            = 5003,   //设备性能过低
 };
 
 #
@@ -146,6 +147,14 @@ typedef NS_ENUM(NSInteger, TKRenderMode) {
     TKRenderMode_adaptive, //等比拉伸，并占满全屏
 };
 #
+#pragma mark - TKVideoMirrorMode 视频渲染镜像模式
+#
+typedef NS_ENUM(NSUInteger, TKVideoMirrorMode) {
+    TKVideoMirrorModeAuto = 0,      //默认设置，前置摄像头时开启镜像模式，后置摄像头时不开启镜像
+    TKVideoMirrorModeEnabled = 1,   //前置和后置均开启镜像模式
+    TKVideoMirrorModeDisabled = 2,  //前置和后置均不开启镜像模式
+};
+#
 #pragma mark - TKLogLevel 日志等级
 #
 typedef NS_ENUM(NSInteger, TKLogLevel) {
@@ -184,6 +193,26 @@ typedef NS_ENUM(NSInteger, TKNetQuality) {
     TKNetQuality_VeryBad,       //极差
     TKNetQuality_Down,
 };
+
+typedef NS_ENUM(NSInteger, TKSampleFormat) {
+
+    TKSampleFormat_None = -1,
+    TKSampleFormat_U8,          ///< unsigned 8 bits
+    TKSampleFormat_S16,         ///< signed 16 bits
+    TKSampleFormat_S32,         ///< signed 32 bits
+    TKSampleFormat_FLT,         ///< float
+    TKSampleFormat_DBL,         ///< double
+    
+    TKSampleFormat_U8P,         ///< unsigned 8 bits, planar
+    TKSampleFormat_S16P,        ///< signed 16 bits, planar
+    TKSampleFormat_S32P,        ///< signed 32 bits, planar
+    TKSampleFormat_FLTP,        ///< float, planar
+    TKSampleFormat_DBLP,        ///< double, planar
+    TKSampleFormat_S64,         ///< signed 64 bits
+    TKSampleFormat_S64P,        ///< signed 64 bits, planar
+    
+    TKAVSampleFormat_NB           ///< Number of sample formats. DO NOT USE if linking dynamically
+};
 #
 #pragma mark - TKVideoProfile 视频属性
 #
@@ -218,7 +247,7 @@ typedef NS_ENUM(NSInteger, TKNetQuality) {
  */
 @property (assign, nonatomic) NSInteger samplesPerSec;
 
-@property (assign, nonatomic) NSInteger format;
+@property (assign, nonatomic) TKSampleFormat format;
 
 /**
  data buffer

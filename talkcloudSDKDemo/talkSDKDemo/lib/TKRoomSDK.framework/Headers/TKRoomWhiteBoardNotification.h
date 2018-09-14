@@ -75,4 +75,9 @@ FOUNDATION_EXTERN NSNotificationName const TKWhiteBoardMediaFirstFrameLoadedNoti
 //关于画笔消息列表的通知
 FOUNDATION_EXTERN NSNotificationName const TKWhiteBoardOnMsgListNotification;
 
+//关于获取白板消息列表
+FOUNDATION_EXTERN NSNotificationName const TKWhiteBoardMsgListACKNotification;
+
+//关于获取白板消息列表
+FOUNDATION_EXTERN NSNotificationName const TKWhiteBoardGetMsgListNotification;
 #endif /* TKRoomWhiteBoardNotification_h */

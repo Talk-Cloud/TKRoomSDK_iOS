@@ -26,6 +26,7 @@
     _autoSubscribe = YES;
 
     NSString *str = [NSString stringWithFormat:@"%s", TKRoomSDKVersionString];
+    NSLog(@"%@", str);
     
 }
 
