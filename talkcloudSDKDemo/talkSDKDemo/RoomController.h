@@ -15,4 +15,7 @@
 @property (copy, nonatomic) NSString *password;
 @property (copy, nonatomic) NSString *name;
 
+@property (assign, nonatomic) int audioID;
+@property (strong, nonatomic) UISlider *slider;
+
 @end

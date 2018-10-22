@@ -43,6 +43,7 @@
  用户属性
  */
 @property (nonatomic, strong) NSMutableDictionary *properties;
+
 /**
  用户是否关闭视频
  */
@@ -66,4 +67,13 @@
  @return 用户对象
  */
 - (instancetype)initWithPeerId:(NSString *)peerID AndProperties:(NSDictionary*)properties;
+
+/**
+ 获取 某个视频设备的视频发布状态
+
+ @param deviceId 设备ID
+ @return 发布状态
+ */
+- (TKPublishState)getPublishStateForDeviceId:(NSString *)deviceId;
+
 @end

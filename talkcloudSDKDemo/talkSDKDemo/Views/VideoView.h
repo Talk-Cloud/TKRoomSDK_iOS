@@ -10,21 +10,14 @@
 //#import <TKRoomSDK/TKRoomSDK.h>
 
 
-typedef  NS_ENUM(NSInteger,TKPlayStatus) {
-    TKPlay_None,
-    TKPlay_Audio,
-    TKPlay_Video,
-    TKPlay_Both,
-};
-
 @interface VideoView : UIView
 
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) TKRoomUser *roomUser;
 @property (nonatomic, strong) UIView *contentView;
-@property (assign, nonatomic) TKPlayStatus status;
+@property (strong, nonatomic) NSString *deviceId;
 
-- (instancetype)initWithRoomMgr:(TKRoomManager *)mgr roomUser:(TKRoomUser *)user;
+- (instancetype)initWithRoomMgr:(TKRoomManager *)mgr roomUser:(TKRoomUser *)user deviceId:(NSString *)deviceId;
 - (void)setVideoBackGroundColor:(UIColor *)color;
 - (void)setViewsToFront;
 @end

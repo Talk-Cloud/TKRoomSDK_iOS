@@ -20,6 +20,12 @@ FOUNDATION_EXTERN NSString * const TKWhiteBoardNotificationUserInfoKey;
 
 //进入教室，checkRoom相关通知
 FOUNDATION_EXTERN NSNotificationName const TKWhiteBoardOnCheckRoomNotification;
+//关于获取白板 服务器地址、备份地址、web地址相关通知
+FOUNDATION_EXTERN NSString * const TKWhiteBoardGetServerAddrKey;
+FOUNDATION_EXTERN NSString * const TKWhiteBoardGetServerAddrBackupKey;
+FOUNDATION_EXTERN NSString * const TKWhiteBoardGetWebAddrKey;
+FOUNDATION_EXTERN NSNotificationName const TKWhiteBoardOnServerAddrsNotification;
+
 //用户属性改变通知
 FOUNDATION_EXTERN NSNotificationName const TKWhiteBoardOnRoomUserPropertyChangedNotification;
 //有用户离开通知

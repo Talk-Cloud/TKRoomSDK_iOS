@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "RoomController.h" 
+#import "RoomController.h"
 
 @interface ViewController () 
 @property (nonatomic, assign) BOOL autoSubscribe;
@@ -16,8 +16,9 @@
 @property (weak, nonatomic) IBOutlet UITextField *password;
 @property (weak, nonatomic) IBOutlet UITextField *name;
 
-@end
 
+@end
+#define YY_SWAP(_a_, _b_)  do { __typeof__(_a_) _tmp_ = (_a_); (_a_) = (_b_); (_b_) = _tmp_; } while (0)
 @implementation ViewController
 
 - (void)viewDidLoad {
@@ -26,7 +27,13 @@
     _autoSubscribe = YES;
 
     NSString *str = [NSString stringWithFormat:@"%s", TKRoomSDKVersionString];
-    NSLog(@"%@", str);
+    for (int i = 0; i < 50; i++) {
+        
+        NSInteger reconn_made = MIN(i, 15);//protect the pow result to be too big.
+        NSLog(@"reconn_made = %d", (int)reconn_made);
+        CGFloat time = MIN(powf(1.5, i), 30);
+        NSLog(@"time = %f", time);
+    }
     
 }
 
@@ -43,6 +50,9 @@
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
     [self.view endEditing:YES];
+//    NSData *data = [NSJSONSerialization dataWithJSONObject:@{@"device":@"1",@"UserName":@"abc123",@"UserPwd":@"abcdef"} options:NSJSONWritingPrettyPrinted error:nil];;
+//    NSString *msg =  [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+//    [_enc sendMessageToJS:msg key1:@"ecpex" key1:@"yph" key1:@"app"];
 }
 - (BOOL)shouldAutorotate
 {
@@ -72,7 +82,5 @@
     pop.password = self.password.text;
     [self presentViewController:pop animated:YES completion:nil];
 }
-
-
 
 @end

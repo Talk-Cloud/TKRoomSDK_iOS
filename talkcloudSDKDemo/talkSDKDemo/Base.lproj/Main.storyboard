@@ -93,7 +93,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="global.talk-cloud.net" borderStyle="roundedRect" placeholder="输入所在地区域名" clearsOnBeginEditing="YES" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="wSg-wF-Phk">
-                                <rect key="frame" x="100" y="132" width="225" height="50"/>
+                                <rect key="frame" x="100" y="131.5" width="225" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="kQT-AE-S4F"/>
                                 </constraints>
@@ -139,7 +139,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-6772" y="-1602"/>
+            <point key="canvasLocation" x="-9028" y="-1763"/>
         </scene>
     </scenes>
 </document>

@@ -9,14 +9,15 @@
 #import <UIKit/UIKit.h>
 //#import <TKRoomSDK/TKRoomSDK.h>
 @class VideoView;
-
-@interface VideosBlock : UIView
+#define VideosBlockChangePositionNoti @"VideosBlockChangePositionNoti"
+@interface VideosBlock : UIScrollView
 - (instancetype)initWithFrame:(CGRect)frame rmg:(TKRoomManager *)rmg;
 
-- (void)playVideoWithUser:(TKRoomUser *)user;
-- (void)unPlayVideoWithUser:(NSString *)peerID;
+- (void)playVideoWithUser:(TKRoomUser *)user deviceId:(NSString *)deviceId;
+- (void)unPlayVideoWithUser:(NSString *)peerID deviceId:(NSString *)deviceId;
 - (void)playAudioWithUser:(TKRoomUser *)user;
 - (void)unPlayAudioWithUser:(NSString *)peerID;
-- (void)refreshForPublishState:(TKPublishState)state user:(NSString *)peerID;
+- (void)addVideo:(VideoView *)view;
+- (void)delVideo:(VideoView *)view;
 - (void)clean;
 @end

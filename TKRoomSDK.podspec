@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "TKRoomSDK"
-  s.version      = "2.2.13"
+  s.version      = "3.0.1"
   s.summary      = "A Framework for audio and video ."
   s.module_name  = "TKRoomSDK"
   # This description is used to generate tags and improve search results.
@@ -94,10 +94,10 @@ Pod::Spec.new do |s|
   #
 
   # s.source_files  = "sdk", "sdk/zlib/*"
-  s.exclude_files = "sdk/zlib"
+  #s.exclude_files = "sdk/zlib"
    #s.source_files  = "Classes", "Classes/**/*.{h,m}"
   #s.exclude_files = "Classes/Exclude"
-  s.vendored_frameworks = 'sdk/lib/TKRoomSDK.framework'
+  s.vendored_frameworks = 'sdk/iphoneos(真机)/TKRoomSDK.framework','sdk/iphoneos+iphonesimulator(真机+模拟器)/TKRoomSDK.framework'
   # s.public_header_files = "Classes/**/*.h"
 
 
@@ -139,10 +139,10 @@ Pod::Spec.new do |s|
    #            'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/sdk/zlib',
    #            "ENABLE_BITCODE" => "NO"
    #           }
-   s.user_target_xcconfig = {
-       'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/sdk/zlib',
-       'ENABLE_BITCODE' => 'NO'
-   }
+   # s.user_target_xcconfig = {
+   #     'SWIFT_INCLUDE_PATHS' => '$(PODS_ROOT)/sdk/zlib',
+   #     'ENABLE_BITCODE' => 'NO'
+   # }
   # s.preserve_paths = 'sdk/zlib/*'
   # s.dependency "JSONKit", "~> 1.4"
 

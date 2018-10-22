@@ -35,7 +35,7 @@
     _showPromptLabel.textColor = [UIColor grayColor];
     _showPromptLabel.text = NSLocalizedString(@"Prompt.show", nil);
 //    self.frame.size.height-120
-    _showPromptLabel.frame = CGRectMake(20, 20, self.frame.size.height, 30);
+    _showPromptLabel.frame = CGRectMake(20, 20, self.frame.size.width, 30);
     
     
     

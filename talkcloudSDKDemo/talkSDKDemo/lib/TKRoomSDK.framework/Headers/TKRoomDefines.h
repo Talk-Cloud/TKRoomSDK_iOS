@@ -14,7 +14,7 @@
 #
 #pragma mark - TKRoom 相关定义
 #
-//******调用joinroom 接口进入房间，roomParams字典参数所需 Key值******//
+//******调用joinroom 接口进入房间，roomParams字典参数所需 Key值定义******//
 //房间ID @required
 FOUNDATION_EXTERN NSString * const TKJoinRoomParamsRoomIDKey;
 //密码key值 @required，如果该房间或者该用户角色没有密码，value：@""
@@ -24,7 +24,6 @@ FOUNDATION_EXTERN NSString * const TKJoinRoomParamsPasswordKey;
 FOUNDATION_EXTERN NSString * const TKJoinRoomParamsUserRoleKey;
 //用户ID的key值 @optional，如果不传用户ID，sdk会自动生成用户ID
 FOUNDATION_EXTERN NSString * const TKJoinRoomParamsUserIDKey;
-
 
 //******调用pubMsg以及delMsg 接口发送信令，toID参数相关传值；表示：此信令需要通知的对象******//
 //所有人
@@ -37,8 +36,15 @@ FOUNDATION_EXTERN NSString * const TKRoomPubMsgTellAllExceptAuditor;
 FOUNDATION_EXTERN NSString * const TKRoomPubMsgTellNone;
 
 
+//******调用- (int)initWithAppKey:optional: 初始化设置 optional字典 key值定义*******//
+//socekt 自动重连次数，默认是无限次
+FOUNDATION_EXTERN NSString * const TKRoomSettingOtionalReconnectattempts;
+//若有使用到sdk白板功能，需要设置次参数，表示会接收到白板消息通知。 若不是用sdk白板功能，可不需要设置。
+//value：NSNumber类型 YES表示接受通知，NO表示不通知。
+FOUNDATION_EXTERN NSString * const TKRoomSettingOtionalWhiteBoardNotify;
 
 typedef void (^completion_block)(NSError *error);
+typedef void (^progress_block)(int audioID, int64_t current, int64_t total);
 
 #
 #pragma mark - TKRoomWarningCode 警告码
@@ -55,6 +61,10 @@ typedef NS_ENUM(NSInteger, TKRoomWarningCode) {
     
     TKRoomWarning_RequestAccessForVideo_Failed = 131,   //请求获取摄像头失败
     TKRoomWarning_RequestAccessForAudio_Failed = 132,   //请求获取麦克风失败
+    
+    TKRoomWarning_Stream_Connected = 1101,
+    TKRoomWarning_Stream_Failed = 1102,
+    TKRoomWarning_Stream_Closed = 1103,
     
     TKRoomWarning_CheckRoom_Success                = 5001,    //CheckRoom 成功
     TKRoomWarning_ReConnectSocket_ServerChanged    = 5002,   //切换了服务器
@@ -75,25 +85,28 @@ typedef NS_ENUM(NSInteger, TKRoomErrorCode) {
     TKErrorCode_Stream_StateError = 105,
     TKErrorCode_Stream_NotFound = 106,
     
-
+    
     TKErrorCode_Publish_NoAck                    = 401,
     TKErrorCode_Publish_RoomNotExist             = 402,
-    TKErrorCode_Publish_RoomMaxVideoLimited      = 403,
+    TKErrorCode_Publish_RoomMaxVideoLimited      = 403,//媒体链路超限
     TKErrorCode_Publish_ErizoJs_Timeout          = 404,
     TKErrorCode_Publish_Agent_Timeout            = 405,
     TKErrorCode_Publish_UndefinedRPC_Timeout     = 406,
     TKErrorCode_Publish_AddingInput_Error        = 407,
     TKErrorCode_Publish_DuplicatedExtensionId    = 408,
     TKErrorCode_Publish_Unauthorized             = 409,
+    TKErrorCode_Publish_Failed                   = 410,//发布失败，自动重新发布
+    TKErrorCode_Publish_Timeout                  = 411,//发布失败，自动重新发布
     
     TKErrorCode_Subscribe_RoomNotExist           = 501,
     TKErrorCode_Subscribe_StreamNotDefine        = 502,
     TKErrorCode_Subscribe_MediaRPC_Timeout       = 503,
-    TKErrorCode_SubscribeStreamFail              = 504,
+    TKErrorCode_Subscribe_Fail                   = 504,//订阅失败，自动重新订阅
+    TKErrorCode_Subscribe_Timeout                = 505,//订阅超时，自动重新订阅
     
     TKErrorCode_ConnectSocketError               = 601,
 
-    TKErrorCode_JoinRoom_WrongParam    = 701,// join room 参数错误
+    TKErrorCode_JoinRoom_WrongParam              = 701,// join room 参数错误
     
     TKErrorCode_CheckRoom_ServerOverdue          = 3001,    //服务器过期
     TKErrorCode_CheckRoom_RoomFreeze             = 3002,    // 公司被冻结
@@ -125,12 +138,11 @@ typedef NS_ENUM(NSInteger, TKMediaType) {
 #pragma mark - TKPublishState 发布状态
 #
 typedef NS_ENUM(NSInteger, TKPublishState) {
-    
+    TKUser_PublishState_UNKown = -2,                //未知状态
     TKUser_PublishState_NONE          = 0,          //没有
     TKUser_PublishState_AUDIOONLY,                  //只有音频
     TKUser_PublishState_VIDEOONLY,                  //只有视频
     TKUser_PublishState_BOTH,                       //都有
-    TKUser_PublishState_NONE_ONSTAGE                //音视频都没有但还在台上
 };
 #
 #pragma mark - TKMediaState 媒体流发布状态
@@ -223,10 +235,20 @@ typedef NS_ENUM(NSInteger, TKSampleFormat) {
 @end
 
 #
+#pragma mark - TKVideoCanvas 视频属性
+#
+@interface TKVideoCanvas : NSObject
+
+@property (strong, nonatomic) UIView *view;// 视频渲染窗口
+@property (assign, nonatomic) TKRenderMode renderMode;//渲染模式
+
+@end
+
+
+#
 #pragma mark - TKAudioFrame 音频数据
 #
 @interface TKAudioFrame : NSObject
-
 /**
  number of samples in this frame
  */
@@ -306,216 +328,6 @@ typedef NS_ENUM(NSInteger, TKSampleFormat) {
 
 @end
 
-#
-#pragma mark - TKRoomProperty 房间属性
-#
-@interface TKRoomProperty : NSObject
-@property (nonatomic, copy) NSString *mobilelayout;
-@property (nonatomic, copy) NSString *padlayout;
-@property (nonatomic, copy) NSString *realpoint;
-@property (nonatomic, copy) NSString *realsilentpoint;
-    //myself
-/**
- 自己的用户角色
- */
-@property (nonatomic, strong) NSNumber *roomrole;
-
-/**
- 自己的ID
- */
-@property (nonatomic, copy) NSString *thirdid;
-    //room
-/**
- 公司ID
- */
-@property (nonatomic, copy) NSString *companyid;
-
-/**
- 房间ID
- */
-@property (nonatomic, copy) NSString *roomid;
-
-/**
- 房间类型 0:表示一对一教室  非0:表示一多教室
- */
-@property (nonatomic, copy) NSString *roomtype;
-
-/**
- 房间名称
- */
-@property (nonatomic, copy) NSString *roomname;
-
-/**
- 房间最大视频数
- */
-@property (nonatomic, copy) NSString *maxvideo;
-/**
- 房间最大音频数
- */
-@property (nonatomic, copy) NSString *maxaudio;
-
-@property (nonatomic, strong) NSNumber *videotype;
-
-/**
- 房间最大分辨率 视频宽
- */
-@property (nonatomic, copy) NSString *videowidth;
-/**
- 房间最大分辨率 视频高
- */
-@property (nonatomic, copy) NSString *videoheight;
-/**
- 房间最大分辨率 视频fps
- */
-@property (nonatomic, copy) NSString *videoframerate;
-
-@property (nonatomic, copy) NSString *begintime;
-@property (nonatomic, copy) NSString *newstarttime;
-@property (nonatomic, copy) NSString *endtime;
-@property (nonatomic, copy) NSString *newendtime;
-
-/**
- 房间文档服务器地址
- */
-@property (nonatomic, copy) NSString *ClassDocServerAddr;
-
-/**
- 房间文档服务器备份地址
- */
-@property (nonatomic, strong) NSArray *ClassDocServerAddrBackup;
-/**
- 房间web服务器地址
- */
-@property (nonatomic, copy) NSString *currentWebAddr;
-/**
- 当前连接的服务器
- */
-@property (nonatomic, copy) NSString *currentServer;
-/**
- 白板底色
- */
-@property (nonatomic, copy) NSString *whiteboardcolor;
-
-/**
- 房间配置项
- */
-@property (nonatomic, copy) NSString *chairmancontrol;
-
-/**
- 自定义奖杯
- */
-@property (nonatomic, strong) NSArray *trophy;
-
-/**
- 模板id
- */
-@property (nonatomic, copy) NSString *tplId;
-
-/**
- 皮肤id
- */
-@property (nonatomic, copy) NSString *skinId;
-
-/**
- 皮肤资源
- */
-@property (nonatomic, copy) NSString *skinResource;
-
-@property (copy, nonatomic) NSString *vcodec;
-
-@end
-
-#
-#pragma mark - TKRoomConfigration 房间设置的相关配置项
-#
-//配置项
-@interface TKRoomConfigration : NSObject
-
-/**
- 自动上课
- */
-@property (nonatomic, assign) BOOL autoStartClassFlag;
-
-/**
- 课堂结束时自动退出房间
- */
-@property (nonatomic, assign) BOOL autoQuitClassWhenClassOverFlag;
-
-/**
- 是否允许学生关闭音视频
- */
-@property (nonatomic, assign) BOOL allowStudentCloseAV;
-
-/**
- 是否隐藏上下课按钮
- */
-@property (nonatomic, assign) BOOL hideClassBeginEndButton;
-
-/**
- 助教是否可以上台
- */
-@property (nonatomic, assign) BOOL assistantCanPublish;
-
-/**
- 上课前是否发布视频
- */
-@property (nonatomic, assign) BOOL beforeClassPubVideoFlag;
-
-/**
- 下课后不允许离开课堂
- */
-@property (nonatomic, assign) BOOL forbidLeaveClassFlag;
-
-/**
- 自动开启音视频
- */
-@property (nonatomic, assign) BOOL autoOpenAudioAndVideoFlag;
-
-/**
- 视频标注
- */
-@property (nonatomic, assign) BOOL videoWhiteboardFlag;
-
-/**
- MP4播放结束时是否自动关闭MP4播放的视频
- */
-@property (nonatomic, assign) BOOL pauseWhenOver;
-
-/**
- 文档分类
- */
-@property (nonatomic, assign) BOOL documentCategoryFlag;
-
-/**
- 按下课时间结束课堂
- */
-@property (nonatomic, assign) BOOL endClassTimeFlag;
-
-/**
- 分组
- */
-@property (nonatomic, assign) BOOL groupFlag;
-
-/**
- 自定义白板底色
- */
-@property (nonatomic, assign) BOOL whiteboardColorFlag;
-
-/**
- 自定义奖杯
- */
-@property (nonatomic, assign) BOOL customTrophyFlag;
-
-/**
- 巡课身份隐藏下课按钮
- */
-@property (assign, nonatomic) BOOL hideClassEndBtn;
-
-/**
- 课件全屏同步
- */
-@property (assign, nonatomic) BOOL coursewareFullSynchronize;
-@end
 
 #
 #pragma mark - TKAudioStats 音频统计数据

@@ -24,12 +24,12 @@
 #define kTipViewW kViewW
 @implementation VideoView
 
-- (instancetype)initWithRoomMgr:(TKRoomManager *)mgr roomUser:(TKRoomUser *)user
+- (instancetype)initWithRoomMgr:(TKRoomManager *)mgr roomUser:(TKRoomUser *)user deviceId:(NSString *)deviceId
 {
     if ([super init]) {
         _mgr = mgr;
         _roomUser = user;
-        self.status = TKPlay_None;
+        _deviceId = deviceId;
 //        self.backgroundColor = [UIColor redColor];
         [self createviews];
         
@@ -92,38 +92,4 @@
     [_imageView setFrame:self.bounds];
     [_contentView setFrame:self.bounds];
 }
-
-// 播放视频
-- (void)playOrUnplayVideo:(UIButton *)sender {
-    if (sender.selected) {
-        [sender setTitle:@"不播放视频" forState:UIControlStateNormal];
-        [self.mgr playVideo:self.roomUser.peerID renderType:1 window:_contentView completion:^(NSError *error) {
-            sender.selected = !sender.selected;
-        }];
-        [self setViewsToFront];
-    } else {
-        [sender setTitle:@"播放视频" forState:UIControlStateNormal];
-        [_contentView removeFromSuperview];
-        [self.mgr unPlayVideo:self.roomUser.peerID completion:nil];
-        sender.selected = !sender.selected;
-    }
-}
-
-- (void )playOrUnplayAudio:(UIButton *)sender
-{
-    if (sender.selected) {
-        [sender setTitle:@"不播放音频" forState:UIControlStateNormal];
-        [self.mgr playAudio:self.roomUser.peerID completion:nil];
-    } else {
-        [sender setTitle:@"播放音频" forState:UIControlStateNormal];
-        [self.mgr unPlayAudio:self.roomUser.peerID completion:nil];
-    }
-    sender.selected = !sender.selected;
-}
-// 发布音视频
-- (void)publishOrUnpublish:(UIButton *)sender {
-
-    sender.selected = !sender.selected;
-}
-
 @end

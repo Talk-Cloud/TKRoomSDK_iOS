@@ -58,12 +58,28 @@
                                 fromId:(NSString *)fromId;
 
 /**
-    用户视频状态变化
+    用户视频状态变化，此回调已经失效， 使用
     @param peerID 用户ID
     @param state 视频发布状态
  */
 
 - (void)roomManagerPublishStateWithUserID:(NSString *)peerID publishState:(TKPublishState)state;
+
+/**
+ 用户视频状态变化的通知，
+
+ @param peerID <#peerID description#>
+ @param state <#state description#>
+ */
+- (void)roomManagerOnUserVideoStatus:(NSString *)peerID
+                               state:(TKMediaState)state;
+
+- (void)roomManagerOnUserVideoStatus:(NSString *)peerID
+                            deviceId:(NSString *)deviceId
+                               state:(TKMediaState)state;
+
+- (void)roomManagerOnUserAudioStatus:(NSString *)peerID
+                               state:(TKMediaState)state;
 /**
     收到自定义信令 发布消息
     @param msgID 消息id
@@ -143,6 +159,7 @@
  @param type 视频类型
  */
 - (void)roomManagerOnFirstVideoFrameWithPeerID:(NSString *)peerID width:(NSInteger)width height:(NSInteger)height mediaType:(TKMediaType)type;
+- (void)roomManagerOnFirstVideoFrameWithPeerID:(NSString *)peerID deviceId:(NSString *)deviceId width:(NSInteger)width height:(NSInteger)height mediaType:(TKMediaType)type;
 
 /**
  播放某用户音频，会收到此回调；如果没有unplay某用户的音频，而再次play该用户音频时，不会再次收到此回调。
@@ -174,7 +191,13 @@
  */
 - (void)roomManagerReportNetworkChanged;
 
-
+/**
+ 网络测速回调
+ @param networkQuality 网速质量 (TKNetQuality_Down 测速失败)
+ @param delay 延迟(毫秒)
+ */
+- (void)onNetworkQuality:(TKNetQuality)networkQuality
+                   delay:(NSInteger)delay;
 
 #pragma mark meidia
 /**
@@ -226,27 +249,7 @@
 
 #pragma mark playback
 
-/**
-    获取到回放总时长的回调
-    @param duration 回放的总时长
- */
-- (void)roomManagerReceivePlaybackDuration:(NSTimeInterval)duration;
 
-/**
-    回放时接收到从服务器发来的回放进度变化
-    @param time 变化的时间进度
- */
-- (void)roomManagerPlaybackUpdateTime:(NSTimeInterval)time;
-
-/**
-    回放时清理
- */
-- (void)roomManagerPlaybackClearAll;
-
-/**
-    回放播放完毕
- */
-- (void)roomManagerPlaybackEnd;
 
 @end
 
@@ -287,6 +290,7 @@
  @param type 采集源
  */
 - (void)onRenderVideoFrame:(TKVideoFrame *)frame uid:(NSString *)peerId sourceType:(TKMediaType)type;
+- (void)onRenderVideoFrame:(TKVideoFrame *)frame uid:(NSString *)peerId deviceId:(NSString *)deviceId sourceType:(TKMediaType)type;
 @end
 
 
