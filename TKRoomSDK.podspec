@@ -97,7 +97,7 @@ Pod::Spec.new do |s|
   #s.exclude_files = "sdk/zlib"
    #s.source_files  = "Classes", "Classes/**/*.{h,m}"
   #s.exclude_files = "Classes/Exclude"
-  s.vendored_frameworks = 'sdk/iphoneos(真机)/TKRoomSDK.framework','sdk/iphoneos+iphonesimulator(真机+模拟器)/TKRoomSDK.framework'
+  s.vendored_frameworks = 'sdk/iphoneos(真机)/TKRoomSDK.framework'
   # s.public_header_files = "Classes/**/*.h"
 
 
