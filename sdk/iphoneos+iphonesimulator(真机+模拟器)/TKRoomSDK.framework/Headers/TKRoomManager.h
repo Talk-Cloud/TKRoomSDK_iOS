@@ -58,7 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
  设置AppID
  
  @param appKey appID
- @param optional 房间扩展信息
+ @param optional 房间扩展信息  TKRoomDefines.h文件中定义了相关传值key
  */
 - (int)initWithAppKey:(NSString *)appKey optional:(NSDictionary * _Nullable)optional;
 
