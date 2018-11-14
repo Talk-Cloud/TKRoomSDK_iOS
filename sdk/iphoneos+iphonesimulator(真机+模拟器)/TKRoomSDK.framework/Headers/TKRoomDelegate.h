@@ -26,9 +26,18 @@
  */
 - (void)roomManagerOnConnectionLost;
 
-// 发生错误 回调
+/**
+ 发生错误 回调
+
+ @param error error
+ */
 - (void)roomManagerDidOccuredError:(NSError *)error;
-// 发生警告 回调
+
+/**
+ 发生警告 回调
+
+ @param code 警告码
+ */
 - (void)roomManagerDidOccuredWaring:(TKRoomWarningCode)code;
 
 /**
@@ -37,16 +46,19 @@
     @param inList true：在自己之前进入；false：在自己之后进入
  */
 - (void)roomManagerUserJoined:(NSString *)peerID inList:(BOOL)inList;
+
 /**
     有用户离开房间
     @param peerID 用户ID
  */
 - (void)roomManagerUserLeft:(NSString *)peerID;
+
 /**
     自己被踢出房间
     @param reason 被踢原因
  */
 - (void)roomManagerKickedOut:(NSDictionary *)reason;
+
 /**
     有用户的属性发生了变化
     @param peerID 用户ID
@@ -58,26 +70,37 @@
                                 fromId:(NSString *)fromId;
 
 /**
-    用户视频状态变化，此回调已经失效， 使用
+    用户视频状态变化，此回调已经失效
     @param peerID 用户ID
     @param state 视频发布状态
  */
 
-- (void)roomManagerPublishStateWithUserID:(NSString *)peerID publishState:(TKPublishState)state;
+- (void)roomManagerPublishStateWithUserID:(NSString *)peerID publishState:(TKPublishState)state TK_Deprecated("Did deprecated, please use '- (void)roomManagerOnUserVideoStatus:state:' '- (void)roomManagerOnUserVideoStatus:deviceId:state:' '- (void)roomManagerOnUserAudioStatus:state:' ");
 
 /**
- 用户视频状态变化的通知，
+ 用户视频状态变化的通知
 
- @param peerID <#peerID description#>
- @param state <#state description#>
+ @param peerID 用户ID
+ @param state 视频状态
  */
 - (void)roomManagerOnUserVideoStatus:(NSString *)peerID
                                state:(TKMediaState)state;
-
+/**
+ 用户某一视频设备的视频状态变化的通知（多流模式）
+ 
+ @param peerID 用户ID
+ @param deviceId 视频设备ID
+ @param state 视频状态
+ */
 - (void)roomManagerOnUserVideoStatus:(NSString *)peerID
                             deviceId:(NSString *)deviceId
                                state:(TKMediaState)state;
-
+/**
+ 用户音频状态变化的通知，
+ 
+ @param peerID 用户ID
+ @param state 音频状态
+ */
 - (void)roomManagerOnUserAudioStatus:(NSString *)peerID
                                state:(TKMediaState)state;
 /**
@@ -159,6 +182,16 @@
  @param type 视频类型
  */
 - (void)roomManagerOnFirstVideoFrameWithPeerID:(NSString *)peerID width:(NSInteger)width height:(NSInteger)height mediaType:(TKMediaType)type;
+
+/**
+ 播放用户某一视频设备视频，渲染视频第一帧时，会收到回调；如果没有unplay，而再次play视频时，不会再次收到此回调。
+
+ @param peerID 用户ID
+ @param deviceId 视频设备ID
+ @param width 视频宽
+ @param height 视频高
+ @param type 视频类型
+ */
 - (void)roomManagerOnFirstVideoFrameWithPeerID:(NSString *)peerID deviceId:(NSString *)deviceId width:(NSInteger)width height:(NSInteger)height mediaType:(TKMediaType)type;
 
 /**
@@ -247,16 +280,12 @@
                               state:(TKMediaState)state
                    extensionMessage:(NSDictionary *)message;
 
-#pragma mark playback
-
-
-
 @end
 
 #pragma mark - TKMediaFrameDelegate
 @protocol TKMediaFrameDelegate<NSObject>
 
-///******该部分回调函数 均不是线程安全的******///
+///************************该部分回调函数 均不是线程安全的************************///
 
 @optional
 /**
@@ -290,6 +319,15 @@
  @param type 采集源
  */
 - (void)onRenderVideoFrame:(TKVideoFrame *)frame uid:(NSString *)peerId sourceType:(TKMediaType)type;
+
+/**
+ 收到远端某一视频设备视频数据
+
+ @param frame 视频数据
+ @param peerId 用户ID
+ @param deviceId 设备ID
+ @param type 采集源
+ */
 - (void)onRenderVideoFrame:(TKVideoFrame *)frame uid:(NSString *)peerId deviceId:(NSString *)deviceId sourceType:(TKMediaType)type;
 @end
 

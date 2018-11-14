@@ -7,7 +7,8 @@ TalkCloud SDK for iOS 是专为iOS平台研发，基于WebRTC协议架构的。�
 
 ### 1、集成TalkCloud SDK for iOS
 #### 1.1、Cocoapods安装
-```pod 'TKRoomSDK', '~> 3.0.1'```
+```pod 'TKRoomSDK', '~> 3.1.0'```
+
 #### 1.2、工程设置
 1. Build Settings: 
 - Build Settings -> Linking -> Other Linker Flags -> -Objc 
@@ -17,8 +18,8 @@ TalkCloud SDK for iOS 是专为iOS平台研发，基于WebRTC协议架构的。�
 2. Build Phases:
 - Build Phases->Copy FIles->Destination->选择为Frameworks
 - Build Phases->CopyFiles->name->添加 TKRoomSDK.framework
-或（xcode10的时候，用这个）
-- Build Phases->Embed Frameworks->添加 TKRoomSDK.framework
+  或
+- Build Phases->Embed Frameworks->添加 TKRoomSDK.framework（xcode10的时候，用这个）
 
 3. Info：
 - info.plist -> Privacy - Camera Usage Description  -> 主人需要您的同意，才能访问相机；

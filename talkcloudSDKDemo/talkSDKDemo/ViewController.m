@@ -9,16 +9,23 @@
 #import "ViewController.h"
 #import "RoomController.h"
 
-@interface ViewController () 
+@interface ViewController ()
+{
+    NSFileHandle *_currentLogFileReadHandle;
+    dispatch_source_t _currentLogFileReadVnode;
+}
+@property (weak, nonatomic) IBOutlet UITextField *host;
 @property (nonatomic, assign) BOOL autoSubscribe;
 @property (weak, nonatomic) IBOutlet UITextField *roomId;
 @property (weak, nonatomic) IBOutlet UITextField *role;
 @property (weak, nonatomic) IBOutlet UITextField *password;
 @property (weak, nonatomic) IBOutlet UITextField *name;
-
+@property (nonatomic, strong) dispatch_queue_t currentLogFileReadHandleQueue;
+@property (nonatomic, strong) dispatch_semaphore_t readSemaphore;
 
 @end
-#define YY_SWAP(_a_, _b_)  do { __typeof__(_a_) _tmp_ = (_a_); (_a_) = (_b_); (_b_) = _tmp_; } while (0)
+
+
 @implementation ViewController
 
 - (void)viewDidLoad {
@@ -33,6 +40,32 @@
         NSLog(@"reconn_made = %d", (int)reconn_made);
         CGFloat time = MIN(powf(1.5, i), 30);
         NSLog(@"time = %f", time);
+    }
+    
+
+    NSString *roomid = [[NSUserDefaults standardUserDefaults] objectForKey:@"roomid"];
+    if (roomid) {
+        _roomId.text = roomid;
+    }
+    NSString *host = [[NSUserDefaults standardUserDefaults] objectForKey:@"host"];
+    if (host) {
+        _host.text = host;
+    }
+    
+    _currentLogFileReadHandleQueue = dispatch_queue_create("com.talkcloud.fileLogger.currentLogFileReadHandleQueue", DISPATCH_QUEUE_SERIAL);
+    _readSemaphore = dispatch_semaphore_create(1);
+    
+    NSArray *arr1 = @[@1];
+    NSArray *arr2 = @[@2];
+    NSMutableArray *muarr = [NSMutableArray array];
+    [muarr addObjectsFromArray:arr1];
+    
+    [muarr addObjectsFromArray:arr2];
+    for (NSUInteger i = 0; i < 5; i++) {
+        time_t timeInterval = [NSDate date].timeIntervalSince1970;
+        struct tm *cTime = localtime(&timeInterval);
+        NSString *dateAsString = [NSString stringWithFormat:@"%d-%02d-%02d-%02d-%02d-%02d", cTime->tm_year + 1900, cTime->tm_mon + 1, cTime->tm_mday, cTime->tm_hour, cTime->tm_min, cTime->tm_sec];
+        NSLog(@"dateAsString = %@", dateAsString);
     }
     
 }
@@ -63,6 +96,20 @@
 }
 -(UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
     return UIInterfaceOrientationPortrait;
+}
+
+- (IBAction)hostTextField:(UITextField *)sender
+{
+    if (sender.text && sender.text.length > 0) {
+        [[NSUserDefaults standardUserDefaults] setValue:sender.text forKey:@"host"];
+    }
+}
+
+- (IBAction)roomIDTextField:(UITextField *)sender
+{
+    if (sender.text && sender.text.length > 0) {
+        [[NSUserDefaults standardUserDefaults] setValue:sender.text forKey:@"roomid"];
+    }
 }
 
 - (IBAction)onClickedStart:(UIButton *)sender {

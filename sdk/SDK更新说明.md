@@ -4,8 +4,15 @@
         3、Installation with CocoaPods
             Podfile
             platform:ios,'8.0'
-            pod 'TKRoomSDK', '~> 2.2.12'
+            pod 'TKRoomSDK', '~> 3.1.0'
 #  SDK版本更新说明
+
+时间：2018.10.19
+版本号：3.1.0
+
+1、添加日志上传；
+2、添加混音接口；
+3、深度优化SDK.
 
 时间：2018.10.19
 版本号：3.0.1

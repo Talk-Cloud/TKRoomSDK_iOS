@@ -66,6 +66,9 @@
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                <connections>
+                                    <action selector="roomIDTextField:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="IRd-7l-u4Y"/>
+                                </connections>
                             </textField>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="txn-Go-bIf">
                                 <rect key="frame" x="131.5" y="440" width="112.5" height="63"/>
@@ -92,7 +95,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="global.talk-cloud.net" borderStyle="roundedRect" placeholder="输入所在地区域名" clearsOnBeginEditing="YES" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="wSg-wF-Phk">
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="global.talk-cloud.net" borderStyle="roundedRect" placeholder="输入所在地区域名" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="wSg-wF-Phk">
                                 <rect key="frame" x="100" y="131.5" width="225" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="kQT-AE-S4F"/>
@@ -100,6 +103,9 @@
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="URL"/>
+                                <connections>
+                                    <action selector="hostTextField:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="XMa-0d-5aJ"/>
+                                </connections>
                             </textField>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -131,6 +137,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="pd1-Jh-oTz"/>
                     <connections>
+                        <outlet property="host" destination="wSg-wF-Phk" id="j10-rE-qUs"/>
                         <outlet property="name" destination="wSg-wF-Phk" id="liC-WG-iyo"/>
                         <outlet property="password" destination="7nf-YV-U80" id="5U2-4B-cuF"/>
                         <outlet property="role" destination="MK2-Gp-8p7" id="o32-e2-0bx"/>
@@ -139,7 +146,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-9028" y="-1763"/>
+            <point key="canvasLocation" x="-9647" y="-1809"/>
         </scene>
     </scenes>
 </document>

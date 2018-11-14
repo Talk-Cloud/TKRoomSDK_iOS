@@ -89,7 +89,9 @@ typedef void (^ButtonAction)(UIButton* button);
     _userDic        = [NSMutableDictionary dictionaryWithCapacity:6];
     
     _roomMgr = [TKRoomManager instance];
-    [TKRoomManager setLogLevel:TKLog_Info logPath:nil debugToConsole:YES];
+    [_roomMgr initWithAppKey:@"" optional:@{TKRoomSettingOptionalSecureSocket:@(NO)}];
+    
+    [TKRoomManager setLogLevel:TKLogLevelInfo logPath:nil debugToConsole:YES];
     CGFloat width = [UIScreen mainScreen].bounds.size.width;
     CGFloat height = (width - 5 * 10) / 4;
     self.videoBlock = [[VideosBlock alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - height - 10, width, height) rmg:self.roomMgr];
@@ -185,13 +187,17 @@ typedef void (^ButtonAction)(UIButton* button);
                          @"imageSelect":[UIImage imageNamed:@"switchCamera"],
                          @"block":^(UIButton* button){
                              //切换摄像头2
-                             if (!button.selected) {
-                                 _timerCount = 0;
-                                 [weakSelf.roomMgr selectCameraPosition:YES];
-                             } else {
-                                 _timerCount = 0;
-                                 [weakSelf.roomMgr selectCameraPosition:NO];
-                             }
+                             NSString *path = [[NSBundle mainBundle] pathForResource:@"32k" ofType:@"wav"];
+                             [self.roomMgr startPlayAudioFile:path loop:YES progress:^(int audioID, int64_t current, int64_t total) {
+                                 
+                             }];
+//                             if (!button.selected) {
+//                                 _timerCount = 0;
+//                                 [weakSelf.roomMgr selectCameraPosition:YES];
+//                             } else {
+//                                 _timerCount = 0;
+//                                 [weakSelf.roomMgr selectCameraPosition:NO];
+//                             }
                          }},
                        @{@"imageNomal":[UIImage imageNamed:@"AV"],
                          @"imageSelect":[UIImage imageNamed:@"onlyAudio"],
@@ -751,7 +757,6 @@ typedef void (^ButtonAction)(UIButton* button);
     NSLog(@"roomManagerUserLeft %@", peerID);
 }
 
-
 - (void)roomManagerUserPropertyChanged:(NSString *)peerID
                             properties:(NSDictionary*)properties
                                 fromId:(NSString *)fromId
@@ -858,7 +863,8 @@ typedef void (^ButtonAction)(UIButton* button);
                     extensionMessage:(NSDictionary *)message
 {
 //    if (state == TKMedia_Pulished) {
-//        [_roomMgr playMediaFile:peerId renderType:TKRenderMode_adaptive window:self.mediaView completion:^(NSError *error) {
+//
+//        [_roomMgr playMediaFile:peerId renderType:TKRenderMode_adaptive window:self.publishView completion:^(NSError *error) {
 //
 //        }];
 //    } else {
@@ -963,9 +969,12 @@ typedef void (^ButtonAction)(UIButton* button);
 //    NSLog(@"自己 onCaptureAudioFrame = %@", frame);
 }
 
-- (void)onCaptureVideoFrame:(TKVideoFrame *)frame sourceType:(TKMediaType)type
+- (void)onCaptureVideoFrame:(TKVideoFrame *)packet sourceType:(TKMediaType)type
 {
 //    NSLog(@"自己 onCaptureVideoFrame = %@", frame);
+//    memset(packet.uBuffer, 128, packet.uStride * packet.height / 2);
+//    memset(packet.vBuffer, 128, packet.vStride * packet.height / 2);
+//    memset(packet.yBuffer, 128, packet.yStride * packet.height);
     
 }
 
@@ -974,9 +983,12 @@ typedef void (^ButtonAction)(UIButton* button);
 //    NSLog(@"peerId= %@, onRenderAudioFrame = %@",peerId, frame);
 }
 
-- (void)onRenderVideoFrame:(TKVideoFrame *)frame uid:(NSString *)peerId sourceType:(TKMediaType)type
+- (void)onRenderVideoFrame:(TKVideoFrame *)packet uid:(NSString *)peerId sourceType:(TKMediaType)type
 {
 //    NSLog(@"peerId= %@, onRenderVideoFrame = %@",peerId, frame);
+//    memset(packet.uBuffer, 128, packet.uStride * packet.height / 2);
+//    memset(packet.vBuffer, 128, packet.vStride * packet.height / 2);
+//    memset(packet.yBuffer, 128, packet.yStride * packet.height);
 }
 #pragma mark -
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

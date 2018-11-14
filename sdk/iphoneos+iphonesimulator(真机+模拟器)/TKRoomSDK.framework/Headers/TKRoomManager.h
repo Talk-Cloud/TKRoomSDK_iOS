@@ -49,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
  设置打印SDK日志等级
  
  @param level 日志等级
- @param logPath 日志需要写入沙盒的路径; 默认路径为：沙盒Documents/TKLog。日志等级为TKLog_None时，不会写入沙盒。
+ @param logPath 日志需要写入沙盒的路径; 默认路径为：沙盒Libary/Caches/TKFileLogs。
  @param debug 是否时debug模式，debug模式：控制台打印，release模式：控制台不打印。
  */
 + (int)setLogLevel:(TKLogLevel)level logPath:(NSString * _Nullable)logPath debugToConsole:(BOOL)debug;
@@ -95,8 +95,8 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  进入房间
  
- @param host 服务器地址
- @param port 服务器端口
+ @param host 服务器地址 默认是https
+ @param port 服务器端口 若在初始化“- (int)initWithAppKey:optional:”接口中设置TKRoomSettingOptionalSecureSocket为YES，表示支持https或者wss，所以此端口需要设置为：443(默认)；若初始化接口设置为NO或者不设置，端口为：80(默认).
  @param nickname 本地用户的昵称
  @param roomParams Dic格式，内含进入房间所需的基本参数，比如：NSDictionary类型，key值详情见 TKRoomDefines.h 相关定义
  @param userParams  Dic格式，内含进入房间时用户的初始化的信息。比如 giftNumber（礼物数）
@@ -133,30 +133,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (TKRoomUser * _Nullable)getRoomUserWithUId:(NSString *)peerId;
 
-/**
- 大规模房间时获取指定用户ID的用户
- 在非大规模时使用- (TKRoomUser *)getRoomUserWithUId: 获取房间用户
- @param peerID 指定的用户ID
- @param callback 回调Block
- */
-- (int)getRoomUserWithPeerId:(NSString *)peerID callback:(void (^)(TKRoomUser *_Nullable user, NSError *_Nullable error))callback;
-/**
- 大规模教室时获取房间人数（可根据用户角色获取人数）
- 
- @param role 用户角色
- @param callback 人数的callBack
- */
-- (int)getRoomUserNumberWithRole:(NSArray * _Nullable)role search:(NSString * _Nullable)search callback:(void (^)(NSInteger num, NSError *error))callback;
-
-/**
- 大规模教室时获取房间用户信息（用户列表）
- 
- @param role 用户角色
- @param start 起始位置
- @param max 需要获取的人数
- @param callback 获取到的用户信息callback
- */
-- (int)getRoomUsersWithRole:(NSArray * _Nullable)role startIndex:(NSInteger)start maxNumber:(NSInteger)max search:(NSString * _Nullable)search order:(NSDictionary * _Nullable)order callback:(void (^)(NSArray <TKRoomUser *>* _Nonnull users , NSError *error) )callback;
 
 /**
  设置视频分辨率
@@ -204,26 +180,6 @@ NS_ASSUME_NONNULL_BEGIN
                        property:(NSDictionary *)properties
                      completion:(completion_block _Nullable)completion;
 
-/**
- 批量改变指定了用户ID的用户属性（适用于高并发房间）
- 
- @param peerIDs 指定了用户ID的用户ID数组
- @param tellWhom 要将此修改通知给谁。NSString类型，详情见 TKRoomDefines.h 相关定义. 可以是某一用户ID，表示此信令只发送给该用户
- @param properties 要修改的属性
- @param completion 完成的回调
- */
-- (int)batchChangeUserPropertyByIds:(NSArray <NSString *>*)peerIDs
-                           tellWhom:(NSString *)tellWhom
-                           property:(NSDictionary *)properties
-                         completion:(completion_block _Nullable)completion;
-
-/**
- 设置发布音视频 属性
- 
- @param attributes 属性
- @return 错误码
- */
-- (int)setAttributes:(NSDictionary *)attributes TK_Deprecated("Will deprecated!!!");
 /**
  发布自己的视频
  @param completion 完成的回调
@@ -442,7 +398,6 @@ extensionData:(NSDictionary * _Nullable)extensionData
            window:(UIView *)window
        completion:(completion_block _Nullable)completion;
 
-
 /**
  关闭共享桌面
  
@@ -462,7 +417,6 @@ extensionData:(NSDictionary * _Nullable)extensionData
          window:(UIView *)window
      completion:(completion_block _Nullable)completion;
 
-
 /**
  关闭电影
  
@@ -470,25 +424,6 @@ extensionData:(NSDictionary * _Nullable)extensionData
  @param completion 关闭共享电影文件的回调
  */
 - (int)unPlayFile:(NSString *)peerID completion:(completion_block _Nullable)completion;
-
-/**
- 录制用户的视频流
- 
- @param peerId 用户id
- @param convert 0 不转换, 1 webm, 2 mp4
- @param completion 回调block，第一个参数为0时，表示成功，非0表示失败；第二个参数为视频路径。
- */
-- (int)startRecordUser:(NSString *)peerId
-               convert:(NSInteger)convert
-            completion:(void (^)(NSInteger ret, NSString *path))completion TK_Deprecated("Will deprecated!!! use - (int)startServerRecord:convert:layout:expiresabs:expires: replaced");
-
-/**
- 结束用户的视频流录制
- 
- @param peerId 用户id
- @param completion 回调block，参数为0，表示成功；非0表示失败。
- */
-- (int)stopRecordUser:(NSString *)peerId completion:(void (^)(NSInteger, NSString *path))completion TK_Deprecated("Will deprecated!!! use - (int)stopServerRecord replaced");
 
 /**
  开始服务器录制
@@ -509,6 +444,7 @@ extensionData:(NSDictionary * _Nullable)extensionData
  停止服务器录制
  */
 - (int)stopServerRecord;
+
 /**
  切换纯音频教室
  
@@ -541,60 +477,11 @@ extensionData:(NSDictionary * _Nullable)extensionData
 - (int)selectCameraPosition:(BOOL)isFront;
 
 /**
- 当前本地摄像头是否被启用
- 
- @return true：摄像头可用；false：摄像头被禁用
- */
-- (BOOL)isVideoEnabled TK_Deprecated("Will deprecated!!!");
-
-/**
- 设置启用/禁用摄像头
- 
- @param enable ：true：启用摄像头；false：禁用摄像头
- */
-- (int)enableVideo:(BOOL)enable TK_Deprecated("Will deprecated!!!");
-
-/**
- 当前本地麦克风是否被启用
- 
- @return ：true：麦克风可用；false：麦克风被静音
- */
-- (BOOL)isAudioEnabled TK_Deprecated("Will deprecated!!!");
-
-/**
- 自己音频的开启关闭
- 
- @param enable YES:开启 NO:关闭
- */
-- (int)enableAudio:(BOOL)enable TK_Deprecated("Will deprecated!!!");
-
-/**
- 其他人音频的开启关闭
- 
- @param enable YES:开启 NO:关闭
- */
-- (int)enableOtherAudio:(BOOL)enable TK_Deprecated("Will deprecated!!!");
-
-/**
  是否外放
  
  @param use YES:外放 NO:关闭
  */
 - (int)useLoudSpeaker:(BOOL)use;
-
-/**
- 禁用本地音频
- 
- @param disable 是否禁用
- */
-- (int)disableMyAudio:(BOOL)disable TK_Deprecated("Will deprecated!!!");
-
-/**
- 禁用本地视频
- 
- @param disable 是否禁用
- */
-- (int)disableMyVideo:(BOOL)disable TK_Deprecated("Will deprecated!!!");
 
 /**
  设置视频方向
@@ -614,7 +501,7 @@ extensionData:(NSDictionary * _Nullable)extensionData
 
 /**
  停止播放
- @param audioId  playAudioFile接口返回的标识
+ @param audioId  playAudioFile接口返回的标识, 此参数为-1时，表示停止所有正在播放的音频
  @result 0 设置成功, -1 失败
  */
 
@@ -654,5 +541,132 @@ extensionData:(NSDictionary * _Nullable)extensionData
  停止测速
  */
 - (void)stopNetworkTest;
+
+
+    //************************************************************************************************//
+    //************************************* 大规模房间相关接口 ******************************************//
+    //************************************************************************************************//
+/**
+ 大规模房间时获取指定用户ID的用户
+ 在非大规模时使用- (TKRoomUser *)getRoomUserWithUId: 获取房间用户
+ @param peerID 指定的用户ID
+ @param callback 回调Block
+ */
+- (int)getRoomUserWithPeerId:(NSString *)peerID callback:(void (^)(TKRoomUser *_Nullable user, NSError *_Nullable error))callback;
+
+/**
+ 大规模教室时获取房间人数（可根据用户角色获取人数）
+ 
+ @param role 用户角色
+ @param callback 人数的callBack
+ */
+- (int)getRoomUserNumberWithRole:(NSArray * _Nullable)role
+                          search:(NSString * _Nullable)search
+                        callback:(void (^)(NSInteger num, NSError *error))callback;
+
+/**
+ 大规模教室时获取房间用户信息（用户列表）
+ 
+ @param role 用户角色
+ @param start 起始位置
+ @param max 需要获取的人数
+ @param callback 获取到的用户信息callback
+ */
+- (int)getRoomUsersWithRole:(NSArray * _Nullable)role
+                 startIndex:(NSInteger)start
+                  maxNumber:(NSInteger)max
+                     search:(NSString * _Nullable)search
+                      order:(NSDictionary * _Nullable)order
+                   callback:(void (^)(NSArray <TKRoomUser *>* _Nonnull users , NSError *error) )callback;
+
+/**
+ 批量改变指定了用户ID的用户属性（适用于高并发房间）
+ 
+ @param peerIDs 指定了用户ID的用户ID数组
+ @param tellWhom 要将此修改通知给谁。NSString类型，详情见 TKRoomDefines.h 相关定义. 可以是某一用户ID，表示此信令只发送给该用户
+ @param properties 要修改的属性
+ @param completion 完成的回调
+ */
+- (int)batchChangeUserPropertyByIds:(NSArray <NSString *>*)peerIDs
+                           tellWhom:(NSString *)tellWhom
+                           property:(NSDictionary *)properties
+                         completion:(completion_block _Nullable)completion;
+
+#warning "deprecated"
+/**
+ 设置发布音视频 属性
+ 
+ @param attributes 属性
+ @return 错误码
+ */
+- (int)setAttributes:(NSDictionary *)attributes TK_Deprecated("Will deprecated!!!");
+
+/**
+ 录制用户的视频流
+ 
+ @param peerId 用户id
+ @param convert 0 不转换, 1 webm, 2 mp4
+ @param completion 回调block，第一个参数为0时，表示成功，非0表示失败；第二个参数为视频路径。
+ */
+- (int)startRecordUser:(NSString *)peerId
+               convert:(NSInteger)convert
+            completion:(void (^)(NSInteger ret, NSString *path))completion TK_Deprecated("Will deprecated!!! use - (int)startServerRecord:convert:layout:expiresabs:expires: replaced");
+
+/**
+ 结束用户的视频流录制
+ 
+ @param peerId 用户id
+ @param completion 回调block，参数为0，表示成功；非0表示失败。
+ */
+- (int)stopRecordUser:(NSString *)peerId completion:(void (^)(NSInteger, NSString *path))completion TK_Deprecated("Will deprecated!!! use - (int)stopServerRecord replaced");
+
+/**
+ 当前本地摄像头是否被启用
+ 
+ @return true：摄像头可用；false：摄像头被禁用
+ */
+- (BOOL)isVideoEnabled TK_Deprecated("Will deprecated!!!");
+
+/**
+ 设置启用/禁用摄像头
+ 
+ @param enable ：true：启用摄像头；false：禁用摄像头
+ */
+- (int)enableVideo:(BOOL)enable TK_Deprecated("Will deprecated!!!");
+
+/**
+ 当前本地麦克风是否被启用
+ 
+ @return ：true：麦克风可用；false：麦克风被静音
+ */
+- (BOOL)isAudioEnabled TK_Deprecated("Will deprecated!!!");
+
+/**
+ 自己音频的开启关闭
+ 
+ @param enable YES:开启 NO:关闭
+ */
+- (int)enableAudio:(BOOL)enable TK_Deprecated("Will deprecated!!!");
+
+/**
+ 禁用本地音频
+ 
+ @param disable 是否禁用
+ */
+- (int)disableMyAudio:(BOOL)disable TK_Deprecated("Will deprecated!!!");
+
+/**
+ 禁用本地视频
+ 
+ @param disable 是否禁用
+ */
+- (int)disableMyVideo:(BOOL)disable TK_Deprecated("Will deprecated!!!");
+
+/**
+ 其他人音频的开启关闭
+ 
+ @param enable YES:开启 NO:关闭
+ */
+- (int)enableOtherAudio:(BOOL)enable TK_Deprecated("deprecated!!!");
 @end
 NS_ASSUME_NONNULL_END

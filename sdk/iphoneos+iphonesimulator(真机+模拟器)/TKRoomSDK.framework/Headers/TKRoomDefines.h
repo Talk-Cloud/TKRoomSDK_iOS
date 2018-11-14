@@ -38,10 +38,14 @@ FOUNDATION_EXTERN NSString * const TKRoomPubMsgTellNone;
 
 //******调用- (int)initWithAppKey:optional: 初始化设置 optional字典 key值定义*******//
 //socekt 自动重连次数，默认是无限次
-FOUNDATION_EXTERN NSString * const TKRoomSettingOtionalReconnectattempts;
+FOUNDATION_EXTERN NSString * const TKRoomSettingOptionalReconnectattempts;
 //若有使用到sdk白板功能，需要设置次参数，表示会接收到白板消息通知。 若不是用sdk白板功能，可不需要设置。
 //value：NSNumber类型 YES表示接受通知，NO表示不通知。
-FOUNDATION_EXTERN NSString * const TKRoomSettingOtionalWhiteBoardNotify;
+FOUNDATION_EXTERN NSString * const TKRoomSettingOptionalWhiteBoardNotify;
+//socekt使用协议参数
+//value: NSNumber类型 YES:使用https wss, NO:使用http ws  默认为NO。
+FOUNDATION_EXTERN NSString * const TKRoomSettingOptionalSecureSocket;
+
 
 typedef void (^completion_block)(NSError *error);
 typedef void (^progress_block)(int audioID, int64_t current, int64_t total);
@@ -62,11 +66,19 @@ typedef NS_ENUM(NSInteger, TKRoomWarningCode) {
     TKRoomWarning_RequestAccessForVideo_Failed = 131,   //请求获取摄像头失败
     TKRoomWarning_RequestAccessForAudio_Failed = 132,   //请求获取麦克风失败
     
+    
+    TKRoomWarning_CheckRoom_Completed                = 1001,    //CheckRoom 成功
+    TKRoomWarning_GetConfig_Completed                = 1002,    //GetConfig 成功
+    
+    TKRoomWarning_UnpublishVideo_By_SwitchAudioRoom = 1011,
+    TKRoomWarning_PublishVideo_By_SwitchAudioVideoRoom = 1012,
+    TKRoomWarning_UnpublishVideo_By_Max_Reconnect_Count = 1013,
+    TKRoomWarning_UnpublishAudio_By_Max_Reconnect_Count = 1014,
+    
     TKRoomWarning_Stream_Connected = 1101,
     TKRoomWarning_Stream_Failed = 1102,
     TKRoomWarning_Stream_Closed = 1103,
-    
-    TKRoomWarning_CheckRoom_Success                = 5001,    //CheckRoom 成功
+
     TKRoomWarning_ReConnectSocket_ServerChanged    = 5002,   //切换了服务器
     TKRoomWarning_DevicePerformance_Low            = 5003,   //设备性能过低
 };
@@ -85,6 +97,7 @@ typedef NS_ENUM(NSInteger, TKRoomErrorCode) {
     TKErrorCode_Stream_StateError = 105,
     TKErrorCode_Stream_NotFound = 106,
     
+    TKErrorCode_RenderView_ReUsed              = 156,//渲染视图已被使用
     
     TKErrorCode_Publish_NoAck                    = 401,
     TKErrorCode_Publish_RoomNotExist             = 402,
@@ -108,14 +121,13 @@ typedef NS_ENUM(NSInteger, TKRoomErrorCode) {
 
     TKErrorCode_JoinRoom_WrongParam              = 701,// join room 参数错误
     
+    TKErrorCode_CheckRoom_RequestFailed          = 801,    //CheckRoom 请求失败
+    TKErrorCode_GetConfig_RequestFailed          = 802,    //getconfig 请求失败
+    
     TKErrorCode_CheckRoom_ServerOverdue          = 3001,    //服务器过期
     TKErrorCode_CheckRoom_RoomFreeze             = 3002,    // 公司被冻结
     TKErrorCode_CheckRoom_RoomDeleteOrOrverdue   = 3003,    //房间被删除或过期
-    
-    TKErrorCode_CheckRoom_RequestFailed          = 4001,    //CheckRoom 请求失败
-    TKErrorCode_GetConfig_RequestFailed          = 4002,    //getconfig 请求失败
     TKErrorCode_CheckRoom_RoomNonExistent        = 4007,    //房间不存在
-    
     TKErrorCode_CheckRoom_PasswordError          = 4008,    //房间密码错误
     TKErrorCode_CheckRoom_WrongPasswordForRole   = 4012,    //密码与身份不符
     TKErrorCode_CheckRoom_RoomNumberOverRun      = 4103,    //房间人数超限
@@ -169,13 +181,43 @@ typedef NS_ENUM(NSUInteger, TKVideoMirrorMode) {
 #
 #pragma mark - TKLogLevel 日志等级
 #
-typedef NS_ENUM(NSInteger, TKLogLevel) {
-    TKLog_Verbose,  //等级最高，打印所有类型日志
-    TKLog_Info,     //打印info、warning、error日志
-    TKLog_Warning,  //打印warning、error日志
-    TKLog_Error,    //打印error日志
-    TKLog_None,     //不打印日志
+typedef NS_ENUM(NSUInteger, TKLogLevel){
+    /**
+     *  No logs
+     */
+    TKLogLevelOff = 0,
+    
+    /**
+     *  Error logs only
+     */
+    TKLogLevelError = (1 << 0),
+    
+    /**
+     *  Error and warning logs
+     */
+    TKLogLevelWarning = (TKLogLevelError | 1 << 1),
+    
+    /**
+     *  Error, warning and info logs
+     */
+    TKLogLevelInfo = (TKLogLevelWarning | 1 << 2),
+    
+    /**
+     *  Error, warning, info and debug logs
+     */
+    TKLogLevelDebug = (TKLogLevelInfo | 1 << 3),
+    
+    /**
+     *  Error, warning, info, debug and verbose logs
+     */
+    TKLogLevelVerbose = (TKLogLevelDebug | 1 << 4),
+    
+    /**
+     *  All logs (1...11111)
+     */
+    TKLogLevelAll = NSUIntegerMax
 };
+
 #
 #pragma mark - TKUserRoleType 用户角色
 #
