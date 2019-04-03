@@ -1,11 +1,16 @@
 #  SDK版本说明：
-        1、可以支持armv7、arm64、i386、x86_64等CPU架构；
+        1、可以支持armv7、arm64等CPU架构；
         2、支持iOS8.0及以上系统版本运行。
         3、Installation with CocoaPods
             Podfile
             platform:ios,'8.0'
-            pod 'TKRoomSDK', '~> 3.1.0'
+            pod 'TKRoomSDK', '~> 3.2.6'
 #  SDK版本更新说明
+时间：2019.04.03
+版本号：3.2.6
+1、修复重新发布和订阅问题；
+2、修复崩溃bug；
+3、优化sdk媒体链路.
 
 时间：2018.10.19
 版本号：3.1.0

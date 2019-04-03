@@ -7,7 +7,7 @@ TalkCloud SDK for iOS 是专为iOS平台研发，基于WebRTC协议架构的。�
 
 ### 1、集成TalkCloud SDK for iOS
 #### 1.1、Cocoapods安装
-```pod 'TKRoomSDK', '~> 3.1.0'```
+```pod 'TKRoomSDK', '~> 3.2.6'```
 
 #### 1.2、工程设置
 1. Build Settings: 
@@ -35,7 +35,7 @@ TalkCloud SDK for iOS 是专为iOS平台研发，基于WebRTC协议架构的。�
 
 #### 3 FAQ
 1、Q：SDK支持哪些CPU版本？
-A：TalkCould iOS SDK目前可以支持arm64、armv7、i386、x86_64；
+A：TalkCould iOS SDK目前可以支持arm64、armv7；
 
 2、Q：SDK是静态库还是动态库？
 A：TalkCould iOS SDK是动态库；
