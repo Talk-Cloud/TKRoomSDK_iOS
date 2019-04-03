@@ -24,7 +24,6 @@ TalkCloud SDK for iOS 是专为iOS平台研发，基于WebRTC协议架构的。�
 3. Info：
 - info.plist -> Privacy - Camera Usage Description  -> 主人需要您的同意，才能访问相机；
 - info.plist -> Privacy - Microphone Usage Description -> 主人需要您的同意，才能使用麦克风；
-- info.plist -> Privacy - Photo Library Usage Description -> 主人需要您的同意，才能访问相册；
 - info.plist -> Privacy - Bluetooth Peripheral Usage Description -> 主人需要您的同意，才能使用蓝牙；
 4. 设置App后台运行模式，如需要可以设置如下：
 - Capablities->Background Modes->设置成ON->勾选 Audio,AirPlay,and Picture in Picture

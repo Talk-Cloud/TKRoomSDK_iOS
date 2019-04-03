@@ -21,9 +21,7 @@
 #define kMixerSource @"tkaudiomixertest"
 #define kSecureSocket 0
 
-//static NSString * const kAppkey = <#AppKey#>;
-static NSString * const kAppkey = @"LNIWjlgmvqwbt4hy";
-//LNIWjlgmvqwbt4hy
+static NSString * const kAppkey = @"";
 static NSString *identifier = @"TKTableViewCell";
 
 typedef NS_ENUM(NSInteger, PublishState) {
@@ -244,7 +242,6 @@ typedef void (^ButtonAction)(UIButton* button);
                        @{@"imageNomal":[UIImage imageNamed:@"videoProfile"],
                          @"imageSelect":[UIImage imageNamed:@"videoProfile"],
                          @"block":^(UIButton* button){
-                             [self.roomMgr pausePlayMedia:_playID];
                              //设置分辨率4
                              UIPopoverPresentationController *popover = weakSelf.alert.popoverPresentationController;
                              if (popover) {
