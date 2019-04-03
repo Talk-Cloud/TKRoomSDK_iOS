@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5825B362219C1E9600E114BC /* TKRoomSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5825B361219C1E9500E114BC /* TKRoomSDK.framework */; };
-		5825B363219C1E9E00E114BC /* TKRoomSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5825B361219C1E9500E114BC /* TKRoomSDK.framework */; };
-		5825B364219C1E9E00E114BC /* TKRoomSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5825B361219C1E9500E114BC /* TKRoomSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5868211022549695000E5335 /* TKRoomSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5868210F22549695000E5335 /* TKRoomSDK.framework */; };
+		586821112254969C000E5335 /* TKRoomSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5868210F22549695000E5335 /* TKRoomSDK.framework */; };
+		586821122254969C000E5335 /* TKRoomSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5868210F22549695000E5335 /* TKRoomSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5899BB2421070F70006F3B23 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5899BB2321070F70006F3B23 /* VideoToolbox.framework */; };
 		5899BB2621070F77006F3B23 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5899BB2521070F77006F3B23 /* GLKit.framework */; };
 		5899BB2821070F7E006F3B23 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5899BB2721070F7E006F3B23 /* libc++.tbd */; };
@@ -49,31 +49,14 @@
 		8486E93520FECEDB00380DBC /* NSString+sizeHeight.m in Sources */ = {isa = PBXBuildFile; fileRef = 8486E93320FECEDB00380DBC /* NSString+sizeHeight.m */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		5E2C93581F023D27005D4300 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5E2C93361F023D26005D4300 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 5E2C933D1F023D26005D4300;
-			remoteInfo = talkSDKDemo;
-		};
-		5E2C93631F023D27005D4300 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5E2C93361F023D26005D4300 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 5E2C933D1F023D26005D4300;
-			remoteInfo = talkSDKDemo;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
-		843B58C0216F701C00AB1930 /* Embed Frameworks */ = {
+		58ACAC6421C39FA600E5E157 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				5825B364219C1E9E00E114BC /* TKRoomSDK.framework in Embed Frameworks */,
+				586821122254969C000E5335 /* TKRoomSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -81,7 +64,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		5825B361219C1E9500E114BC /* TKRoomSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TKRoomSDK.framework; sourceTree = "<group>"; };
+		5868210F22549695000E5335 /* TKRoomSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TKRoomSDK.framework; sourceTree = "<group>"; };
 		587D8C812101DF8700C08F32 /* talkSDKDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = talkSDKDemo.entitlements; sourceTree = "<group>"; };
 		5899BB2321070F70006F3B23 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		5899BB2521070F77006F3B23 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
@@ -102,8 +85,6 @@
 		5E2C934B1F023D26005D4300 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		5E2C93501F023D26005D4300 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5E2C93521F023D26005D4300 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5E2C93571F023D27005D4300 /* talkSDKDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = talkSDKDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		5E2C93621F023D27005D4300 /* talkSDKDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = talkSDKDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E2C93741F023D5F005D4300 /* RoomController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoomController.h; sourceTree = "<group>"; };
 		5E2C93751F023D5F005D4300 /* RoomController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoomController.m; sourceTree = "<group>"; };
 		5E2C93801F023E45005D4300 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
@@ -173,36 +154,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				5899BB2821070F7E006F3B23 /* libc++.tbd in Frameworks */,
-				5825B363219C1E9E00E114BC /* TKRoomSDK.framework in Frameworks */,
-				5825B362219C1E9600E114BC /* TKRoomSDK.framework in Frameworks */,
+				586821112254969C000E5335 /* TKRoomSDK.framework in Frameworks */,
+				5868211022549695000E5335 /* TKRoomSDK.framework in Frameworks */,
 				5899BB2621070F77006F3B23 /* GLKit.framework in Frameworks */,
 				5899BB2421070F70006F3B23 /* VideoToolbox.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		5E2C93541F023D27005D4300 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		5E2C935F1F023D27005D4300 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		5825B0F9219B276100E114BC /* lib */ = {
+		586820F0224E15D7000E5335 /* libs */ = {
 			isa = PBXGroup;
 			children = (
-				5825B361219C1E9500E114BC /* TKRoomSDK.framework */,
+				5868210F22549695000E5335 /* TKRoomSDK.framework */,
 			);
-			path = lib;
+			path = libs;
 			sourceTree = "<group>";
 		};
 		5E2C93351F023D26005D4300 = {
@@ -218,8 +185,6 @@
 			isa = PBXGroup;
 			children = (
 				5E2C933E1F023D26005D4300 /* talkSDKDemo.app */,
-				5E2C93571F023D27005D4300 /* talkSDKDemoTests.xctest */,
-				5E2C93621F023D27005D4300 /* talkSDKDemoUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -227,7 +192,7 @@
 		5E2C93401F023D26005D4300 /* talkSDKDemo */ = {
 			isa = PBXGroup;
 			children = (
-				5825B0F9219B276100E114BC /* lib */,
+				586820F0224E15D7000E5335 /* libs */,
 				58C0954E21788990007FD67E /* 32k.wav */,
 				58C0949621771E54007FD67E /* trust you.mp3 */,
 				587D8C812101DF8700C08F32 /* talkSDKDemo.entitlements */,
@@ -379,7 +344,7 @@
 				5E2C933A1F023D26005D4300 /* Sources */,
 				5E2C933B1F023D26005D4300 /* Frameworks */,
 				5E2C933C1F023D26005D4300 /* Resources */,
-				843B58C0216F701C00AB1930 /* Embed Frameworks */,
+				58ACAC6421C39FA600E5E157 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -389,42 +354,6 @@
 			productName = talkSDKDemo;
 			productReference = 5E2C933E1F023D26005D4300 /* talkSDKDemo.app */;
 			productType = "com.apple.product-type.application";
-		};
-		5E2C93561F023D27005D4300 /* talkSDKDemoTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 5E2C936E1F023D27005D4300 /* Build configuration list for PBXNativeTarget "talkSDKDemoTests" */;
-			buildPhases = (
-				5E2C93531F023D27005D4300 /* Sources */,
-				5E2C93541F023D27005D4300 /* Frameworks */,
-				5E2C93551F023D27005D4300 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				5E2C93591F023D27005D4300 /* PBXTargetDependency */,
-			);
-			name = talkSDKDemoTests;
-			productName = talkSDKDemoTests;
-			productReference = 5E2C93571F023D27005D4300 /* talkSDKDemoTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		5E2C93611F023D27005D4300 /* talkSDKDemoUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 5E2C93711F023D27005D4300 /* Build configuration list for PBXNativeTarget "talkSDKDemoUITests" */;
-			buildPhases = (
-				5E2C935E1F023D27005D4300 /* Sources */,
-				5E2C935F1F023D27005D4300 /* Frameworks */,
-				5E2C93601F023D27005D4300 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				5E2C93641F023D27005D4300 /* PBXTargetDependency */,
-			);
-			name = talkSDKDemoUITests;
-			productName = talkSDKDemoUITests;
-			productReference = 5E2C93621F023D27005D4300 /* talkSDKDemoUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -451,18 +380,6 @@
 							};
 						};
 					};
-					5E2C93561F023D27005D4300 = {
-						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = 8VXJWE28Q2;
-						ProvisioningStyle = Automatic;
-						TestTargetID = 5E2C933D1F023D26005D4300;
-					};
-					5E2C93611F023D27005D4300 = {
-						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = 8VXJWE28Q2;
-						ProvisioningStyle = Automatic;
-						TestTargetID = 5E2C933D1F023D26005D4300;
-					};
 				};
 			};
 			buildConfigurationList = 5E2C93391F023D26005D4300 /* Build configuration list for PBXProject "talkSDKDemo" */;
@@ -481,8 +398,6 @@
 			projectRoot = "";
 			targets = (
 				5E2C933D1F023D26005D4300 /* talkSDKDemo */,
-				5E2C93561F023D27005D4300 /* talkSDKDemoTests */,
-				5E2C93611F023D27005D4300 /* talkSDKDemoUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -500,20 +415,6 @@
 				58C0949721771E55007FD67E /* trust you.mp3 in Resources */,
 				58C9D52F20FC8A64000376C1 /* TKTableViewCell.xib in Resources */,
 				8469F8D620FD8EAF00E231D2 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		5E2C93551F023D27005D4300 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		5E2C93601F023D27005D4300 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -553,34 +454,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		5E2C93531F023D27005D4300 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		5E2C935E1F023D27005D4300 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		5E2C93591F023D27005D4300 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 5E2C933D1F023D26005D4300 /* talkSDKDemo */;
-			targetProxy = 5E2C93581F023D27005D4300 /* PBXContainerItemProxy */;
-		};
-		5E2C93641F023D27005D4300 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 5E2C933D1F023D26005D4300 /* talkSDKDemo */;
-			targetProxy = 5E2C93631F023D27005D4300 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		5E2C934A1F023D26005D4300 /* Main.storyboard */ = {
@@ -723,6 +597,7 @@
 					"$(PROJECT_DIR)/talkSDKDemo",
 					"$(PROJECT_DIR)/talkSDKDemo/lib",
 					"$(PROJECT_DIR)/talkSDKDemo/lib/socketio_zhm",
+					"$(PROJECT_DIR)/talkSDKDemo/libs",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/talkSDKDemo/PrefixHeader.pch";
@@ -757,6 +632,7 @@
 					"$(PROJECT_DIR)/talkSDKDemo",
 					"$(PROJECT_DIR)/talkSDKDemo/lib",
 					"$(PROJECT_DIR)/talkSDKDemo/lib/socketio_zhm",
+					"$(PROJECT_DIR)/talkSDKDemo/libs",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/talkSDKDemo/PrefixHeader.pch";
@@ -777,56 +653,6 @@
 			};
 			name = Release;
 		};
-		5E2C936F1F023D27005D4300 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = 8VXJWE28Q2;
-				INFOPLIST_FILE = talkSDKDemoTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = ifeng.talkSDKDemoTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/talkSDKDemo.app/talkSDKDemo";
-			};
-			name = Debug;
-		};
-		5E2C93701F023D27005D4300 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = 8VXJWE28Q2;
-				INFOPLIST_FILE = talkSDKDemoTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = ifeng.talkSDKDemoTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/talkSDKDemo.app/talkSDKDemo";
-			};
-			name = Release;
-		};
-		5E2C93721F023D27005D4300 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				DEVELOPMENT_TEAM = 8VXJWE28Q2;
-				INFOPLIST_FILE = talkSDKDemoUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = ifeng.talkSDKDemoUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = talkSDKDemo;
-			};
-			name = Debug;
-		};
-		5E2C93731F023D27005D4300 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				DEVELOPMENT_TEAM = 8VXJWE28Q2;
-				INFOPLIST_FILE = talkSDKDemoUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = ifeng.talkSDKDemoUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = talkSDKDemo;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -844,24 +670,6 @@
 			buildConfigurations = (
 				5E2C936C1F023D27005D4300 /* Debug */,
 				5E2C936D1F023D27005D4300 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		5E2C936E1F023D27005D4300 /* Build configuration list for PBXNativeTarget "talkSDKDemoTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				5E2C936F1F023D27005D4300 /* Debug */,
-				5E2C93701F023D27005D4300 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		5E2C93711F023D27005D4300 /* Build configuration list for PBXNativeTarget "talkSDKDemoUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				5E2C93721F023D27005D4300 /* Debug */,
-				5E2C93731F023D27005D4300 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

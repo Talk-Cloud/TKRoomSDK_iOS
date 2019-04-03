@@ -17,5 +17,10 @@
 
 @property (assign, nonatomic) int audioID;
 @property (strong, nonatomic) UISlider *slider;
+@property (assign, nonatomic) int first;
+
+@property (assign, nonatomic) CGFloat seekpos;
+@property (assign, nonatomic) int playID;
+
 
 @end

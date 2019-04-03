@@ -17,4 +17,6 @@
 - (void)addVideo:(VideoView *)view;
 - (void)delVideo:(VideoView *)view;
 - (void)clean;
+
+- (int)playMeida:(NSString *)file progress:(progress_block)block;
 @end

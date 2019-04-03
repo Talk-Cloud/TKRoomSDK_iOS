@@ -7,6 +7,14 @@
 //
 #import "TKRoomDefines.h"
 
+#pragma mark - JoinRoomNotification
+// 可以在userInfo 获取相关信息，包括error和链路相关统计信息
+//加入房间成功
+FOUNDATION_EXTERN NSNotificationName const TKRoomManagerJoinRoomSuccessNotification;
+//加入房间失败
+FOUNDATION_EXTERN NSNotificationName const TKRoomManagerJoinRoomFailedNotification;
+
+
 #pragma mark - TKRoomManagerDelegate
 @protocol TKRoomManagerDelegate<NSObject>
 
@@ -103,6 +111,9 @@
  */
 - (void)roomManagerOnUserAudioStatus:(NSString *)peerID
                                state:(TKMediaState)state;
+
+
+
 /**
     收到自定义信令 发布消息
     @param msgID 消息id
@@ -195,34 +206,37 @@
 - (void)roomManagerOnFirstVideoFrameWithPeerID:(NSString *)peerID deviceId:(NSString *)deviceId width:(NSInteger)width height:(NSInteger)height mediaType:(TKMediaType)type;
 
 /**
+ 视频播放过程中画面状态回调
+ 
+ @param peerId 用户ID
+ @param deviceId 视频设备ID
+ @param state 画面状态
+ @param type 视频类型
+ */
+- (void)roomManagerOnVideoStateChange:(NSString *)peerId
+                             deviceId:(NSString *)deviceId
+                           videoState:(TKRenderState)state
+                            mediaType:(TKMediaType)type;
+
+/**
+ 音频播放过程中状态回调
+ 
+ @param peerId 用户ID
+ @param state 音频状态
+ @param type 类型
+ */
+- (void)roomManagerOnAudioStateChange:(NSString *)peerId
+                           audioState:(TKRenderState)state
+                            mediaType:(TKMediaType)type;
+
+
+/**
  播放某用户音频，会收到此回调；如果没有unplay某用户的音频，而再次play该用户音频时，不会再次收到此回调。
 
  @param peerID 用户ID
  @param type 音频类型
  */
 - (void)roomManagerOnFirstAudioFrameWithPeerID:(NSString *)peerID mediaType:(TKMediaType)type;
-
-/**
-    回放时收到聊天消息
-    @param message 聊天消息内容
-    @param peerID 发送者用户ID
-    @param ts 发送消息的时间戳
-    @param extension 消息扩展信息（用户昵称、用户角色等等）
- */
-- (void)roomManagerPlaybackMessageReceived:(NSString *)message
-                                    fromID:(NSString *)peerID
-                                        ts:(NSTimeInterval)ts
-                                 extension:(NSDictionary *)extension;
-
-/**
-    在没有发布或订阅成功之前，发布3次失败或订阅3次失败通知上层有网路问题。
- */
-- (void)roomManagerReportNetworkProblem;
-
-/**
-    网络环境发生变化，进行提示
- */
-- (void)roomManagerReportNetworkChanged;
 
 /**
  网络测速回调
@@ -266,8 +280,8 @@
     @param message 扩展消息
  */
 - (void)roomManagerOnShareScreenState:(NSString *)peerId
-                                state:(TKMediaState)state
-                     extensionMessage:(NSDictionary *)message;
+                                state:(TKMediaState)state;
+//                     extensionMessage:(NSDictionary *)message;
 
 #pragma mark file
 /**

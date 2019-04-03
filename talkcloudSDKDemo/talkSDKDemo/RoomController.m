@@ -19,6 +19,11 @@
 #import "ChatView.h"
 
 #define kMixerSource @"tkaudiomixertest"
+#define kSecureSocket 0
+
+//static NSString * const kAppkey = <#AppKey#>;
+static NSString * const kAppkey = @"LNIWjlgmvqwbt4hy";
+//LNIWjlgmvqwbt4hy
 static NSString *identifier = @"TKTableViewCell";
 
 typedef NS_ENUM(NSInteger, PublishState) {
@@ -79,18 +84,32 @@ typedef void (^ButtonAction)(UIButton* button);
  5.roomManagerUserChanged回调，播放可以播放视频的用户
  */
 
+
+
 @implementation RoomController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self initView];
+}
+
+- (void)initView
+{
     [self.view setBackgroundColor:[UIColor blackColor]];
     _userViews      = [NSMutableDictionary dictionaryWithCapacity:6];
     _userDic        = [NSMutableDictionary dictionaryWithCapacity:6];
     
-    _roomMgr = [TKRoomManager instance];
-    [_roomMgr initWithAppKey:@"" optional:@{TKRoomSettingOptionalSecureSocket:@(NO)}];
     
+    _roomMgr = [TKRoomManager instance];
+    
+    [_roomMgr startNetworkTest];
+    [_roomMgr initWithAppKey:kAppkey optional:@{TKRoomSettingOptionalSecureSocket:@(kSecureSocket),
+                                                TKRoomSettingOptionalPrivatePort : @(443),
+                                                }];
+    NSArray *cachesPathArr = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *cachesPath = cachesPathArr.firstObject;
+    NSString *filePath = [cachesPath stringByAppendingPathComponent:@"TKSDKLogs"];
     [TKRoomManager setLogLevel:TKLogLevelInfo logPath:nil debugToConsole:YES];
     CGFloat width = [UIScreen mainScreen].bounds.size.width;
     CGFloat height = (width - 5 * 10) / 4;
@@ -112,17 +131,17 @@ typedef void (^ButtonAction)(UIButton* button);
     self.showStats.delegate = self;
     self.showStats.dataSource = self;
     self.showStats.rowHeight = 20;
-//    self.showStats.scrollEnabled = NO;
+        //    self.showStats.scrollEnabled = NO;
     self.showStats.backgroundColor = [UIColor clearColor];
     [self.showStats registerNib:[UINib nibWithNibName:@"TKTableViewCell" bundle:nil] forCellReuseIdentifier:identifier];
     [self.view addSubview:self.showStats];
     
-//    [self.showStats reloadData];
+        //    [self.showStats reloadData];
     self.statsArray = [NSMutableArray array];
-
-//    self.mediaView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
-//    self.mediaView.backgroundColor = [UIColor redColor];
-//    [self.view addSubview:self.mediaView];
+    
+        //    self.mediaView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+        //    self.mediaView.backgroundColor = [UIColor redColor];
+        //    [self.view addSubview:self.mediaView];
     
     [self initAVAndinitClass];
     
@@ -132,9 +151,23 @@ typedef void (^ButtonAction)(UIButton* button);
     [self createCommonBtn];
     [self creatTimer];
     
-    // 双击处理方法
+        // 双击处理方法
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeViewPosition:) name:VideosBlockChangePositionNoti object:nil];
+     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(joinroomFailed:) name:TKRoomManagerJoinRoomFailedNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(joinroomSuccess:) name:TKRoomManagerJoinRoomSuccessNotification object:nil];
+        //    _slider = [[UISlider alloc] initWithFrame:CGRectMake(100, 200, 100, 100)];
 
+}
+
+- (void)joinroomSuccess:(NSNotification *)noti
+{
+    NSDictionary *di = noti.userInfo;
+}
+
+- (void)joinroomFailed:(NSNotification *)noti
+{
+    NSDictionary *di = noti.userInfo;
 }
 
 - (void)creatTimer{
@@ -187,27 +220,22 @@ typedef void (^ButtonAction)(UIButton* button);
                          @"imageSelect":[UIImage imageNamed:@"switchCamera"],
                          @"block":^(UIButton* button){
                              //切换摄像头2
-                             NSString *path = [[NSBundle mainBundle] pathForResource:@"32k" ofType:@"wav"];
-                             [self.roomMgr startPlayAudioFile:path loop:YES progress:^(int audioID, int64_t current, int64_t total) {
-                                 
-                             }];
-//                             if (!button.selected) {
-//                                 _timerCount = 0;
-//                                 [weakSelf.roomMgr selectCameraPosition:YES];
-//                             } else {
-//                                 _timerCount = 0;
-//                                 [weakSelf.roomMgr selectCameraPosition:NO];
-//                             }
+                             if (!button.selected) {
+                                 _timerCount = 0;
+                                 [weakSelf.roomMgr selectCameraPosition:YES];
+                             } else {
+                                 _timerCount = 0;
+                                 [weakSelf.roomMgr selectCameraPosition:NO];
+                             }
                          }},
                        @{@"imageNomal":[UIImage imageNamed:@"AV"],
                          @"imageSelect":[UIImage imageNamed:@"onlyAudio"],
                          @"block":^(UIButton* button){
-                             
                              //切换纯音频3
                              if (button.selected) {
                                  _timerCount = 0;
                                  [weakSelf.roomMgr switchOnlyAudioRoom:YES];
-                                 
+
                              } else {
                                  _timerCount = 0;
                                  [weakSelf.roomMgr switchOnlyAudioRoom:NO];
@@ -216,6 +244,7 @@ typedef void (^ButtonAction)(UIButton* button);
                        @{@"imageNomal":[UIImage imageNamed:@"videoProfile"],
                          @"imageSelect":[UIImage imageNamed:@"videoProfile"],
                          @"block":^(UIButton* button){
+                             [self.roomMgr pausePlayMedia:_playID];
                              //设置分辨率4
                              UIPopoverPresentationController *popover = weakSelf.alert.popoverPresentationController;
                              if (popover) {
@@ -386,7 +415,15 @@ typedef void (^ButtonAction)(UIButton* button);
     profile.height = 480;
     profile.maxfps = 10;
     [_roomMgr setVideoProfile:profile];
-    [_roomMgr joinRoomWithHost:self.name port:80 nickName:@"ios" roomParams:@{TKJoinRoomParamsRoomIDKey:self.roomid,TKJoinRoomParamsUserRoleKey:self.role, TKJoinRoomParamsPasswordKey : password,@"clientType":@(3), @"autoSubscribeAV" : @(YES)} userParams:nil];
+    int port = 80;
+    if (kSecureSocket) {
+        port = 443;
+    }
+    
+    
+//    [_roomMgr joinRoomEx:@"10234569" nickName:@"ios" third_uid:nil userParams:nil];
+    
+    [_roomMgr joinRoomWithHost:self.name port:port nickName:@"ios" roomParams:@{TKJoinRoomParamsRoomIDKey:self.roomid,TKJoinRoomParamsUserRoleKey:self.role, TKJoinRoomParamsPasswordKey : password,@"clientType":@(3), @"autoSubscribeAV" : @(YES)} userParams:nil];
     [_roomMgr setVideoOrientation:UIDeviceOrientationPortrait];
     [_roomMgr setLocalVideoMirrorMode:TKVideoMirrorModeAuto];
     
@@ -427,14 +464,14 @@ typedef void (^ButtonAction)(UIButton* button);
                              @"block":^(UIButton* button){
                                  if (button.selected) {
                                      [weakSelf.roomMgr leaveRoom:nil];
-                                     [TKRoomManager destory];
-                                     weakSelf.roomMgr = nil;
+                                     
                                  } else {
                                      button.enabled = NO;
                                  }
                              }},
  
                            ];
+
     
     
     NSMutableArray *bt = [NSMutableArray arrayWithCapacity:_buttonDescrptions.count];
@@ -572,6 +609,7 @@ typedef void (^ButtonAction)(UIButton* button);
 
 - (void)roomManagerDidOccuredError:(NSError *)error
 {
+    NSLog(@"roomManagerDidOccuredError = %@", error);
     [self reportFail:error.code];
     NSString *log = [NSString stringWithFormat:@"💔error💔 code:%ld message:%@",error.code, error.localizedDescription];
     
@@ -694,8 +732,8 @@ typedef void (^ButtonAction)(UIButton* button);
 }
 - (void)roomManagerRoomLeft {
     NSLog(@"roomManagerRoomLeft");
-    
     [self destory];
+//    [self initView];
     [self dismissViewControllerAnimated:YES completion:^{
 
     }];
@@ -724,11 +762,13 @@ typedef void (^ButtonAction)(UIButton* button);
     if ([peerID isEqualToString:_myID]) {
         UIButton *video = _controlButtons[0];
         video.selected = !state;
+//        [self.roomMgr leaveRoom:nil];
     }
 }
 
 - (void)roomManagerOnUserVideoStatus:(NSString *)peerID deviceId:(NSString *)deviceId state:(TKMediaState)state
 {
+
     if (state == TKMedia_Pulished) {
         TKRoomUser *user = [_roomMgr getRoomUserWithUId:peerID];
         [self playVideo:user deviceId:deviceId];
@@ -962,6 +1002,7 @@ typedef void (^ButtonAction)(UIButton* button);
 //        NSLog(@"远端 OnFirstVideoFrame width = %ld height = %ld mediaType = %ld",width, height, type);
     }
 }
+
 #pragma mark - TKMediaFrameDelegate
 
 - (void)onCaptureAudioFrame:(TKAudioFrame *)frame sourceType:(TKMediaType)type

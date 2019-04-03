@@ -12,7 +12,7 @@
 #define TK_Deprecated(string) __attribute__((deprecated(string)))
 
 #
-#pragma mark - TKRoom 相关定义
+#pragma mark - joinroom 相关定义
 #
 //******调用joinroom 接口进入房间，roomParams字典参数所需 Key值定义******//
 //房间ID @required
@@ -35,20 +35,32 @@ FOUNDATION_EXTERN NSString * const TKRoomPubMsgTellAllExceptAuditor;
 //不通知任何人
 FOUNDATION_EXTERN NSString * const TKRoomPubMsgTellNone;
 
-
+#
+#pragma mark -  房间初始化相关设置
+#
 //******调用- (int)initWithAppKey:optional: 初始化设置 optional字典 key值定义*******//
-//socekt 自动重连次数，默认是无限次
+//socekt 自动重连次数，默认是5次
 FOUNDATION_EXTERN NSString * const TKRoomSettingOptionalReconnectattempts;
 //若有使用到sdk白板功能，需要设置次参数，表示会接收到白板消息通知。 若不是用sdk白板功能，可不需要设置。
 //value：NSNumber类型 YES表示接受通知，NO表示不通知。
 FOUNDATION_EXTERN NSString * const TKRoomSettingOptionalWhiteBoardNotify;
-//socekt使用协议参数
-//value: NSNumber类型 YES:使用https wss, NO:使用http ws  默认为NO。
+
+#pragma mark socekt使用协议参数
+//value: NSNumber类型 YES:使用https wss, NO:使用http ws  默认为YES。
 FOUNDATION_EXTERN NSString * const TKRoomSettingOptionalSecureSocket;
 
+#pragma mark 私有部署房间相关
+//私有地址  默认为global.talk-cloud.net
+FOUNDATION_EXTERN NSString * const TKRoomSettingOptionalPrivateHostAddress;
+//私有端口  如果TKRoomSettingOptionalSecureSocket 设置为YES，默认为443；如果TKRoomSettingOptionalSecureSocket 设置为NO，默认为80.
+// ***TKRoomSettingOptionalSecureSocket优先.***
+FOUNDATION_EXTERN NSString * const TKRoomSettingOptionalPrivatePort;
 
+#
+#pragma mark - Block重命名
+#
 typedef void (^completion_block)(NSError *error);
-typedef void (^progress_block)(int audioID, int64_t current, int64_t total);
+typedef void (^progress_block)(int playID, int64_t current, int64_t total);
 
 #
 #pragma mark - TKRoomWarningCode 警告码
@@ -96,6 +108,9 @@ typedef NS_ENUM(NSInteger, TKRoomErrorCode) {
     TKErrorCode_Publish_StateError = 104,
     TKErrorCode_Stream_StateError = 105,
     TKErrorCode_Stream_NotFound = 106,
+    TKErrorCode_FilePath_NotExist = 107,    //文件路劲不存在
+    TKErrorCode_CreateFile_Failed   = 108,    //创建文件失败
+    TKErrorCode_TestSpeed_Failed     = 109,
     
     TKErrorCode_RenderView_ReUsed              = 156,//渲染视图已被使用
     
@@ -126,7 +141,8 @@ typedef NS_ENUM(NSInteger, TKRoomErrorCode) {
     
     TKErrorCode_CheckRoom_ServerOverdue          = 3001,    //服务器过期
     TKErrorCode_CheckRoom_RoomFreeze             = 3002,    // 公司被冻结
-    TKErrorCode_CheckRoom_RoomDeleteOrOrverdue   = 3003,    //房间被删除或过期
+    TKErrorCode_CheckRoom_RoomDeleteOrOrverdue   = 3003,    //房间已删除或过期
+    TKErrorCode_CheckRoom_CompanyNotExist        = 4001,    //该公司不存在
     TKErrorCode_CheckRoom_RoomNonExistent        = 4007,    //房间不存在
     TKErrorCode_CheckRoom_PasswordError          = 4008,    //房间密码错误
     TKErrorCode_CheckRoom_WrongPasswordForRole   = 4012,    //密码与身份不符
@@ -135,6 +151,8 @@ typedef NS_ENUM(NSInteger, TKRoomErrorCode) {
     TKErrorCode_CheckRoom_NeedPassword           = 4110,    //该房间需要密码，请输入密码
     TKErrorCode_CheckRoom_RoomPointOverrun       = 4112,    //企业点数超限
 };
+
+
 #
 #pragma mark - TKMediaType 媒体类型
 #
@@ -146,6 +164,7 @@ typedef NS_ENUM(NSInteger, TKMediaType) {
     TKMediaSourceType_screen    = 102,    //屏幕共享
     TKMediaSourceType_media     = 103,    //媒体文件 mp4、mp3
 };
+
 #
 #pragma mark - TKPublishState 发布状态
 #
@@ -170,6 +189,15 @@ typedef NS_ENUM(NSInteger, TKRenderMode) {
     TKRenderMode_fit = 0,  //等比拉伸
     TKRenderMode_adaptive, //等比拉伸，并占满全屏
 };
+
+#
+#pragma mark - TKRenderState
+#
+typedef NS_ENUM(NSInteger, TKRenderState) {
+    TKRenderState_Interruption  = 0,   //中断
+    TKRenderState_Resumption    = 1,   //恢复
+};
+
 #
 #pragma mark - TKVideoMirrorMode 视频渲染镜像模式
 #
@@ -267,6 +295,18 @@ typedef NS_ENUM(NSInteger, TKSampleFormat) {
     
     TKAVSampleFormat_NB           ///< Number of sample formats. DO NOT USE if linking dynamically
 };
+#
+#pragma mark - TKMediaFileInfo 媒体文件信息
+#
+@interface TKMediaFileInfo : NSObject
+@property (assign, nonatomic) NSInteger duration;
+@property (assign, nonatomic) NSInteger width;
+@property (assign, nonatomic) NSInteger height;
+@property (assign, nonatomic) NSInteger fps;
+@property (assign, nonatomic) BOOL video;
+@property (assign, nonatomic) BOOL audio;
+@end
+
 #
 #pragma mark - TKVideoProfile 视频属性
 #
@@ -451,4 +491,5 @@ typedef NS_ENUM(NSInteger, TKSampleFormat) {
 @property (assign, nonatomic) TKNetQuality netLevel;
 
 @end
+
 

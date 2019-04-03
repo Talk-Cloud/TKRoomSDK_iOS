@@ -64,7 +64,6 @@ NS_ASSUME_NONNULL_BEGIN
                        nickName:(NSString *)nickname
                      roomParams:(NSDictionary *)roomParams
                      userParams:(NSDictionary * _Nullable)userParams;
-
 /**
  获取房间属性
  */

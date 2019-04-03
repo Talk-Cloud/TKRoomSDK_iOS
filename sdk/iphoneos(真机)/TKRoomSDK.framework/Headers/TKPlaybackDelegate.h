@@ -15,6 +15,17 @@
 
 @optional
 /**
+ 回放时收到聊天消息
+ @param message 聊天消息内容
+ @param peerID 发送者用户ID
+ @param ts 发送消息的时间戳
+ @param extension 消息扩展信息（用户昵称、用户角色等等）
+ */
+- (void)roomManagerPlaybackMessageReceived:(NSString *)message
+                                    fromID:(NSString *)peerID
+                                        ts:(NSTimeInterval)ts
+                                 extension:(NSDictionary *)extension;
+/**
  获取到回放总时长的回调
  @param duration 回放的总时长
  */

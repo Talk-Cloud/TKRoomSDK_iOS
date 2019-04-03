@@ -83,6 +83,20 @@
     }
 }
 
+
+- (int)playMeida:(NSString *)file progress:(progress_block)block
+{
+    VideoView *videoView = [self getVideoViewWithPeerID:file deviceId:nil];
+    if (!videoView) {
+        TKRoomUser *user = [[TKRoomUser alloc] initWithPeerId:file];
+        videoView = [self creatVideoViewWith:user deviceId:nil];
+        [self addSubview:videoView];
+        [videoView sendSubviewToBack:videoView.imageView];
+        [self refreshVideo];
+        [videoView setViewsToFront]; 
+    }
+    return [self.rmg startPlayMediaFile:file window:videoView loop:NO progress:block];
+}
 - (void)unPlayVideoWithUser:(NSString *)peerID deviceId:(NSString *)deviceId
 {
     if ([peerID isEqualToString:_rmg.localUser.peerID]) {
