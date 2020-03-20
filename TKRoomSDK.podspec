@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "TKRoomSDK"
-  s.version      = "3.2.6"
+  s.version      = "3.2.15"
   s.summary      = "A Framework for audio and video ."
   s.module_name  = "TKRoomSDK"
   # This description is used to generate tags and improve search results.

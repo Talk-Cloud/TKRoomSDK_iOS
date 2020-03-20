@@ -14,7 +14,6 @@ FOUNDATION_EXTERN NSNotificationName const TKRoomManagerJoinRoomSuccessNotificat
 //加入房间失败
 FOUNDATION_EXTERN NSNotificationName const TKRoomManagerJoinRoomFailedNotification;
 
-
 #pragma mark - TKRoomManagerDelegate
 @protocol TKRoomManagerDelegate<NSObject>
 
@@ -168,6 +167,16 @@ FOUNDATION_EXTERN NSNotificationName const TKRoomManagerJoinRoomFailedNotificati
  @param stats 数据信息
  */
 - (void)roomManagerOnAudioStatsReport:(NSString *)peerId stats:(TKAudioStats *)stats;
+
+
+/**
+ 音视频统计数据
+
+ @param stats 视频和音频的统计数据
+ */
+- (void)roomManagerOnRtcStatsReport:(TKRtcStats *)stats;
+
+
 /**
  用户的音频音量大小变化的回调
 
@@ -192,7 +201,10 @@ FOUNDATION_EXTERN NSNotificationName const TKRoomManagerJoinRoomFailedNotificati
  @param height 视频高
  @param type 视频类型
  */
-- (void)roomManagerOnFirstVideoFrameWithPeerID:(NSString *)peerID width:(NSInteger)width height:(NSInteger)height mediaType:(TKMediaType)type;
+- (void)roomManagerOnFirstVideoFrameWithPeerID:(NSString *)peerID
+                                         width:(NSInteger)width
+                                        height:(NSInteger)height
+                                     mediaType:(TKMediaType)type;
 
 /**
  播放用户某一视频设备视频，渲染视频第一帧时，会收到回调；如果没有unplay，而再次play视频时，不会再次收到此回调。
@@ -203,11 +215,17 @@ FOUNDATION_EXTERN NSNotificationName const TKRoomManagerJoinRoomFailedNotificati
  @param height 视频高
  @param type 视频类型
  */
-- (void)roomManagerOnFirstVideoFrameWithPeerID:(NSString *)peerID deviceId:(NSString *)deviceId width:(NSInteger)width height:(NSInteger)height mediaType:(TKMediaType)type;
+- (void)roomManagerOnFirstVideoFrameWithPeerID:(NSString *)peerID
+                                      deviceId:(NSString *)deviceId
+                                         width:(NSInteger)width
+                                        height:(NSInteger)height
+                                     mediaType:(TKMediaType)type;
+
+
 
 /**
  视频播放过程中画面状态回调
- 
+
  @param peerId 用户ID
  @param deviceId 视频设备ID
  @param state 画面状态
@@ -228,7 +246,6 @@ FOUNDATION_EXTERN NSNotificationName const TKRoomManagerJoinRoomFailedNotificati
 - (void)roomManagerOnAudioStateChange:(NSString *)peerId
                            audioState:(TKRenderState)state
                             mediaType:(TKMediaType)type;
-
 
 /**
  播放某用户音频，会收到此回调；如果没有unplay某用户的音频，而再次play该用户音频时，不会再次收到此回调。
@@ -277,11 +294,9 @@ FOUNDATION_EXTERN NSNotificationName const TKRoomManagerJoinRoomFailedNotificati
     用户桌面共享状态 变化回调
     @param peerId 用户id
     @param state 状态0:取消  非0：发布
-    @param message 扩展消息
  */
 - (void)roomManagerOnShareScreenState:(NSString *)peerId
                                 state:(TKMediaState)state;
-//                     extensionMessage:(NSDictionary *)message;
 
 #pragma mark file
 /**
@@ -293,6 +308,8 @@ FOUNDATION_EXTERN NSNotificationName const TKRoomManagerJoinRoomFailedNotificati
 - (void)roomManagerOnShareFileState:(NSString *)peerId
                               state:(TKMediaState)state
                    extensionMessage:(NSDictionary *)message;
+
+
 
 @end
 

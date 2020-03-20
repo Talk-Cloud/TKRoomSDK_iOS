@@ -495,11 +495,32 @@ extensionData:(NSDictionary * _Nullable)extensionData
  2：表示 mp4
  @param layout 只有在recordtype = 3的情况下起作用。 0：横屏，1：竖屏
  @param expiresabs expiresabs 录制时长
- @param expires expires 录制结束时的时间戳
- @return error code
+ @param expires expires 结束录制时的时间戳
  @return 0表示调用成功，非0表示调用失败
  */
 - (int)startServerRecord:(TKRecordType)recordType convert:(NSInteger)convert layout:(NSInteger)layout expiresabs:(NSInteger)expiresabs expires:(NSInteger)expires;
+
+/**
+开始服务器录制
+
+@param spec 录制参数
+ 「
+ 1、@"recordType" : 录制类型  默认0
+ 2、@"convert" :  录制件数据格式， 默认0
+ 只有在recordtype = 0与1的情况下起作用。
+    0: 表示不转换(mkv格式）
+    1：表示webm(recordtype其他值时，固定状态)
+    2：表示 mp4
+ 3、@"layout" : 只有在recordtype = 3的情况下起作用。 0：横屏，1：竖屏 ， 默认0；
+ 4、其他布局参数（视频布局设置）
+ 」
+@param expiresabs expiresabs 录制时长
+@param expires expires 结束录制时的时间戳
+@return 0表示调用成功，非0表示调用失败
+*/
+- (int)startServerRecord:(NSDictionary<NSString *, id> *)spec
+              expiresabs:(NSInteger)expiresabs
+                 expires:(NSInteger)expires;
 
 /**
  停止服务器录制
@@ -533,6 +554,7 @@ extensionData:(NSDictionary * _Nullable)extensionData
  @return 0 设置成功, 非0 失败
  */
 - (int)stopAudioRecord;
+
 
 #pragma mark 房间功能
 /**
@@ -588,10 +610,45 @@ extensionData:(NSDictionary * _Nullable)extensionData
 
 /**
  设置视频方向
+ 
  @param orientation 设备取向
  @return 0表示调用成功，非0表示调用失败
  */
 - (int)setVideoOrientation:(UIDeviceOrientation)orientation;
+
+/**
+ 开启/关闭 多码流
+
+ @param enable 开启/关闭
+ @return 0表示调用成功，非0表示调用失败
+ */
+- (int)enableDualStream:(BOOL)enable;
+
+/**
+ 设置小流分辨率
+
+ @param profile TKVideoProfile实例对象
+ @return 0表示调用成功，非0表示调用失败
+ */
+- (int)setSmallStreamParameter:(TKVideoProfile *)profile;
+
+/**
+ 设置远端视频流默认类型，若不设置默认为TKVideoStream_Big
+
+ @param streamType 视频流类型
+ @return 0表示调用成功，非0表示调用失败
+ */
+- (int)setRemoteDefaultVideoStreamType:(TKVideoStreamType)streamType;
+
+/**
+ 设置某一用户（除自己之外）的某一视频设备的视频流类型
+
+ @param streamType 视频流类型
+ @param peerID 用户ID
+ @param deviceID 视频设备ID
+ @return 0表示调用成功，非0表示调用失败
+ */
+- (int)setRemoteVideoStreamType:(TKVideoStreamType)streamType peerId:(NSString *)peerID deviceId:(NSString * _Nullable)deviceID;
 
 #pragma mark 播放音频文件
 /**
@@ -811,5 +868,7 @@ extensionData:(NSDictionary * _Nullable)extensionData
  @return true：可用；false：被禁用
  */
 - (BOOL)isAudioEnabled TK_Deprecated("Will deprecated!!!");
+
+
 @end
 NS_ASSUME_NONNULL_END

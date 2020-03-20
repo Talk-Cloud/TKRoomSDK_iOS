@@ -76,4 +76,9 @@
  */
 - (TKPublishState)getPublishStateForDeviceId:(NSString *)deviceId;
 
+/**
+ 是否开启多码流
+ */
+- (BOOL)enableDualStream;
+
 @end

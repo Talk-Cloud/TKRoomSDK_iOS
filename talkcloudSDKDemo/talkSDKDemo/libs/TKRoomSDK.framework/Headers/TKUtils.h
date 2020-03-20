@@ -29,6 +29,7 @@
  获取总物理内存
  */
 + (unsigned long long)getTotalMemory;
+
 /**
  获取当前App内存使用
  */

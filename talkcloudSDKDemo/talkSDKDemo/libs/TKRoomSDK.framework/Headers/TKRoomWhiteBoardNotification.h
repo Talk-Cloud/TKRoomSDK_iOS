@@ -81,13 +81,13 @@ FOUNDATION_EXTERN NSNotificationName const TKWhiteBoardMediaFirstFrameLoadedNoti
 //关于画笔消息列表的通知
 FOUNDATION_EXTERN NSNotificationName const TKWhiteBoardOnMsgListNotification;
 
-//关于发送获取白板消息列表通知
+    //关于发送获取白板消息列表通知
 FOUNDATION_EXTERN NSNotificationName const TKWhiteBoardGetMsgListNotification;
-//关于获取白板消息列表ACK
+    //关于获取白板消息列表ACK
 FOUNDATION_EXTERN NSNotificationName const TKWhiteBoardMsgListACKNotification;
 
 
-//关于上传当前文档服务器地址
+    //关于上传当前文档服务器地址
 FOUNDATION_EXTERN NSNotificationName const TKWhiteBoardDocServerNotification;
 FOUNDATION_EXTERN NSString * const TKWhiteBoardDocServerKey;
 
