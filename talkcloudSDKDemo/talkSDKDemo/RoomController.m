@@ -17,12 +17,20 @@
 #import "TKTableViewCell.h"
 #import "MBProgressHUD.h"
 #import "ChatView.h"
+#import <ReplayKit/ReplayKit.h>
+#import <TKMediaEngine/TKLogMacros.h>
+#import "GenerateUserSig.h"
 
 #define kMixerSource @"tkaudiomixertest"
-#define kSecureSocket 0
+#define kSecureSocket 1
 
-static NSString * const kAppkey = @"";
+//static NSString * const kAppkey = <#AppKey#>;
+static NSString * const kAppkey = @"Fa2rW7TPACmxgbqZ";
+static NSString *const companyDomain = @"tutu";
+//LNIWjlgmvqwbt4hy
 static NSString *identifier = @"TKTableViewCell";
+
+static NSString * const kAppGroup = @"group.com.talkcloud.sdkDemo";
 
 typedef NS_ENUM(NSInteger, PublishState) {
     PublishState_NONE           = 0,            //没有
@@ -39,7 +47,7 @@ typedef void (^ButtonAction)(UIButton* button);
 - (void)setTestServer:(NSString*)ip Port:(NSString*)port;
 @end
 
-@interface RoomController() <TKRoomManagerDelegate,TKMediaFrameDelegate,UITableViewDelegate,UITableViewDataSource, TKAudioMixerOuputDelegate>
+@interface RoomController() <TKRoomManagerDelegate,TKMediaFrameDelegate,UITableViewDelegate,UITableViewDataSource,RPBroadcastActivityViewControllerDelegate>
 @property (nonatomic, strong) VideoView *publishView;
 @property (strong, nonatomic) NSString *myID;
 @property (nonatomic, strong) VideoView *playView;
@@ -71,6 +79,19 @@ typedef void (^ButtonAction)(UIButton* button);
 @property (assign, nonatomic) BOOL clean;
 @property (strong, nonatomic) UIImageView *bgView;
 
+@property (assign, nonatomic) BOOL startScreenRecord;
+
+@property (strong, nonatomic) NSTimer *testtimer;
+
+@property (strong, nonatomic) RPBroadcastActivityViewController *broadcastAVC;
+@property (strong, nonatomic) RPBroadcastController *broadcastController;
+
+@property (nonatomic, assign) NSInteger ID;
+
+@property (nonatomic, strong) RPSystemBroadcastPickerView *broadcastView;
+@property (nonatomic, assign) NSInteger autoSpeechRecognitionCount;
+@property (nonatomic, strong) NSMutableDictionary *tmp;
+
 @end
 /*
  流程 
@@ -82,15 +103,29 @@ typedef void (^ButtonAction)(UIButton* button);
  5.roomManagerUserChanged回调，播放可以播放视频的用户
  */
 
-
-
 @implementation RoomController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _autoSpeechRecognitionCount = 0;
     
     [self initView];
+    
 }
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    UIApplicationState state = [UIApplication sharedApplication].applicationState;
+    NSLog(@"state1 = %zd", state);
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    UIApplicationState state = [UIApplication sharedApplication].applicationState;
+    NSLog(@"state2 = %zd", state);
+}
+
 
 - (void)initView
 {
@@ -101,19 +136,10 @@ typedef void (^ButtonAction)(UIButton* button);
     
     _roomMgr = [TKRoomManager instance];
     
-    [_roomMgr startNetworkTest];
-    [_roomMgr initWithAppKey:kAppkey optional:@{TKRoomSettingOptionalSecureSocket:@(kSecureSocket),
-                                                TKRoomSettingOptionalPrivatePort : @(443),
-                                                }];
-    NSArray *cachesPathArr = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-    NSString *cachesPath = cachesPathArr.firstObject;
-    NSString *filePath = [cachesPath stringByAppendingPathComponent:@"TKSDKLogs"];
-    [TKRoomManager setLogLevel:TKLogLevelInfo logPath:nil debugToConsole:YES];
     CGFloat width = [UIScreen mainScreen].bounds.size.width;
     CGFloat height = (width - 5 * 10) / 4;
     self.videoBlock = [[VideosBlock alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - height - 10, width, height) rmg:self.roomMgr];
     [self.view addSubview:self.videoBlock];
-    
     _bgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_videoClose"]];
     _bgView.backgroundColor = [UIColor colorWithRed:(47)/255.0f green:(47)/255.0f blue:(47)/255.0f alpha:1.0];
     [_bgView setFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
@@ -140,32 +166,77 @@ typedef void (^ButtonAction)(UIButton* button);
         //    self.mediaView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
         //    self.mediaView.backgroundColor = [UIColor redColor];
         //    [self.view addSubview:self.mediaView];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(joinroomfailed:) name:TKRoomManagerJoinRoomFailedNotification object:nil];
     [self initAVAndinitClass];
-    
+
+    // 底部按钮
     [self ControlBtn];
     [self createAlert];
     
+    // 右侧按钮
     [self createCommonBtn];
     [self creatTimer];
     
         // 双击处理方法
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeViewPosition:) name:VideosBlockChangePositionNoti object:nil];
-     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(joinroomFailed:) name:TKRoomManagerJoinRoomFailedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(switchDuaStream:) name:SwitchDuaStreamNotifiaction object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(joinroomSuccess:) name:TKRoomManagerJoinRoomSuccessNotification object:nil];
+    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(),
+                                    (__bridge const void *)(self),
+                                    broadcastStarted,
+                                    CFSTR("ScreenbroadcastStarted"),
+                                    NULL,
+                                    CFNotificationSuspensionBehaviorDeliverImmediately);
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleScreenRecordStartedNotification:) name:@"ScreenRecordStarted" object:nil];
+    
+    
+    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(),
+                                    (__bridge const void *)(self),
+                                    broadcastFinished,
+                                    CFSTR("ScreenbroadcastFinished"),
+                                    NULL,
+                                    CFNotificationSuspensionBehaviorDeliverImmediately);
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleScreenRecordFinishedNotification:) name:@"ScreenRecordFinished" object:nil];
         //    _slider = [[UISlider alloc] initWithFrame:CGRectMake(100, 200, 100, 100)];
-
 }
 
-- (void)joinroomSuccess:(NSNotification *)noti
+- (void)joinroomfailed:(NSNotification *)noti {
+    NSLog(@"!!!!!!");
+}
+void broadcastStarted(CFNotificationCenterRef center,
+                      void *observer, CFStringRef name,
+                      const void *object, CFDictionaryRef
+                      userInfo)
 {
-    NSDictionary *di = noti.userInfo;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ScreenRecordStarted" object:nil];
+    });
 }
 
-- (void)joinroomFailed:(NSNotification *)noti
+void broadcastFinished(CFNotificationCenterRef center,
+                      void *observer, CFStringRef name,
+                      const void *object, CFDictionaryRef
+                      userInfo)
 {
-    NSDictionary *di = noti.userInfo;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ScreenRecordFinished" object:nil];
+    });
+}
+
+- (void)handleScreenRecordStartedNotification:(NSNotification *)notify
+{
+    _startScreenRecord = YES;
+    [self.roomMgr startScreenShare:kAppGroup];
+}
+
+- (void)handleScreenRecordFinishedNotification:(NSNotification *)notify
+{
+//    UIButton *btn = self.funBtns[4];
+//    btn.selected = NO;
+    _startScreenRecord = NO;
+    [self.roomMgr stopScreenShare];
 }
 
 - (void)creatTimer{
@@ -217,7 +288,6 @@ typedef void (^ButtonAction)(UIButton* button);
                        @{@"imageNomal":[UIImage imageNamed:@"switchCamera"],
                          @"imageSelect":[UIImage imageNamed:@"switchCamera"],
                          @"block":^(UIButton* button){
-                             //切换摄像头2
                              if (!button.selected) {
                                  _timerCount = 0;
                                  [weakSelf.roomMgr selectCameraPosition:YES];
@@ -238,6 +308,7 @@ typedef void (^ButtonAction)(UIButton* button);
                                  _timerCount = 0;
                                  [weakSelf.roomMgr switchOnlyAudioRoom:NO];
                              }
+                             
                          }},
                        @{@"imageNomal":[UIImage imageNamed:@"videoProfile"],
                          @"imageSelect":[UIImage imageNamed:@"videoProfile"],
@@ -255,7 +326,7 @@ typedef void (^ButtonAction)(UIButton* button);
                        @{@"imageNomal":[UIImage imageNamed:@"speaker"],
                          @"imageSelect":[UIImage imageNamed:@"receive"],
                          @"block":^(UIButton* button){
-                             //扬声器
+//                             //扬声器
                              if (!button.selected) {
                                  _timerCount = 0;
                                  [weakSelf.roomMgr useLoudSpeaker:YES];
@@ -263,6 +334,78 @@ typedef void (^ButtonAction)(UIButton* button);
                                  _timerCount = 0;
                                  [weakSelf.roomMgr useLoudSpeaker:NO];
                              }
+                             
+                         }},
+                       // 开始或停止音频录制
+                       @{@"imageNomal":[UIImage imageNamed:@"recordAudio_start"],
+                         @"imageSelect":[UIImage imageNamed:@"recordAudio_stop"],
+                         @"block":^(UIButton* button){
+//                             NSDictionary *dic = @{@"convert" : @1,
+//                                                   @"mixStreamParams" : @{
+//                                                           @"template": @2, // 必选，混流布局模板ID，0等分布局; 1画中画布局; 2自定义布局
+//                                                           @"backgroundColor": @"#0d69fb", // 颜色值
+//                                                           @"customConfig": @{
+//                                                                   @"videoLayout": @[
+//                                                                           @{
+//                                                                               @"uid": @"1131223463fff", // 用户 ID，若为桌面共享的视频，此 ID 为'用户ID:screen'
+//                                                                               @"x_coord": @(0.1), // 窗口x坐标，取值为相对于整个视频宽度百分比
+//                                                                               @"y_coord": @(0.1), // 窗口y坐标，取值为相对于整个视频高度百分比
+//                                                                               @"width": @(0.18), // 窗口宽，取值为相对于整个视频宽度百分比
+//                                                                               @"height": @(0.24), // 窗口高，取值为相对于整个视频高度百分比
+//                                                                               @"alpha": @(1), // 窗口透明度
+//                                                                           }
+//                                                                   ]
+//                                                           } // 若 template 为2则必选，自定义布局时生效，包括布局参数和其他附加参数；template 为2以外的其他值，此参数无效，可不填
+//                                                   }};
+//
+//                             [self.roomMgr startServerRecord:dic expiresabs:0 expires:0];
+                            _timerCount = 0;
+                             if (button.selected) {
+                                 NSArray *cachesPathArr = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+                                 NSString *cachesPath = cachesPathArr.firstObject;
+                                 NSString *path = [cachesPath stringByAppendingPathComponent:@"audioRecord.mp3"];
+                                 BOOL exist = [[NSFileManager defaultManager] fileExistsAtPath:path];
+                                 if (!exist) {
+                                     [[NSFileManager defaultManager] createFileAtPath:path contents:nil attributes:nil];
+                                 }
+                                 [self.roomMgr startAudioRecord:path];
+                             } else {
+                                 [self.roomMgr stopAudioRecord];
+                             }
+                         }},
+                       //开启或停止屏幕共享
+//                       @{@"imageNomal":[UIImage imageNamed:@"startshare"],
+//                         @"imageSelect":[UIImage imageNamed:@"stopshare"],
+//                         @"block":^(UIButton* button){
+//                            _timerCount = 0;
+//                             if (button.selected) {
+//                                 if (_startScreenRecord) {
+//                                     [self.roomMgr startScreenShare:kAppGroup];
+//                                 } else {
+//                                     NSString *msg = @"1 >iOS12.0以下系统：需要在设置->控制中心->自定控制->添加屏幕录制。然后从手机底部上划，推出系统控制中心，长按屏幕录制按键，选择TKScreenRecord。\n2 >iOS12.0及以上系统：可以点击屏幕右侧开启屏幕直播按钮开启直播（从下往上数第二个按钮）；也可以选择1>的方式开启录制。\n然后点击开始直播按钮，3秒后，系统会自动开启屏幕录制（屏幕顶端出现红条即表示已开启屏幕录制）";
+//                                     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"屏幕直播未开启" message:msg preferredStyle:UIAlertControllerStyleAlert];
+//                                     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:nil];
+//                                     [alertController addAction:cancelAction];
+//                                     [self presentViewController:alertController animated:YES completion:nil];
+//                                     button.selected = !button.selected;
+//                                 }
+//                             } else {
+//                                 if (_startScreenRecord) {
+//                                     [self.roomMgr stopScreenShare];
+//                                         //通知屏幕采集进程 停止屏幕直播
+//                                     CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(),
+//                                                                          CFSTR("stopScreenRecord"),NULL,nil,YES);
+//                                     _startScreenRecord = NO;
+//                                 } else {
+//                                     button.selected = !button.selected;
+//                                 }
+//                             }
+//                         }},
+                       @{@"imageNomal":[UIImage imageNamed:@"open_small"],
+                         @"imageSelect":[UIImage imageNamed:@"close_small"],
+                         @"block":^(UIButton* button){
+                            _timerCount = 0;
+                            [self.roomMgr enableDualStream:button.selected];
                          }},
                        // 聊天界面打开关闭 按钮
                        @{@"imageNomal":[UIImage imageNamed:@"talk_default"],
@@ -275,10 +418,22 @@ typedef void (^ButtonAction)(UIButton* button);
                                  [weakSelf.chatView hide];
                              }
                          }},
+                       @{@"screen":@(YES),
+                         @"imageNomal":[UIImage imageNamed:@"startshare"],
+                         @"imageSelect":[UIImage imageNamed:@"stopshare"],
+                         @"block":^(UIButton* button) {
+                             if (@available(iOS 12.0, *)) {
+                                 UIButton *btn = [self findButtonFromSupperView:_broadcastView];
+                                 [btn sendActionsForControlEvents:UIControlEventAllTouchEvents];
+                             } else {
+                                 NSString *msg = @"当前系统版本低于iOS 12.0，暂不能使用屏幕直播功能。可以选择升级设备系统版本至iOS 12.0及以上版本，以便使用屏幕直播功能。";
+                                 UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"未能开启屏幕直播" message:msg preferredStyle:UIAlertControllerStyleAlert];
+                                 UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:nil];
+                                 [alertController addAction:cancelAction];
+                                 [self presentViewController:alertController animated:YES completion:nil];
+                             }
+                        }},
                        ];
-    
-    
-    
     NSInteger count = self.funBtnDes.count;
     CGFloat kWidth = [UIScreen mainScreen].bounds.size.width;
     CGFloat gap = 10;
@@ -293,28 +448,75 @@ typedef void (^ButtonAction)(UIButton* button);
     NSInteger i = 0;
     NSMutableArray *bt = [NSMutableArray arrayWithCapacity:self.funBtnDes.count];
     for (NSDictionary* dic in _funBtnDes) {
-        UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, i *(width + gap), width, width)];
-        [button setSelected:false];
-        UIImage *imageNomal = [dic objectForKey:@"imageNomal"];
-        UIImage *imageSelect = [dic objectForKey:@"imageSelect"];
-        [button setImage:imageNomal forState:(UIControlStateNormal)];
-        [button setImage:imageSelect forState:(UIControlStateSelected)];
-        [button setTag:bt.count];
-        [button.titleLabel setFont:[UIFont systemFontOfSize:13.0]];
-        [button addTarget:self action:@selector(listViewBtn:) forControlEvents: UIControlEventTouchUpInside];
-        button.hidden = YES;
-        [bt addObject:button];
-        [self.listView addSubview:button];
-        i++;
+        id screen = [dic objectForKey:@"screen"];
+        if (!screen) {
+            UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, i *(width + gap), width, width)];
+            [button setSelected:false];
+            UIImage *imageNomal = [dic objectForKey:@"imageNomal"];
+            UIImage *imageSelect = [dic objectForKey:@"imageSelect"];
+            [button setImage:imageNomal forState:(UIControlStateNormal)];
+            [button setImage:imageSelect forState:(UIControlStateSelected)];
+            [button setTag:bt.count];
+            [button.titleLabel setFont:[UIFont systemFontOfSize:13.0]];
+            [button addTarget:self action:@selector(listViewBtn:) forControlEvents: UIControlEventTouchUpInside];
+            button.hidden = YES;
+            [bt addObject:button];
+            [self.listView addSubview:button];
+            i++;
+        } else {
+            if (@available(iOS 12.0, *)) {
+//                RPSystemBroadcastPickerView *broadcastView = [[RPSystemBroadcastPickerView alloc] initWithFrame:CGRectMake(0, i *(width + gap), width, width)];
+//                broadcastView.preferredExtension = @"com.talkcloud.sdkDemo.TKScreenRecord";
+//                broadcastView.showsMicrophoneButton = NO;
+//                broadcastView.backgroundColor = [UIColor redColor];
+//                broadcastView.alpha = 0.5;
+//                [self.listView addSubview:broadcastView];
+                _broadcastView = [_roomMgr createRPSystemBroadcastPickerViewWithFrame:CGRectMake(0, i *(width + gap), width, width) preferredExtension:@"com.talkcloud.sdkDemo.TKScreenRecord"];
+                UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, i *(width + gap), width, width)];
+                [button setSelected:false];
+                UIImage *imageNomal = [dic objectForKey:@"imageNomal"];
+//                UIImage *imageSelect = [dic objectForKey:@"imageSelect"];
+                [button setImage:imageNomal forState:(UIControlStateNormal)];
+                [button setImage:imageNomal forState:(UIControlStateSelected)];
+                [button setTag:bt.count];
+                button.hidden = YES;
+                [bt addObject:button];
+                [button addTarget:self action:@selector(listViewBtn:) forControlEvents: UIControlEventTouchUpInside];
+                [self.listView addSubview:button];
+                 i++;
+            }
+        }
     }
     self.funBtns = [bt copy];
     return nil;
 }
+
+- (UIButton *)findButtonFromSupperView:(UIView *)view {
+    if(!_broadcastView.subviews.count) {
+        return nil;
+    }
+    UIButton *btn = nil;
+    if ([view isKindOfClass:[UIButton class]]) {
+        btn = (UIButton *)view;
+        return btn;
+    }
+    for(UIView *subView in view.subviews) {
+        UIView *desView = [self findButtonFromSupperView:subView];
+        if (desView) {
+            btn = (UIButton *)desView;
+            break;
+        }
+    }
+    return btn;
+}
+
 - (void)listViewBtn:(UIButton *)button {
     
     [button setSelected:!button.isSelected];
     ButtonAction block = (ButtonAction)[((NSDictionary*)self.funBtnDes[button.tag]) objectForKey:@"block"];
-    block(button);
+    if (block) {
+        block(button);
+    }
 }
 - (void)createAlert
 {
@@ -327,6 +529,7 @@ typedef void (^ButtonAction)(UIButton* button);
         videoProfile.height = 60;
         videoProfile.maxfps = 15;
         [_roomMgr setVideoProfile:videoProfile];
+//        [_roomMgr setSmallStreamParameter:videoProfile];
     }];
     [_alert addAction:action1];
     UIAlertAction *action2 = [UIAlertAction actionWithTitle:@"176X132" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -335,6 +538,7 @@ typedef void (^ButtonAction)(UIButton* button);
         videoProfile.height = 132;
         videoProfile.maxfps = 15;
         [_roomMgr setVideoProfile:videoProfile];
+//        [_roomMgr setSmallStreamParameter:videoProfile];
     }];
     [_alert addAction:action2];
     UIAlertAction *action3 = [UIAlertAction actionWithTitle:@"320X240" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -343,6 +547,7 @@ typedef void (^ButtonAction)(UIButton* button);
         videoProfile.height = 240;
         videoProfile.maxfps = 15;
         [_roomMgr setVideoProfile:videoProfile];
+//        [_roomMgr setSmallStreamParameter:videoProfile];
     }];
     [_alert addAction:action3];
     UIAlertAction *action4 = [UIAlertAction actionWithTitle:@"640X480" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -379,50 +584,52 @@ typedef void (^ButtonAction)(UIButton* button);
     CGFloat width = [UIScreen mainScreen].bounds.size.width;
     CGFloat height = (width - 5 * 10) / 4;
     self.videoBlock.frame = CGRectMake(0, self.view.frame.size.height - height - 70, width, height);
-
-}
-- (void)btnTest {
-#pragma mark - 测试按钮
-//    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-//    btn.frame = CGRectMake(10, 50, 50, 50);
-//    [btn setTitle:@"测试按钮" forState:UIControlStateNormal];
-//    [btn addTarget:self action:@selector(btnTest) forControlEvents:UIControlEventTouchUpInside];
-//    [self.view addSubview:btn];
-    [_roomMgr stopNetworkTest];
-    
+//    self.broadcastView.frame = CGRectMake(0, 100, 200,50);
 }
 
 #pragma mark - 获取摄像头麦克风权限以及初始化课堂
+
+#define kAppId  @"tkpaastx"//@"bo" // <#企业domain#>
+#define kAuthkey @"oY5VHQ7QSwRGVJO1"//@"M6FPPO1lJYTx4iX1" // <#企业Authkey#>
 - (void)initAVAndinitClass
 {
+    if (!self.host || self.host.length == 0) {
+        self.host = @"global.talk-cloud.net";
+    }
+    [_roomMgr setLogLevel:TKLogLevelInfo logPath:nil debugToConsole:YES];
+    TKRoomConfig *config = [[TKRoomConfig alloc] init];
+    config.tk_use_secure_socket = YES;
+    config.tk_host = self.host;
+    config.tk_port = config.tk_use_secure_socket ? @"443" : @"80";
+    config.autoRecvAudio = YES;
+    [_roomMgr initWithAppID:kAppId optional:config];
     [_roomMgr registerRoomManagerDelegate:self];
     [_roomMgr registerMediaDelegate:self];
     NSString *password = @"";
     if (self.password) {
         password = self.password;
     }
-    if (!self.name || self.name.length == 0) {
-        self.name = @"global.talk-cloud.net";
-    }
-//    self.name = @"demo.talk-cloud.net";
-//    self.roomid = @"686149745";
-   
-    TKVideoProfile *profile = [TKVideoProfile new];
-    profile.width = 640;
-    profile.height = 480;
-    profile.maxfps = 10;
-    [_roomMgr setVideoProfile:profile];
-    int port = 80;
-    if (kSecureSocket) {
-        port = 443;
-    }
+    NSString *userid = @"xxabcdef1235";
+    TKRoomParams *roomParams = [[TKRoomParams alloc] init];
+    roomParams.roomId = self.roomid;
+    roomParams.userPwd = password;
+    TKUserParams *userParams = [[TKUserParams alloc] init];
+    userParams.userId = userid;
+    userParams.roleId = [self.role integerValue];
+    userParams.nickName = @"iost2";
+    [_roomMgr joinRoom:roomParams userParams:userParams];
     
-    
-//    [_roomMgr joinRoomEx:@"10234569" nickName:@"ios" third_uid:nil userParams:nil];
-    
-    [_roomMgr joinRoomWithHost:self.name port:port nickName:@"ios" roomParams:@{TKJoinRoomParamsRoomIDKey:self.roomid,TKJoinRoomParamsUserRoleKey:self.role, TKJoinRoomParamsPasswordKey : password,@"clientType":@(3), @"autoSubscribeAV" : @(YES)} userParams:nil];
+    TKRoomExParams *roomExParams = [[TKRoomExParams alloc] init];
+    roomExParams.roomId = @"2567856";//self.roomid;
+    NSTimeInterval ts = [[NSDate date] timeIntervalSince1970] * 1000;
+    NSString *val = [[NSString alloc] initWithFormat:@"appId=%@&thirdRoomId=%@&userId=%@&ts=%.0f&expireTs=%d", kAppId, roomExParams.roomId, userid, ts, 7 * 3600];
+    NSString *token = [GenerateUserSig AES128_CBCEncryptWithKey:kAuthkey iv:kAuthkey encrypt:val];
+    roomExParams.token = token;
+    roomExParams.roomType = 1;
+//    [_roomMgr joinRoomEx:roomExParams userParams:userParams];
     [_roomMgr setVideoOrientation:UIDeviceOrientationPortrait];
     [_roomMgr setLocalVideoMirrorMode:TKVideoMirrorModeAuto];
+    TKUILogInfo(@"initAVAndinitClass = %@", _roomid);
     
 }
 #pragma mark - 初始化课堂按钮
@@ -494,12 +701,12 @@ typedef void (^ButtonAction)(UIButton* button);
 - (void)layoutVideos {
     
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:_userViews];
-    if ([_userViews objectForKey:_roomMgr.localUser.peerID]) {
+    if ([_userViews objectForKey:[_roomMgr getUserManager].myID]) {
        
-        VideoView *videoView = (VideoView *)_userViews[_roomMgr.localUser.peerID];
+        VideoView *videoView = (VideoView *)_userViews[[_roomMgr getUserManager].myID];
         videoView.frame = CGRectMake(self.view.frame.size.width-self.view.frame.size.width/4-20, 20, self.view.frame.size.width/4, self.view.frame.size.width/3);
 //        videoView.transform = CGAffineTransformMakeRotation(M_PI_2);
-         [dict removeObjectForKey:_roomMgr.localUser.peerID];
+         [dict removeObjectForKey:[_roomMgr getUserManager].myID];
     }
         
     for (VideoView *view in [dict allValues]) {
@@ -529,7 +736,10 @@ typedef void (^ButtonAction)(UIButton* button);
     [self.view bringSubviewToFront:self.videoBlock];
     [self.view bringSubviewToFront:self.showStats];
     [self.view bringSubviewToFront:self.listView];
-//    [self.view bringSubviewToFront:self.mediaView];
+    for (NSString *uid in self.tmp) {
+        UILabel *label = self.tmp[uid];
+        [self.view bringSubviewToFront:label];
+    }
 }
 - (void)playVideo:(TKRoomUser *)user deviceId:(NSString *)deviceId
 {
@@ -573,17 +783,9 @@ typedef void (^ButtonAction)(UIButton* button);
     }
 }
 
-- (void)refreshUI{
-    if ([_userViews objectForKey:_roomMgr.localUser.peerID]) {
-        
-        VideoView *videoView = (VideoView *)_userViews[_roomMgr.localUser.peerID];
-        [self.view bringSubviewToFront:videoView];
-    }
-}
-
 - (void)toggleButton:(UIButton *) button
 {
-    if (button.tag == 0 && self.isOnlyAuido && _roomMgr.localUser.publishState != 0) {
+    if (button.tag == 0 && self.isOnlyAuido && [_roomMgr getUserManager].localUser.publishState != 0) {
         return;
     }
     [button setSelected:!button.isSelected];
@@ -601,7 +803,14 @@ typedef void (^ButtonAction)(UIButton* button);
     }
     [_roomMgr publishVideo:nil];
     [_roomMgr publishAudio:nil];
-    _myID = _roomMgr.localUser.peerID;
+    
+    if (_startScreenRecord) {
+//        [self.roomMgr startScreenShare:kAppGroup];
+    }
+    _myID = [_roomMgr getUserManager].myID;
+//    [self playVideo:_roomMgr.localUser deviceId:nil];
+    
+    
 }
 
 - (void)roomManagerDidOccuredError:(NSError *)error
@@ -630,7 +839,7 @@ typedef void (^ButtonAction)(UIButton* button);
 - (void)roomManagerOnConnectionLost
 {
     if (!self.clean) {
-        [_videoBlock clean];
+//        [_videoBlock clean];
     }
     self.clean = YES;
 }
@@ -697,7 +906,11 @@ typedef void (^ButtonAction)(UIButton* button);
     }
     UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"💔Error💔" message:alertMessage preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *action1 = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [_roomMgr leaveRoom:nil];
+       int ret = [_roomMgr leaveRoom:NO Completion:^(NSError *error) {
+            if (error) {
+                NSLog(@"leave room error:%@", error);
+            }
+        }];
         
         
     }];
@@ -710,6 +923,7 @@ typedef void (^ButtonAction)(UIButton* button);
      NSLog(@"roomManagerSelfEvicted");
     [self.roomMgr leaveRoom:nil];
 }
+
 - (void)destory
 {
     if (_timer) {
@@ -718,6 +932,7 @@ typedef void (^ButtonAction)(UIButton* button);
     }
     [_videoBlock clean];
     [TKRoomManager destory];
+//    [TKPlaybackManager destory];
     _roomMgr = nil;
     if (_chatView) {
         [_chatView removeFromSuperview];
@@ -730,52 +945,63 @@ typedef void (^ButtonAction)(UIButton* button);
 - (void)roomManagerRoomLeft {
     NSLog(@"roomManagerRoomLeft");
     [self destory];
+    CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(),
+                                         CFSTR("stopScreenRecord"),NULL,nil,YES);
 //    [self initView];
     [self dismissViewControllerAnimated:YES completion:^{
 
     }];
+//    [_roomMgr unPlayAudio:@"" completion:nil];
 }
 
 - (void)roomManagerOnUserAudioStatus:(NSString *)peerID state:(TKMediaState)state
 {
-    if (state == TKMedia_Pulished) {
-        [_roomMgr playAudio:peerID completion:nil];
-    } else {
-        [_roomMgr unPlayAudio:peerID completion:nil];
-    }
     if ([peerID isEqualToString:_myID]) {
         UIButton *audio = _controlButtons[1];
         audio.selected = !state;
     }
+//    if (state == TKMedia_Pulished) {
+//        [_roomMgr playAudio:peerID completion:nil];
+//    } else {
+//        [_roomMgr unPlayAudio:peerID completion:nil];
+//    }
 }
+
 - (void)roomManagerOnUserVideoStatus:(NSString *)peerID state:(TKMediaState)state
 {
+    NSLog(@"roomManagerOnUserVideoStatus");
+    if ([peerID isEqualToString:_myID]) {
+        UIButton *video = _controlButtons[0];
+        video.selected = !state;
+            //        [self.roomMgr leaveRoom:nil];
+//        return;
+    }
     if (state == TKMedia_Pulished) {
-        TKRoomUser *user = [_roomMgr getRoomUserWithUId:peerID];
+        TKRoomUser *user = [[_roomMgr getUserManager] getUserWithPeerID:peerID];
+        
+//        [self.roomMgr setRemoteDefaultVideoStreamType:TKVideoStream_Small];
         [self playVideo:user deviceId:nil];
     } else {
         [self unPlayVideo:peerID deviceId:nil];
     }
-    if ([peerID isEqualToString:_myID]) {
-        UIButton *video = _controlButtons[0];
-        video.selected = !state;
-//        [self.roomMgr leaveRoom:nil];
-    }
+    
 }
 
 - (void)roomManagerOnUserVideoStatus:(NSString *)peerID deviceId:(NSString *)deviceId state:(TKMediaState)state
 {
-
+    if ([peerID isEqualToString:_myID]) {
+        UIButton *video = _controlButtons[0];
+        video.selected = !state;
+        
+//         return;
+    }
     if (state == TKMedia_Pulished) {
-        TKRoomUser *user = [_roomMgr getRoomUserWithUId:peerID];
+        TKRoomUser *user = [[_roomMgr getUserManager] getUserWithPeerID:peerID];
         [self playVideo:user deviceId:deviceId];
     } else {
         [self unPlayVideo:peerID deviceId:deviceId];
     }
-    if ([peerID isEqualToString:_myID]) {
-        UIButton *video = _controlButtons[0];
-        video.selected = !state;
-    }
+    
 }
 
 - (void)roomManagerConnected:(dispatch_block_t)completion
@@ -831,7 +1057,48 @@ typedef void (^ButtonAction)(UIButton* button);
 {
 //    NSLog(@"roomManagerOnRemoteMsg %@ %@ %lu %@", msgID, msgName, ts, data);
     
+    if ([msgName isEqualToString:@"TK_SpeechToText"]) {
+        NSArray *tmp = (NSArray * )data;
+        for (NSDictionary *dic in tmp) {
+            NSString *uid = dic[@"userId"];
+            if (!uid) {
+                continue;
+            }
+            TKRoomUser *user = [_roomMgr getRoomUserWithUId:uid];
+            UILabel *autoSpeechRecognitionLabel = self.tmp[uid];
+            if (autoSpeechRecognitionLabel) {
+                autoSpeechRecognitionLabel.text = [NSString stringWithFormat:@"%@ : %@", user.nickName? user.nickName : uid, dic[@"text"]];
+            } else {
+                autoSpeechRecognitionLabel = [self createLabel];
+                autoSpeechRecognitionLabel.text = [NSString stringWithFormat:@"%@ : %@", user.nickName? user.nickName : uid, dic[@"text"]];
+                [self.tmp setObject:autoSpeechRecognitionLabel forKey:uid];
+            }
+        }
+    }
 }
+
+- (UILabel *)createLabel {
+    NSInteger width = self.view.bounds.size.width;
+    UILabel *autoSpeechRecognitionLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 50 + _autoSpeechRecognitionCount * 30, width, 30)];
+    autoSpeechRecognitionLabel.textAlignment = NSTextAlignmentLeft;
+    autoSpeechRecognitionLabel.textColor = UIColor.orangeColor;
+    autoSpeechRecognitionLabel.backgroundColor = UIColor.clearColor;
+    autoSpeechRecognitionLabel.text = @"自动语音文本翻译";
+    [self.view addSubview:autoSpeechRecognitionLabel];
+    
+    _autoSpeechRecognitionCount++;
+    [self.view bringSubviewToFront:autoSpeechRecognitionLabel];
+    return autoSpeechRecognitionLabel;
+}
+
+- (NSMutableDictionary *)tmp {
+    if (!_tmp) {
+        _tmp = [NSMutableDictionary dictionary];
+    }
+    return _tmp;
+}
+
+
 - (void)roomManagerOnRemoteDelMsgWithMsgID:(NSString *)msgID
                                    msgName:(NSString *)msgName
                                       data:(NSObject *)data
@@ -852,22 +1119,22 @@ typedef void (^ButtonAction)(UIButton* button);
     // 视频按钮
     UIButton *video = _controlButtons[0];
     // yes 关闭, no 开启
-    video.selected = !(_roomMgr.localUser.publishState == TKUser_PublishState_VIDEOONLY ||
-                        _roomMgr.localUser.publishState == TKUser_PublishState_BOTH);
+    video.selected = !([_roomMgr getUserManager].localUser.publishState == TKUser_PublishState_VIDEOONLY ||
+                       [_roomMgr getUserManager].localUser.publishState == TKUser_PublishState_BOTH);
     // 禁用/启动 视频按钮
     video.enabled = !onlyAudio;
     
     // 音频按钮
     UIButton *audio = _controlButtons[1];
-    audio.selected = !(_roomMgr.localUser.publishState == TKUser_PublishState_AUDIOONLY ||
-                     _roomMgr.localUser.publishState == TKUser_PublishState_BOTH);
+    audio.selected = !([_roomMgr getUserManager].localUser.publishState == TKUser_PublishState_AUDIOONLY ||
+                       [_roomMgr getUserManager].localUser.publishState == TKUser_PublishState_BOTH);
     
     self.isOnlyAuido = onlyAudio;
     NSString *log = nil;
     
     if (onlyAudio) {
         log = @"💚房间已切换成纯音频房间💚";
-        if (_roomMgr.localUser.publishState != 0) {
+        if ([_roomMgr getUserManager].localUser.publishState != 0) {
             if(_publishView) {
                 [_publishView bringSubviewToFront:_publishView.imageView];
                 [self unPlayVideo:_myID deviceId:nil];
@@ -875,10 +1142,10 @@ typedef void (^ButtonAction)(UIButton* button);
         }
     } else {
         log = @"💚房间已切换成音视频房间💚";
-        if (_roomMgr.localUser.publishState == TKUser_PublishState_BOTH ||
-            _roomMgr.localUser.publishState == TKUser_PublishState_VIDEOONLY)
+        if ([_roomMgr getUserManager].localUser.publishState == TKUser_PublishState_BOTH ||
+            [_roomMgr getUserManager].localUser.publishState == TKUser_PublishState_VIDEOONLY)
         {
-            [self playVideo:[_roomMgr getRoomUserWithUId:_myID] deviceId:nil];
+            [self playVideo:[[_roomMgr getUserManager] getUserWithPeerID:_myID] deviceId:nil];
             [_publishView sendSubviewToBack:_publishView.imageView];
         }
     }
@@ -894,16 +1161,23 @@ typedef void (^ButtonAction)(UIButton* button);
     [self.view addSubview:hud];
 }
 
+- (void)roomManagerOnAudioVolumeWithPeerID:(NSString *)peeID volume:(int)volume {
+//    NSLog(@"roomManagerOnAudioVolumeWithPeerID peerID = %@, volume = %d", peeID, volume);
+}
+
 #pragma mark meidia
 - (void)roomManagerOnShareMediaState:(NSString *)peerId
                                state:(TKMediaState)state
                     extensionMessage:(NSDictionary *)message
 {
 //    if (state == TKMedia_Pulished) {
-//
+//        if (!self.publishView) {
+//            self.publishView = [[VideoView alloc] initWithRoomMgr:_roomMgr roomUser:_roomMgr.localUser   deviceId:nil];
+//            [self.view addSubview:self.publishView];
+//        }
 //        [_roomMgr playMediaFile:peerId renderType:TKRenderMode_adaptive window:self.publishView completion:^(NSError *error) {
-//
 //        }];
+//        [self.roomMgr setRemoteAudioVolume:1 peerId:peerId type:TKMediaSourceType_media];
 //    } else {
 //        [_roomMgr unPlayMediaFile:peerId completion:^(NSError *error) {
 //
@@ -927,16 +1201,31 @@ typedef void (^ButtonAction)(UIButton* button);
 
 - (void)roomManagerOnShareScreenState:(NSString *)peerId
                                 state:(TKMediaState)state
-                     extensionMessage:(NSDictionary *)message
 {
-    
+    if ([peerId isEqualToString:self.myID]) {
+        return;
+    }
+    NSString *extensionId = [NSString stringWithFormat:@"%@:screen", peerId];
+    if (state == TKMedia_Pulished) {
+        [self playVideo:[[TKRoomUser alloc] initWithPeerId:extensionId] deviceId:nil];
+    } else {
+        [self unPlayVideo:extensionId deviceId:nil];
+    }
 }
 
 - (void)roomManagerOnShareFileState:(NSString *)peerId
                               state:(TKMediaState)state
                    extensionMessage:(NSDictionary *)message
 {
-    
+    if (state == 1) {
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+        [self.view addSubview:view];
+        [_roomMgr playFile:peerId renderType:TKRenderMode_fit window:view completion:^(NSError *error) {
+                
+        }];
+    } else {
+        NSLog(@"2222");
+    }
 }
 
 #pragma mark Playback
@@ -969,6 +1258,7 @@ typedef void (^ButtonAction)(UIButton* button);
 //    [self.showStats reloadData];
 //
 }
+
 - (void)roomManagerOnVideoStatsReport:(NSString *)peerId stats:(TKVideoStats *)stats
 {
 //    TKRoomUser *user = [_roomMgr getRoomUserWithUId:peerId];
@@ -980,9 +1270,16 @@ typedef void (^ButtonAction)(UIButton* button);
 //    }
 //    [self.showStats reloadData];
 }
+
+- (void)roomManagerOnRtcStatsReport:(TKRtcStats *)stats
+{
+    
+}
+
+
 - (void)roomManagerOnFirstAudioFrameWithPeerID:(NSString *)peerID mediaType:(TKMediaType)type
 {
-    if ([peerID isEqualToString:_roomMgr.localUser.peerID]) {
+    if ([peerID isEqualToString:[_roomMgr getUserManager].myID]) {
 //        NSLog(@"自己 OnFirstAudioFrame mediaType = %ld", type);
     } else {
 //        NSLog(@"远端 OnFirstAudioFrame mediaType = %ld", type);
@@ -991,7 +1288,7 @@ typedef void (^ButtonAction)(UIButton* button);
 
 - (void)roomManagerOnFirstVideoFrameWithPeerID:(NSString *)peerID width:(NSInteger)width height:(NSInteger)height mediaType:(TKMediaType)type
 {
-    if ([peerID isEqualToString:_roomMgr.localUser.peerID]) {
+    if ([peerID isEqualToString:[_roomMgr getUserManager].myID]) {
 //        NSLog(@"自己 OnFirstVideoFrame width = %ld height = %ld mediaType = %ld",width, height, type);
     } else {
 //        CFAbsoluteTime cur = CFAbsoluteTimeGetCurrent() - _start;
@@ -999,6 +1296,16 @@ typedef void (^ButtonAction)(UIButton* button);
 //        NSLog(@"远端 OnFirstVideoFrame width = %ld height = %ld mediaType = %ld",width, height, type);
     }
 }
+
+//视频画面状态回调
+- (void)roomManagerOnVideoStateChange:(NSString *)peerId
+                             deviceId:(NSString *)deviceId
+                           videoState:(TKRenderState)state
+                            mediaType:(TKMediaType)type
+{
+    NSLog(@"videostate peerId = %@, state = %zd", peerId, state);
+}
+
 
 #pragma mark - TKMediaFrameDelegate
 
@@ -1009,7 +1316,7 @@ typedef void (^ButtonAction)(UIButton* button);
 
 - (void)onCaptureVideoFrame:(TKVideoFrame *)packet sourceType:(TKMediaType)type
 {
-//    NSLog(@"自己 onCaptureVideoFrame = %@", frame);
+//    NSLog(@"自己 onCaptureVideoFrame width = %ld, height = %zd", (long)packet.width, packet.height);
 //    memset(packet.uBuffer, 128, packet.uStride * packet.height / 2);
 //    memset(packet.vBuffer, 128, packet.vStride * packet.height / 2);
 //    memset(packet.yBuffer, 128, packet.yStride * packet.height);
@@ -1024,6 +1331,7 @@ typedef void (^ButtonAction)(UIButton* button);
 - (void)onRenderVideoFrame:(TKVideoFrame *)packet uid:(NSString *)peerId sourceType:(TKMediaType)type
 {
 //    NSLog(@"peerId= %@, onRenderVideoFrame = %@",peerId, frame);
+//    NSLog(@"onRenderVideoFrame width = %ld, height = %zd", (long)packet.width, packet.height);
 //    memset(packet.uBuffer, 128, packet.uStride * packet.height / 2);
 //    memset(packet.vBuffer, 128, packet.vStride * packet.height / 2);
 //    memset(packet.yBuffer, 128, packet.yStride * packet.height);
@@ -1055,16 +1363,16 @@ typedef void (^ButtonAction)(UIButton* button);
     }
 }
 
-- (BOOL)shouldAutorotate
-{
-    return NO;
-}
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskAllButUpsideDown;
-}
--(UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
-    return UIInterfaceOrientationPortrait;
-}
+//- (BOOL)shouldAutorotate
+//{
+//    return NO;
+//}
+//- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+//    return UIInterfaceOrientationMaskAllButUpsideDown;
+//}
+//-(UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
+//    return UIInterfaceOrientationPortrait;
+//}
 
 #pragma mark - 双击交换位置
 - (void)changeViewPosition:(NSNotification *)noti {
@@ -1087,7 +1395,7 @@ typedef void (^ButtonAction)(UIButton* button);
     else {
         [self.view insertSubview:view aboveSubview:self.bgView];
     }
-    _myID = view.roomUser.peerID;
+//    _myID = view.roomUser.peerID;
     
     // 1. 缩小
     [self.videoBlock addVideo:self.publishView];
@@ -1095,13 +1403,31 @@ typedef void (^ButtonAction)(UIButton* button);
     
     self.publishView = view;
 }
+
+- (void)switchDuaStream:(NSNotification *)notify
+{
+    NSDictionary *dic = notify.userInfo; 
+    TKVideoStreamType type = (TKVideoStreamType)[dic[@"type"] integerValue];
+    NSString *msg = @"已切换成大流";
+    if (type == TKVideoStream_Small) {
+        msg = @"已切换成小流";
+    }
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:msg message:nil preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *confAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:nil];
+    [alertController addAction:confAction];
+    [self presentViewController:alertController animated:YES completion:nil]; 
+}
 #pragma mark - 懒加载 聊天视图
 - (ChatView *)chatView {
+//    CGRectGetMaxY(_listView.frame) + 10
+//     self.view.height - (CGRectGetMaxY(_listView.frame) + 10)
     if (!_chatView) {
         _chatView = [[ChatView alloc] initWithFrame:CGRectMake(0,
-                                                               CGRectGetMaxY(_listView.frame) + 10,
+                                                               self.view.height * 2 / 3,
                                                                self.view.width,
-                                                               self.view.height - (CGRectGetMaxY(_listView.frame) + 10))];
+                                                               self.view.height / 3)];
         [[UIApplication sharedApplication].keyWindow addSubview:_chatView];
     }
     return _chatView;
@@ -1113,11 +1439,18 @@ typedef void (^ButtonAction)(UIButton* button);
 }
 
 
-- (void)mixedAudioOutput:(TKAudioMixer *)mixer ouput_data:(const void *)data audioInfo:(TKAudioInfo *)audioInfo
+- (void)broadcastActivityViewController:(RPBroadcastActivityViewController *)broadcastActivityViewController didFinishWithBroadcastController:(nullable RPBroadcastController *)broadcastController error:(nullable NSError *)error API_AVAILABLE(ios(10.0), tvos(10.0))
 {
-        //dosomething
+    [self.broadcastAVC dismissViewControllerAnimated:YES completion:nil];
+    
+    self.broadcastController = broadcastController;
+    [broadcastController startBroadcastWithHandler:^(NSError * _Nullable error) {
+        if (!error) {
+//            self.liveButton.selected = YES;
+        } else {
+            NSLog(@"startBroadcastWithHandler error: %@", error);
+        }
+    }];
 }
-
-
 
 @end

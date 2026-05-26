@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param logPath 日志需要写入沙盒的路径; 默认路径为：沙盒Documents/TKLog。日志等级为TKLog_None时，不会写入沙盒。
  @param debug 是否时debug模式，debug模式：控制台打印，release模式：控制台不打印。
  */
-+ (int)setLogLevel:(TKLogLevel)level logPath:(NSString * _Nullable)logPath debugToConsole:(BOOL)debug;
+- (int)setLogLevel:(TKLogLevel)level logPath:(NSString * _Nullable)logPath debugToConsole:(BOOL)debug;
 
 /**
  设置AppID
@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
  @param appKey appID
  @param optional 房间扩展信息
  */
-- (int)initWithAppKey:(NSString *)appKey optional:(NSDictionary * _Nullable)optional;
+- (int)initWithAppID:(NSString *)appID optional:(TKRoomConfig *)config;
 
 /**
  设置TKPlaybackManagerDelegate
@@ -53,17 +53,10 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  进入回放房间
  
- @param host 服务器地址
- @param port 服务器端口
- @param nickname 本地用户的昵称
- @param roomParams Dic格式，内含进入房间所需的基本参数，比如：NSDictionary类型，key值详情见 TKRoomDefines.h 相关定义
- @param userParams Dic格式，内含进入房间时用户的初始化的信息。比如 giftNumber（礼物数）
+ @param param    房间参数
+ @param userParams  用户参数
  */
-- (int)joinPlaybackRoomWithHost:(NSString *)host
-                           port:(int)port
-                       nickName:(NSString *)nickname
-                     roomParams:(NSDictionary *)roomParams
-                     userParams:(NSDictionary * _Nullable)userParams;
+- (int)joinRoom:(TKRoomParams *)param userParams:(TKUserParams *)userParams;
 /**
  获取房间属性
  */

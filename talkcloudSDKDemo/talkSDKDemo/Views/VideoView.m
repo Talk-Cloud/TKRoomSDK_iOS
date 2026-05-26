@@ -9,11 +9,13 @@
 #import "VideoView.h" 
 
 
+
 @interface VideoView()<UIGestureRecognizerDelegate>
 @property (nonatomic) BOOL isViewHidden;
 @property (nonatomic, weak) TKRoomManager *mgr;
 @property (strong, nonatomic)  UILabel *nameLabel;
-
+@property (strong, nonatomic) UIButton *button;
+@property (weak, nonatomic) id<VideoViewClickEvent> delegate;
 
 
 @end
@@ -37,6 +39,12 @@
     }
     return self;
 }
+
+- (void)setEventDelegate:(id<VideoViewClickEvent>)delegate
+{
+    self.delegate = delegate;
+}
+
 - (void)setVideoBackGroundColor:(UIColor *)color{
      self.imageView.backgroundColor = color;
 }
@@ -79,17 +87,36 @@
     if (_mgr.localUser.peerID == _roomUser.peerID) {
         role = @"我";
     }
+    
+    _button = [UIButton buttonWithType:UIButtonTypeCustom];
+    _button.frame = self.bounds;
+    _button.backgroundColor = [UIColor clearColor];
+    [_button addTarget:self action:@selector(buttonClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:_button];
+}
+
+- (void)buttonClick:(UIButton *)sender
+{
+    if (self.delegate) {
+        BOOL enableDua = [self.roomUser enableDualStream];
+        if (enableDua) {
+            sender.selected = !sender.selected;
+            [self.delegate clickEvent:self deviceId:self.deviceId select:sender.selected];
+        }
+    }
 }
 
 - (void)setViewsToFront
 {
 //    [self bringSubviewToFront:_imageView];
     [self bringSubviewToFront:_nameLabel];
+    [self bringSubviewToFront:_button];
 }
 
 - (void)layoutSubviews
 {
     [_imageView setFrame:self.bounds];
     [_contentView setFrame:self.bounds];
+    [_button setFrame:self.bounds];
 }
 @end

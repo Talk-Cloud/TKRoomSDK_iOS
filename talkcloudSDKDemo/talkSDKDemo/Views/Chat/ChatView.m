@@ -141,6 +141,11 @@ static NSString * const meCellID = @"ChatMessageMeCell";
     }
 }
 
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [self hide];
+}
+
 - (void)show {
     
     [UIView animateWithDuration:0.3 animations:^{

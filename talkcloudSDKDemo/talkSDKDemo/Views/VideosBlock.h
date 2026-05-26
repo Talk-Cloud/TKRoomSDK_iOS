@@ -10,6 +10,7 @@
 //#import <TKRoomSDK/TKRoomSDK.h>
 @class VideoView;
 #define VideosBlockChangePositionNoti @"VideosBlockChangePositionNoti"
+#define SwitchDuaStreamNotifiaction @"SwitchDuaStreamNotifaction"
 @interface VideosBlock : UIScrollView
 - (instancetype)initWithFrame:(CGRect)frame rmg:(TKRoomManager *)rmg;
 - (void)playVideoWithUser:(TKRoomUser *)user deviceId:(NSString *)deviceId;
@@ -18,5 +19,8 @@
 - (void)delVideo:(VideoView *)view;
 - (void)clean;
 
-- (int)playMeida:(NSString *)file progress:(progress_block)block;
+- (int)playMeida:(NSString *)file progress:(TKLocalMediaProgress_block)block;
+
+
+- (void)playVideo:(NSString *)peerId deviceId:(NSString *)deviceId;
 @end

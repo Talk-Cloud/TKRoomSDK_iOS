@@ -7,9 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5868211022549695000E5335 /* TKRoomSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5868210F22549695000E5335 /* TKRoomSDK.framework */; };
-		586821112254969C000E5335 /* TKRoomSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5868210F22549695000E5335 /* TKRoomSDK.framework */; };
-		586821122254969C000E5335 /* TKRoomSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5868210F22549695000E5335 /* TKRoomSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0449E66028A9E87C003AD2F9 /* www(1).mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 0449E65F28A9E87C003AD2F9 /* www(1).mp4 */; };
+		04EE12412853256200228D6B /* test.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 04EE12402853256200228D6B /* test.mp4 */; };
+		583E368421EE1AE600E2ABAC /* libiconv.2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 583E367921EE194E00E2ABAC /* libiconv.2.tbd */; };
+		583E368621EE1AED00E2ABAC /* libbz2.1.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 583E368521EE1AED00E2ABAC /* libbz2.1.0.tbd */; };
+		583E368721EE1AF300E2ABAC /* libz.1.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 583E367E21EE196900E2ABAC /* libz.1.tbd */; };
 		5899BB2421070F70006F3B23 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5899BB2321070F70006F3B23 /* VideoToolbox.framework */; };
 		5899BB2621070F77006F3B23 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5899BB2521070F77006F3B23 /* GLKit.framework */; };
 		5899BB2821070F7E006F3B23 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 5899BB2721070F7E006F3B23 /* libc++.tbd */; };
@@ -27,8 +29,18 @@
 		683B1AA8207D1549008E2BEB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 683B1AAA207D1549008E2BEB /* Localizable.strings */; };
 		685826DE207E085100734E43 /* VideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 685826DC207E085100734E43 /* VideoView.m */; };
 		685826E1207E087D00734E43 /* TKVideoLayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 685826E0207E087D00734E43 /* TKVideoLayerView.m */; };
+		835F71FE2F1A5FE900DF62A0 /* ttre.pcm in Resources */ = {isa = PBXBuildFile; fileRef = 835F71FD2F1A5FE900DF62A0 /* ttre.pcm */; };
+		83F064612D2FD20F00AFF182 /* GenerateUserSig.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F064602D2FD20F00AFF182 /* GenerateUserSig.m */; };
+		83F0646F2D30C9B600AFF182 /* TKScreenShareService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F064662D30C8E300AFF182 /* TKScreenShareService.framework */; };
+		83F064702D30C9B600AFF182 /* TKScreenShareService.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 83F064662D30C8E300AFF182 /* TKScreenShareService.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		83F064742D31020500AFF182 /* TKMediaEngine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0434FE072BFF4AD000107BC0 /* TKMediaEngine.framework */; };
+		83F064752D31020500AFF182 /* TKMediaEngine.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0434FE072BFF4AD000107BC0 /* TKMediaEngine.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		83F064762D31020700AFF182 /* TKRoomSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F7ADDB284474350049686D /* TKRoomSDK.framework */; };
+		83F064772D31020700AFF182 /* TKRoomSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 83F7ADDB284474350049686D /* TKRoomSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		83F7ADBD2844728A0049686D /* ReplayKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58CA725E21E4C29A00D9154E /* ReplayKit.framework */; };
+		83F7ADC12844728A0049686D /* SampleHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F7ADC02844728A0049686D /* SampleHandler.m */; };
+		83F7ADD42844728B0049686D /* TKScreenRecord.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 83F7ADBC2844728A0049686D /* TKScreenRecord.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		8469F8D620FD8EAF00E231D2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8469F8D520FD8EAE00E231D2 /* Assets.xcassets */; };
-		8469F8F720FD90A600E231D2 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8469F8D920FD90A600E231D2 /* Info.plist */; };
 		8469F8F820FD90A600E231D2 /* MASCompositeConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 8469F8DB20FD90A600E231D2 /* MASCompositeConstraint.m */; };
 		8469F8F920FD90A600E231D2 /* MASConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 8469F8DE20FD90A600E231D2 /* MASConstraint.m */; };
 		8469F8FA20FD90A600E231D2 /* MASConstraintMaker.m in Sources */ = {isa = PBXBuildFile; fileRef = 8469F8E020FD90A600E231D2 /* MASConstraintMaker.m */; };
@@ -49,23 +61,64 @@
 		8486E93520FECEDB00380DBC /* NSString+sizeHeight.m in Sources */ = {isa = PBXBuildFile; fileRef = 8486E93320FECEDB00380DBC /* NSString+sizeHeight.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		83F7ADD22844728B0049686D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5E2C93361F023D26005D4300 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 83F7ADBB2844728A0049686D;
+			remoteInfo = TKScreenRecord;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
-		58ACAC6421C39FA600E5E157 /* Embed Frameworks */ = {
+		19B9CC0423B34A3B004EE884 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				586821122254969C000E5335 /* TKRoomSDK.framework in Embed Frameworks */,
+				83F064752D31020500AFF182 /* TKMediaEngine.framework in Embed Frameworks */,
+				83F064772D31020700AFF182 /* TKRoomSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		83F064712D30C9B600AFF182 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				83F064702D30C9B600AFF182 /* TKScreenShareService.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		83F1E7CD283F71E8008D7886 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				83F7ADD42844728B0049686D /* TKScreenRecord.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		5868210F22549695000E5335 /* TKRoomSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TKRoomSDK.framework; sourceTree = "<group>"; };
-		587D8C812101DF8700C08F32 /* talkSDKDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = talkSDKDemo.entitlements; sourceTree = "<group>"; };
+		0434FE072BFF4AD000107BC0 /* TKMediaEngine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = TKMediaEngine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0449E65F28A9E87C003AD2F9 /* www(1).mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "www(1).mp4"; sourceTree = "<group>"; };
+		04EE12402853256200228D6B /* test.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.mp4; sourceTree = "<group>"; };
+		580DCD4C21EEC5E700A13285 /* librtc_sdk_objc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = librtc_sdk_objc.a; path = ../../TKRoomSDK/TKRoomSDK/thirdParty/webrtc/lib/librtc_sdk_objc.a; sourceTree = "<group>"; };
+		583E367921EE194E00E2ABAC /* libiconv.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.2.tbd; path = usr/lib/libiconv.2.tbd; sourceTree = SDKROOT; };
+		583E367C21EE195F00E2ABAC /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
+		583E367E21EE196900E2ABAC /* libz.1.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.tbd; path = usr/lib/libz.1.tbd; sourceTree = SDKROOT; };
+		583E368221EE1A3900E2ABAC /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
+		583E368521EE1AED00E2ABAC /* libbz2.1.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.1.0.tbd; path = usr/lib/libbz2.1.0.tbd; sourceTree = SDKROOT; };
+		58903DFB223B8471008E9F82 /* TKScreenShareService.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = TKScreenShareService.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5899BB2321070F70006F3B23 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		5899BB2521070F77006F3B23 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		5899BB2721070F7E006F3B23 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
@@ -76,6 +129,8 @@
 		58C9D52B20FC8A64000376C1 /* TKTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKTableViewCell.h; sourceTree = "<group>"; };
 		58C9D52C20FC8A64000376C1 /* TKTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKTableViewCell.m; sourceTree = "<group>"; };
 		58C9D52D20FC8A64000376C1 /* TKTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TKTableViewCell.xib; sourceTree = "<group>"; };
+		58CA725E21E4C29A00D9154E /* ReplayKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReplayKit.framework; path = System/Library/Frameworks/ReplayKit.framework; sourceTree = SDKROOT; };
+		58CA726B21E4C29A00D9154E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		5E2C933E1F023D26005D4300 /* talkSDKDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = talkSDKDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E2C93421F023D26005D4300 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		5E2C93441F023D26005D4300 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -100,8 +155,19 @@
 		685826DD207E085100734E43 /* VideoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoView.h; sourceTree = "<group>"; };
 		685826DF207E087D00734E43 /* TKVideoLayerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TKVideoLayerView.h; sourceTree = "<group>"; };
 		685826E0207E087D00734E43 /* TKVideoLayerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TKVideoLayerView.m; sourceTree = "<group>"; };
+		835F71FD2F1A5FE900DF62A0 /* ttre.pcm */ = {isa = PBXFileReference; lastKnownFileType = file; path = ttre.pcm; sourceTree = "<group>"; };
+		83F0645F2D2FD20F00AFF182 /* GenerateUserSig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GenerateUserSig.h; sourceTree = "<group>"; };
+		83F064602D2FD20F00AFF182 /* GenerateUserSig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GenerateUserSig.m; sourceTree = "<group>"; };
+		83F064662D30C8E300AFF182 /* TKScreenShareService.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TKScreenShareService.framework; sourceTree = "<group>"; };
+		83F1E7A8283F6FD8008D7886 /* talkSDKDemoDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = talkSDKDemoDebug.entitlements; sourceTree = "<group>"; };
+		83F7ADBC2844728A0049686D /* TKScreenRecord.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TKScreenRecord.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		83F7ADBF2844728A0049686D /* SampleHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SampleHandler.h; sourceTree = "<group>"; };
+		83F7ADC02844728A0049686D /* SampleHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SampleHandler.m; sourceTree = "<group>"; };
+		83F7ADC22844728A0049686D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		83F7ADDB284474350049686D /* TKRoomSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = TKRoomSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		83F7ADED2844D74F0049686D /* TKScreenShareService.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = TKScreenShareService.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		83F7ADEF2844D86A0049686D /* TKScreenRecordDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TKScreenRecordDebug.entitlements; sourceTree = "<group>"; };
 		8469F8D520FD8EAE00E231D2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		8469F8D920FD90A600E231D2 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8469F8DA20FD90A600E231D2 /* MASCompositeConstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MASCompositeConstraint.h; sourceTree = "<group>"; };
 		8469F8DB20FD90A600E231D2 /* MASCompositeConstraint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MASCompositeConstraint.m; sourceTree = "<group>"; };
 		8469F8DC20FD90A600E231D2 /* MASConstraint+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MASConstraint+Private.h"; sourceTree = "<group>"; };
@@ -153,29 +219,34 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				83F064742D31020500AFF182 /* TKMediaEngine.framework in Frameworks */,
+				583E368721EE1AF300E2ABAC /* libz.1.tbd in Frameworks */,
+				583E368621EE1AED00E2ABAC /* libbz2.1.0.tbd in Frameworks */,
+				583E368421EE1AE600E2ABAC /* libiconv.2.tbd in Frameworks */,
 				5899BB2821070F7E006F3B23 /* libc++.tbd in Frameworks */,
-				586821112254969C000E5335 /* TKRoomSDK.framework in Frameworks */,
-				5868211022549695000E5335 /* TKRoomSDK.framework in Frameworks */,
+				83F064762D31020700AFF182 /* TKRoomSDK.framework in Frameworks */,
 				5899BB2621070F77006F3B23 /* GLKit.framework in Frameworks */,
 				5899BB2421070F70006F3B23 /* VideoToolbox.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		83F7ADB92844728A0049686D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				83F7ADBD2844728A0049686D /* ReplayKit.framework in Frameworks */,
+				83F0646F2D30C9B600AFF182 /* TKScreenShareService.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		586820F0224E15D7000E5335 /* libs */ = {
-			isa = PBXGroup;
-			children = (
-				5868210F22549695000E5335 /* TKRoomSDK.framework */,
-			);
-			path = libs;
-			sourceTree = "<group>";
-		};
 		5E2C93351F023D26005D4300 = {
 			isa = PBXGroup;
 			children = (
 				5E2C93401F023D26005D4300 /* talkSDKDemo */,
+				83F7ADBE2844728A0049686D /* TKScreenRecord */,
 				5E2C933F1F023D26005D4300 /* Products */,
 				5E2C937F1F023E45005D4300 /* Frameworks */,
 			);
@@ -185,6 +256,7 @@
 			isa = PBXGroup;
 			children = (
 				5E2C933E1F023D26005D4300 /* talkSDKDemo.app */,
+				83F7ADBC2844728A0049686D /* TKScreenRecord.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -192,14 +264,19 @@
 		5E2C93401F023D26005D4300 /* talkSDKDemo */ = {
 			isa = PBXGroup;
 			children = (
-				586820F0224E15D7000E5335 /* libs */,
+				0449E65F28A9E87C003AD2F9 /* www(1).mp4 */,
+				04EE12402853256200228D6B /* test.mp4 */,
+				83F1E7A8283F6FD8008D7886 /* talkSDKDemoDebug.entitlements */,
+				83EDBAC9283C8FE100F7ECC5 /* lib */,
 				58C0954E21788990007FD67E /* 32k.wav */,
+				835F71FD2F1A5FE900DF62A0 /* ttre.pcm */,
 				58C0949621771E54007FD67E /* trust you.mp3 */,
-				587D8C812101DF8700C08F32 /* talkSDKDemo.entitlements */,
 				8469F8CF20FCA1DE00E231D2 /* Vendor */,
 				685826DB207E083600734E43 /* Views */,
 				5E2C93741F023D5F005D4300 /* RoomController.h */,
 				5E2C93751F023D5F005D4300 /* RoomController.m */,
+				83F0645F2D2FD20F00AFF182 /* GenerateUserSig.h */,
+				83F064602D2FD20F00AFF182 /* GenerateUserSig.m */,
 				5E2C93441F023D26005D4300 /* AppDelegate.h */,
 				5E2C93451F023D26005D4300 /* AppDelegate.m */,
 				5E2C93471F023D26005D4300 /* ViewController.h */,
@@ -226,11 +303,23 @@
 		5E2C937F1F023E45005D4300 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0434FE072BFF4AD000107BC0 /* TKMediaEngine.framework */,
+				83F7ADED2844D74F0049686D /* TKScreenShareService.framework */,
+				83F7ADDB284474350049686D /* TKRoomSDK.framework */,
+				58903DFB223B8471008E9F82 /* TKScreenShareService.framework */,
+				580DCD4C21EEC5E700A13285 /* librtc_sdk_objc.a */,
+				583E368521EE1AED00E2ABAC /* libbz2.1.0.tbd */,
+				583E368221EE1A3900E2ABAC /* libiconv.tbd */,
+				583E367E21EE196900E2ABAC /* libz.1.tbd */,
+				583E367C21EE195F00E2ABAC /* libbz2.tbd */,
+				583E367921EE194E00E2ABAC /* libiconv.2.tbd */,
 				5899BB2721070F7E006F3B23 /* libc++.tbd */,
 				5899BB2521070F77006F3B23 /* GLKit.framework */,
 				5899BB2321070F70006F3B23 /* VideoToolbox.framework */,
 				5E2C93821F023E4E005D4300 /* libicucore.tbd */,
 				5E2C93801F023E45005D4300 /* CoreMedia.framework */,
+				58CA725E21E4C29A00D9154E /* ReplayKit.framework */,
+				58CA726B21E4C29A00D9154E /* UIKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -250,6 +339,25 @@
 				58C9D52D20FC8A64000376C1 /* TKTableViewCell.xib */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		83EDBAC9283C8FE100F7ECC5 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		83F7ADBE2844728A0049686D /* TKScreenRecord */ = {
+			isa = PBXGroup;
+			children = (
+				83F064662D30C8E300AFF182 /* TKScreenShareService.framework */,
+				83F7ADEF2844D86A0049686D /* TKScreenRecordDebug.entitlements */,
+				83F7ADBF2844728A0049686D /* SampleHandler.h */,
+				83F7ADC02844728A0049686D /* SampleHandler.m */,
+				83F7ADC22844728A0049686D /* Info.plist */,
+			);
+			path = TKScreenRecord;
 			sourceTree = "<group>";
 		};
 		8469F8CF20FCA1DE00E231D2 /* Vendor */ = {
@@ -286,7 +394,6 @@
 		8469F8D820FD90A500E231D2 /* Masonry */ = {
 			isa = PBXGroup;
 			children = (
-				8469F8D920FD90A600E231D2 /* Info.plist */,
 				8469F8DA20FD90A600E231D2 /* MASCompositeConstraint.h */,
 				8469F8DB20FD90A600E231D2 /* MASCompositeConstraint.m */,
 				8469F8DC20FD90A600E231D2 /* MASConstraint+Private.h */,
@@ -344,16 +451,36 @@
 				5E2C933A1F023D26005D4300 /* Sources */,
 				5E2C933B1F023D26005D4300 /* Frameworks */,
 				5E2C933C1F023D26005D4300 /* Resources */,
-				58ACAC6421C39FA600E5E157 /* Embed Frameworks */,
+				19B9CC0423B34A3B004EE884 /* Embed Frameworks */,
+				83F1E7CD283F71E8008D7886 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				83F7ADD32844728B0049686D /* PBXTargetDependency */,
 			);
 			name = talkSDKDemo;
 			productName = talkSDKDemo;
 			productReference = 5E2C933E1F023D26005D4300 /* talkSDKDemo.app */;
 			productType = "com.apple.product-type.application";
+		};
+		83F7ADBB2844728A0049686D /* TKScreenRecord */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 83F7ADD82844728B0049686D /* Build configuration list for PBXNativeTarget "TKScreenRecord" */;
+			buildPhases = (
+				83F7ADB82844728A0049686D /* Sources */,
+				83F7ADB92844728A0049686D /* Frameworks */,
+				83F7ADBA2844728A0049686D /* Resources */,
+				83F064712D30C9B600AFF182 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TKScreenRecord;
+			productName = TKScreenRecord;
+			productReference = 83F7ADBC2844728A0049686D /* TKScreenRecord.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -361,6 +488,7 @@
 		5E2C93361F023D26005D4300 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				DefaultBuildSystemTypeForWorkspace = Original;
 				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = beijing;
 				TargetAttributes = {
@@ -369,6 +497,9 @@
 						DevelopmentTeam = 8VXJWE28Q2;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
 							com.apple.BackgroundModes = {
 								enabled = 1;
 							};
@@ -380,6 +511,11 @@
 							};
 						};
 					};
+					83F7ADBB2844728A0049686D = {
+						CreatedOnToolsVersion = 12.5.1;
+						DevelopmentTeam = 8VXJWE28Q2;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = 5E2C93391F023D26005D4300 /* Build configuration list for PBXProject "talkSDKDemo" */;
@@ -387,6 +523,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 				"zh-Hans",
@@ -398,6 +535,7 @@
 			projectRoot = "";
 			targets = (
 				5E2C933D1F023D26005D4300 /* talkSDKDemo */,
+				83F7ADBB2844728A0049686D /* TKScreenRecord */,
 			);
 		};
 /* End PBXProject section */
@@ -409,12 +547,21 @@
 			files = (
 				683B1AA8207D1549008E2BEB /* Localizable.strings in Resources */,
 				5E2C93511F023D26005D4300 /* LaunchScreen.storyboard in Resources */,
-				8469F8F720FD90A600E231D2 /* Info.plist in Resources */,
 				58C0954F21788991007FD67E /* 32k.wav in Resources */,
 				5E2C934C1F023D26005D4300 /* Main.storyboard in Resources */,
 				58C0949721771E55007FD67E /* trust you.mp3 in Resources */,
 				58C9D52F20FC8A64000376C1 /* TKTableViewCell.xib in Resources */,
 				8469F8D620FD8EAF00E231D2 /* Assets.xcassets in Resources */,
+				04EE12412853256200228D6B /* test.mp4 in Resources */,
+				0449E66028A9E87C003AD2F9 /* www(1).mp4 in Resources */,
+				835F71FE2F1A5FE900DF62A0 /* ttre.pcm in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		83F7ADBA2844728A0049686D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -438,6 +585,7 @@
 				8469F8F920FD90A600E231D2 /* MASConstraint.m in Sources */,
 				8486E93520FECEDB00380DBC /* NSString+sizeHeight.m in Sources */,
 				8469F8FF20FD90A600E231D2 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
+				83F064612D2FD20F00AFF182 /* GenerateUserSig.m in Sources */,
 				8469F8F820FD90A600E231D2 /* MASCompositeConstraint.m in Sources */,
 				8486E92620FDCB0A00380DBC /* ChatMessageOtherCell.m in Sources */,
 				5E2C93491F023D26005D4300 /* ViewController.m in Sources */,
@@ -454,7 +602,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		83F7ADB82844728A0049686D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				83F7ADC12844728A0049686D /* SampleHandler.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		83F7ADD32844728B0049686D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 83F7ADBB2844728A0049686D /* TKScreenRecord */;
+			targetProxy = 83F7ADD22844728B0049686D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		5E2C934A1F023D26005D4300 /* Main.storyboard */ = {
@@ -586,6 +750,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = talkSDKDemo/talkSDKDemoDebug.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
@@ -597,18 +762,19 @@
 					"$(PROJECT_DIR)/talkSDKDemo",
 					"$(PROJECT_DIR)/talkSDKDemo/lib",
 					"$(PROJECT_DIR)/talkSDKDemo/lib/socketio_zhm",
-					"$(PROJECT_DIR)/talkSDKDemo/libs",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/talkSDKDemo/PrefixHeader.pch";
 				INFOPLIST_FILE = talkSDKDemo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/talkSDKDemo",
 					"$(PROJECT_DIR)/talkSDKDemo/lib",
+					"$(PROJECT_DIR)",
 				);
+				MARKETING_VERSION = 3.2.11;
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_BUNDLE_IDENTIFIER = com.talkcloud.sdkDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -622,6 +788,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = talkSDKDemo/talkSDKDemo.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
@@ -632,23 +799,98 @@
 					"$(PROJECT_DIR)/talkSDKDemo",
 					"$(PROJECT_DIR)/talkSDKDemo/lib",
 					"$(PROJECT_DIR)/talkSDKDemo/lib/socketio_zhm",
-					"$(PROJECT_DIR)/talkSDKDemo/libs",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/talkSDKDemo/PrefixHeader.pch";
 				INFOPLIST_FILE = talkSDKDemo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/talkSDKDemo",
 					"$(PROJECT_DIR)/talkSDKDemo/lib",
+					"$(PROJECT_DIR)",
 				);
+				MARKETING_VERSION = 3.2.11;
 				OTHER_LDFLAGS = "-all_load";
 				PRODUCT_BUNDLE_IDENTIFIER = com.talkcloud.sdkDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		83F7ADD92844728B0049686D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = TKScreenRecord/TKScreenRecordDebug.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8VXJWE28Q2;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/TKScreenRecord",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = TKScreenRecord/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.talkcloud.sdkDemo.TKScreenRecord;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		83F7ADDA2844728B0049686D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8VXJWE28Q2;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/TKScreenRecord",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = TKScreenRecord/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.talkcloud.sdkDemo.TKScreenRecord;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -670,6 +912,15 @@
 			buildConfigurations = (
 				5E2C936C1F023D27005D4300 /* Debug */,
 				5E2C936D1F023D27005D4300 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		83F7ADD82844728B0049686D /* Build configuration list for PBXNativeTarget "TKScreenRecord" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				83F7ADD92844728B0049686D /* Debug */,
+				83F7ADDA2844728B0049686D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

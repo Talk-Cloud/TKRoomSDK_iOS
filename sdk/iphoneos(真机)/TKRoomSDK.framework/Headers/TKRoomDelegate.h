@@ -8,13 +8,21 @@
 #import "TKRoomDefines.h"
 
 #pragma mark - JoinRoomNotification
-// 可以在userInfo 获取相关信息，包括error和链路相关统计信息
+// 可以在userInfo 获取相关信息，包括error和链路相关统计信息，特殊定制通知
 //加入房间成功
 FOUNDATION_EXTERN NSNotificationName const TKRoomManagerJoinRoomSuccessNotification;
 //加入房间失败
 FOUNDATION_EXTERN NSNotificationName const TKRoomManagerJoinRoomFailedNotification;
 
+//房间配置项是否开启设备检测, 如果开启，SDK会监听设备检测完成的通知，然后继续进行加入房间流程
+FOUNDATION_EXTERN NSNotificationName const TKRoomManagerContinueCheckRoomNotification;
+
 #pragma mark - TKRoomManagerDelegate
+@class TKRoomUser;
+@class TKVideoStats;
+@class TKAudioStats;
+@class TKVideoFrame;
+@class TKAudioFrame;
 @protocol TKRoomManagerDelegate<NSObject>
 
 @optional
@@ -42,23 +50,27 @@ FOUNDATION_EXTERN NSNotificationName const TKRoomManagerJoinRoomFailedNotificati
 
 /**
  发生警告 回调
-
+ 查看 <TKMediaEngine/TKSDKCode> 获取
  @param code 警告码
  */
-- (void)roomManagerDidOccuredWaring:(TKRoomWarningCode)code;
+- (void)roomManagerDidOccuredWaring:(NSInteger)code;
 
 /**
     有用户进入房间
     @param peerID 用户ID
     @param inList true：在自己之前进入；false：在自己之后进入
  */
-- (void)roomManagerUserJoined:(NSString *)peerID inList:(BOOL)inList;
+- (void)roomManagerUserJoined:(NSString *)peerID inList:(BOOL)inList TK_Deprecated("Will did deprecated, please use '- (void)roomManagerRoomUserJoined:inList:'");
 
+- (void)roomManagerRoomUserJoined:(TKRoomUser *)roomUser inList:(BOOL)inList;
+
+- (void)roomManagerOptionalServer:(NSArray <NSString *> *)servers;
 /**
     有用户离开房间
     @param peerID 用户ID
  */
-- (void)roomManagerUserLeft:(NSString *)peerID;
+- (void)roomManagerUserLeft:(NSString *)peerID  TK_Deprecated("Will did deprecated, please use '- (void)roomManagerUserLeft: reason:'");
+- (void)roomManagerUserLeft:(NSString *)peerID reason:(TKUserOfflineReason)reason;
 
 /**
     自己被踢出房间
@@ -102,6 +114,21 @@ FOUNDATION_EXTERN NSNotificationName const TKRoomManagerJoinRoomFailedNotificati
 - (void)roomManagerOnUserVideoStatus:(NSString *)peerID
                             deviceId:(NSString *)deviceId
                                state:(TKMediaState)state;
+
+/**
+ 禁用音频设备
+ @param peerId 用户ID
+ @param isDisable 是否禁用
+ */
+//- (void)onAudioDeviceDisableStateChanged:(NSString *)peerId isDisable:(BOOL) isDisable;
+
+/**
+ 禁用视频设备
+ @param peerId 用户ID
+ @param isDisable 是否禁用
+ */
+- (void)onVideoDeviceDisableStateChanged:(NSString *)peerId isDisable:(BOOL) isDisable;
+
 /**
  用户音频状态变化的通知，
  
@@ -153,6 +180,16 @@ FOUNDATION_EXTERN NSNotificationName const TKRoomManagerJoinRoomFailedNotificati
 - (void)roomManagerMessageReceived:(NSString *)message
                             fromID:(NSString *)peerID
                          extension:(NSDictionary *)extension;
+
+/// 录制状态回调
+/// @param state 状态
+/// @param peerID 发送者用户ID
+/// @param extension  若参数 state == TKRecordState_Started 开始录制状态时，extension字典中返回本次录制的常规录制件ID和mp4录制件ID，
+/// extension可能nil。
+- (void)roomManagerOnServerRecordStateChanged:(TKRecordState)state
+                                       fromID:(NSString *)peerID
+                                    extension:(NSDictionary *)extension;
+
 /**
  视频数据统计
  
@@ -261,7 +298,7 @@ FOUNDATION_EXTERN NSNotificationName const TKRoomManagerJoinRoomFailedNotificati
  @param delay 延迟(毫秒)
  */
 - (void)onNetworkQuality:(TKNetQuality)networkQuality
-                   delay:(NSInteger)delay;
+                   delay:(NSInteger)delay TK_Deprecated("Did deprecated!");
 
 #pragma mark meidia
 /**
@@ -360,6 +397,8 @@ FOUNDATION_EXTERN NSNotificationName const TKRoomManagerJoinRoomFailedNotificati
  @param type 采集源
  */
 - (void)onRenderVideoFrame:(TKVideoFrame *)frame uid:(NSString *)peerId deviceId:(NSString *)deviceId sourceType:(TKMediaType)type;
+
+
 @end
 
 

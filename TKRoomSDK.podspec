@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "TKRoomSDK"
-  s.version      = "3.2.15"
+  s.version      = "5.1.7"
   s.summary      = "A Framework for audio and video ."
   s.module_name  = "TKRoomSDK"
   # This description is used to generate tags and improve search results.
@@ -64,10 +64,10 @@ Pod::Spec.new do |s|
   #
 
   # s.platform     = :ios
-   s.platform     = :ios, "8.0"
+   s.platform     = :ios, "12.0"
 
   #  When using multiple platforms
-   s.ios.deployment_target = "8.0"
+   s.ios.deployment_target = "12.0"
   # s.osx.deployment_target = "10.7"
   # s.watchos.deployment_target = "2.0"
   # s.tvos.deployment_target = "9.0"

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+//#import "TKRoomCode.h"
 
 #define TK_Deprecated(string) __attribute__((deprecated(string)))
 
@@ -25,6 +26,18 @@ FOUNDATION_EXTERN NSString * const TKJoinRoomParamsUserRoleKey;
 //用户ID的key值 @optional，如果不传用户ID，sdk会自动生成用户ID
 FOUNDATION_EXTERN NSString * const TKJoinRoomParamsUserIDKey;
 
+#pragma mark  joinroom token方式
+//如果使用token的方式join room，需要roomParams中添加以下参数
+
+//token
+FOUNDATION_EXTERN NSString * const TKJoinRoomParamsToken;
+//时间戳，token权限时间
+FOUNDATION_EXTERN NSString * const TKJoinRoomParamsPrivilegeExpiredTs;
+
+
+#
+#pragma mark - pub/delete msg 相关定义
+#
 //******调用pubMsg以及delMsg 接口发送信令，toID参数相关传值；表示：此信令需要通知的对象******//
 //所有人
 FOUNDATION_EXTERN NSString * const TKRoomPubMsgTellAll;
@@ -39,16 +52,36 @@ FOUNDATION_EXTERN NSString * const TKRoomPubMsgTellNone;
 #pragma mark -  房间初始化相关设置
 #
 //******调用- (int)initWithAppKey:optional: 初始化设置 optional字典 key值定义*******//
+
+//使用token方式进入教室，初始化需要传入企业域名
+FOUNDATION_EXTERN NSString * const TKRoomSettingOptionalCompanyDomain;
+
 //socekt 自动重连次数，默认是无限次
 FOUNDATION_EXTERN NSString * const TKRoomSettingOptionalReconnectattempts;
-//若有使用到sdk白板功能，需要设置次参数，表示会接收到白板消息通知。 若不是用sdk白板功能，可不需要设置。
+
+//若有使用到sdk白板功能，需要设置此参数，表示会接收到白板消息通知。 若不是用sdk白板功能，可不需要设置。
 //value：NSNumber类型 YES表示接受通知，NO表示不通知。
 FOUNDATION_EXTERN NSString * const TKRoomSettingOptionalWhiteBoardNotify;
+
+// 是否中断进入房间, 发送的TKRoomManagerContinueCheckRoomNotification通知以便继续进入房间.
+// Paas 接入方式无需设置.
+FOUNDATION_EXTERN NSString * const TKRoomSettingOptionalInteruptCheckRoom;
+
+// UI Version
+FOUNDATION_EXTERN NSString * const TKRoomSettingOptionalUIVersion;
+//tk_ui_uniform_version
+FOUNDATION_EXTERN NSString * const TKRoomSettingOptionalUIUniformVersion;
 
 //设置编码格式 @optional Key值，可不传，若不传会根据房间属性设置。 value：NSNumber类型 TKVideoCodecType枚举值
 FOUNDATION_EXTERN NSString * const TKRoomSettingOptionalVideoCodec;
 //设置即时房间类型 @optional Key值，可不传，默认是一对多TKRoomType_More。 value：NSNumber类型 TKRoomTypes枚举值
 FOUNDATION_EXTERN NSString * const TKRoomSettingOptionalRoomType;
+
+FOUNDATION_EXTERN NSString * const TKRoomSettingOptionalGetRoomFile;
+
+FOUNDATION_EXTERN NSString * const TKRoomSettingOptionalUserAgent;
+//value值：BOOL类型，YES表示关闭获取位置服务，NO表示开启获取位置服务
+FOUNDATION_EXTERN NSString * const TKRoomSettingOptionalByPassLocation TK_Deprecated("TKRoomSDK 5.0 deprecated.");
 
 #pragma mark socekt使用协议参数
 //value: NSNumber类型 YES:使用https wss, NO:使用http ws  默认为YES。
@@ -65,100 +98,38 @@ FOUNDATION_EXTERN NSString * const TKRoomSettingOptionalPrivatePort;
 #pragma mark - block重命名
 #
 typedef void (^completion_block)(NSError *error);
-typedef void (^progress_block)(int playID, int64_t current, int64_t total);
+//typedef void (^progress_block)(int playID, int64_t current, int64_t total);
+
+
+typedef NS_ENUM(NSInteger, TKLocalMediaPlayingStateCode) {
+    TKLocalMediaPlayingState_Playing = 710,
+    TKLocalMediaPlayingState_Paused = 711,
+    TKLocalMediaPlayingState_Stopped = 713,
+    TKLocalMediaPlayingState_Failed = 714,
+};
+
+typedef void (^TKLocalMediaProgress_block)(int playID, int64_t current, int64_t total);
+typedef void (^TKLocalMediaState_block)(int playID, TKLocalMediaPlayingStateCode stateCode);
 
 #
-#pragma mark - TKRoomWarningCode 警告码
+#pragma mark - TKRTCAudioQuality 声音音质
 #
-typedef NS_ENUM(NSInteger, TKRoomWarningCode) {
-    TKRoomWarning_UnKnow,
-    TKRoomWarning_Microphone_NotWorking                 = 111,         //麦克风不可用
-    TKRoomWarning_Micphone_InterruptionBegan,          // the system has interrupted your audio session,the interruption has began
-    TKRoomWarning_Micphone_InterruptionEnded,          // the interruption has ended
-    TKRoomWarning_AudioRouteChange_Headphones           = 121,   //耳机
-    TKRoomWarning_AudioRouteChange_BuiltInReceiver,    //听筒模式（手机靠近耳边）
-    TKRoomWarning_AudioRouteChange_BuiltInSpeaker,     // 内置扬声器（外放）
-    TKRoomWarning_AudioRouteChange_Bluetooth,          // 蓝牙
-    
-    TKRoomWarning_RequestAccessForVideo_Failed          = 131,   //请求获取摄像头失败
-    TKRoomWarning_RequestAccessForAudio_Failed          = 132,   //请求获取麦克风失败
-    
-    
-    TKRoomWarning_CheckRoom_Completed                   = 1001,    //CheckRoom 成功
-    TKRoomWarning_GetConfig_Completed                   = 1002,    //GetConfig 成功
-    
-    TKRoomWarning_UnpublishVideo_By_SwitchAudioRoom     = 1011,
-    TKRoomWarning_PublishVideo_By_SwitchAudioVideoRoom  = 1012,
-    TKRoomWarning_UnpublishVideo_By_Max_Reconnect_Count = 1013,
-    TKRoomWarning_UnpublishAudio_By_Max_Reconnect_Count = 1014,
-    
-    TKRoomWarning_Stream_Connected                      = 1101,
-    TKRoomWarning_Stream_Failed                         = 1102,
-    TKRoomWarning_Stream_Closed                         = 1103,
-
-    TKRoomWarning_ReConnectSocket_ServerChanged         = 5002,   //切换了服务器
-    TKRoomWarning_DevicePerformance_Low                 = 5003,   //设备性能过低
+typedef NS_ENUM(NSInteger, TKRTCAudioQuality) {
+    ///人声模式：比如在线会议，语音通话等。
+    TKRTCAudioQualitySpeech = 1,
+    ///默认模式：SDK 默认档位，推荐选择。
+    TKRTCAudioQualityDefault = 2,
+    ///音乐模式：比如在线K歌、音乐直播等。
+    TKRTCAudioQualityMusic = 3,
 };
 
 #
-#pragma mark - TKRoomErrorCode 错误码
+#pragma mark - TKAppScene 使用场景
 #
-typedef NS_ENUM(NSInteger, TKRoomErrorCode) {
-    TKErrorCode_UnKnow              = -2,
-    TKErrorCode_Internal_Exception  = -1,
-    TKErrorCode_OK                  = 0,
-    TKErrorCode_Not_Initialized     = 101,
-    TKErrorCode_Bad_Parameters      = 102,
-    TKErrorCode_Room_StateError     = 103,
-    TKErrorCode_Publish_StateError  = 104,
-    TKErrorCode_Stream_StateError   = 105,
-    TKErrorCode_Stream_NotFound     = 106,
-    TKErrorCode_FilePath_NotExist   = 107,    //文件路劲不存在
-    TKErrorCode_CreateFile_Failed   = 108,    //创建文件失败
-    TKErrorCode_TestSpeed_Failed     = 109,
-    
-    TKErrorCode_RenderView_ReUsed               = 156,//渲染视图已被使用
-    
-    TKErrorCode_Publish_NoAck                    = 401,
-    TKErrorCode_Publish_RoomNotExist             = 402,
-    TKErrorCode_Publish_RoomMaxVideoLimited      = 403,//媒体链路超限
-    TKErrorCode_Publish_ErizoJs_Timeout          = 404,
-    TKErrorCode_Publish_Agent_Timeout            = 405,
-    TKErrorCode_Publish_UndefinedRPC_Timeout     = 406,
-    TKErrorCode_Publish_AddingInput_Error        = 407,
-    TKErrorCode_Publish_DuplicatedExtensionId    = 408,
-    TKErrorCode_Publish_Unauthorized             = 409,
-    TKErrorCode_Publish_Failed                   = 410,//发布失败，自动重新发布
-    TKErrorCode_Publish_Timeout                  = 411,//发布失败，自动重新发布
-    
-    TKErrorCode_Subscribe_RoomNotExist           = 501,
-    TKErrorCode_Subscribe_StreamNotDefine        = 502,
-    TKErrorCode_Subscribe_MediaRPC_Timeout       = 503,
-    TKErrorCode_Subscribe_Fail                   = 504,//订阅失败，自动重新订阅
-    TKErrorCode_Subscribe_Timeout                = 505,//订阅超时，自动重新订阅
-    
-    TKErrorCode_ConnectSocketError               = 601,
-
-    TKErrorCode_JoinRoom_WrongParam              = 701,// join room 参数错误
-    
-    TKErrorCode_CheckRoom_RequestFailed          = 801,    //CheckRoom 请求失败
-    TKErrorCode_GetConfig_RequestFailed          = 802,    //getconfig 请求失败
-    
-    TKErrorCode_CheckRoom_ServerOverdue          = 3001,    //服务器过期
-    TKErrorCode_CheckRoom_RoomFreeze             = 3002,    // 公司被冻结
-    TKErrorCode_CheckRoom_RoomDeleteOrOrverdue   = 3003,    //房间已删除或过期
-    TKErrorCode_CheckRoom_CompanyNotExist        = 4001,    //该公司不存在
-    TKErrorCode_CheckRoom_RoomNonExistent        = 4007,    //房间不存在
-    TKErrorCode_CheckRoom_PasswordError          = 4008,    //房间密码错误
-    TKErrorCode_CheckRoom_WrongPasswordForRole   = 4012,    //密码与身份不符
-    TKErrorCode_CheckRoom_RoomNumberOverRun      = 4103,    //房间人数超限
-    TKErrorCode_CheckRoom_RoomAuthenError        = 4109,    //认证错误
-    TKErrorCode_CheckRoom_NeedPassword           = 4110,    //该房间需要密码，请输入密码
-    TKErrorCode_CheckRoom_RoomPointOverrun       = 4112,    //企业点数超限
-    TKErrorCode_CheckRoom_RoomNSF				 = 4113,    //余额不足
-    TKErrorCode_CheckRoom_RoomCancelled			 = 4020, 	//课程已取消
+typedef NS_ENUM(NSInteger, TKAppScene) {
+    TKAppScene_Call    = 0,  //默认场景，适用于[1对1视频通话]、[300人视频会议]、[在线问诊]、[教育小班课]、[远程面试]等业务场景。
+    TKAppScene_Live    = 1,  //适用于直播带货等
 };
-
 
 #
 #pragma mark - TKMediaType 媒体类型
@@ -181,6 +152,7 @@ typedef NS_ENUM(NSInteger, TKPublishState) {
     TKUser_PublishState_AUDIOONLY,                  //只有音频
     TKUser_PublishState_VIDEOONLY,                  //只有视频
     TKUser_PublishState_BOTH,                       //都有
+    TKUser_PublishState_Extension,                 //4表示在台上，但音视频均为打开
 };
 #
 #pragma mark - TKMediaState 媒体流发布状态
@@ -238,6 +210,14 @@ typedef NS_ENUM(NSUInteger, TKVideoMirrorMode) {
     TKVideoMirrorModeEnabled    = 1,  //前置和后置均开启镜像模式
     TKVideoMirrorModeDisabled   = 2,  //前置和后置均不开启镜像模式
 };
+
+/** Reason for the user being offline. */
+typedef NS_ENUM(NSUInteger, TKUserOfflineReason) {
+  /** The user left the current channel. */
+    TKUserOfflineReasonQuit = 0,
+  /** The SDK timed out and the user dropped offline because no data packet is received within a certain period of time. If a user quits the call and the message is not passed to the SDK (due to an unreliable channel), the SDK assumes the user dropped offline. */
+    TKUserOfflineReasonDropped = 1,
+};
 #
 #pragma mark - TKLogLevel 日志等级
 #
@@ -282,13 +262,23 @@ typedef NS_ENUM(NSUInteger, TKLogLevel){
 #pragma mark - TKUserRoleType 用户角色
 #
 typedef NS_ENUM(NSInteger, TKUserRoleType) {
-    TKUserType_Playback   = -1,   //回放
-    TKUserType_Teacher    = 0,    //老师
-    TKUserType_Assistant,         //助教
-    TKUserType_Student,           //学生
-    TKUserType_Live,              //直播
-    TKUserType_Patrol             //巡课
+    TKUserType_Playback   	= -1,   //回放
+    TKUserType_Teacher    	= 0,    //老师
+    TKUserType_Assistant  	= 1,    //助教
+    TKUserType_Student	  	= 2,    //学生
+    TKUserType_Live		  	= 3,    //直播
+    TKUserType_Patrol		= 4,    //巡课
+    TKUserType_ClassTeacher	= 5,    //班主任
+    TKUserType_Onlooker     = 6,    //旁听生
+    TKUserType_SystemAdministrator = 26, //系统管理员
+    TKUserType_Parent       = 27,   //家长
+    TKUserType_WorkorderAdministrator = 31,// 工单管理员
+    TKUserType_Record   	= 88,   //录制用户
+    TKUserType_Interaction 	= 98,	//交互直播房间直播用户
+    TKUserType_Bypass		= 99    //旁路直播房间直播用户
+    
 };
+
 #
 #pragma mark - TKRecordType 录制件类型
 #
@@ -299,6 +289,15 @@ typedef NS_ENUM(NSInteger, TKRecordType) {
     TKRecordType_RecordMaxFile  = 3, //同时生产mp3和mp4
 };
 
+#
+#pragma mark - TKRecordState 录制状态
+#
+typedef NS_ENUM(NSInteger, TKRecordState) {
+    TKRecordState_Stoped          = 0,    //停止录制
+    TKRecordState_Started         = 1,    //开始录制
+    TKRecordState_Paused      = 2,        //暂停录制
+};
+
 typedef NS_ENUM(NSInteger, TKNetQuality) {
     TKNetQuality_Excellent  = 1, //优
     TKNetQuality_Good,          //良
@@ -306,6 +305,15 @@ typedef NS_ENUM(NSInteger, TKNetQuality) {
     TKNetQuality_Bad,           //差
     TKNetQuality_VeryBad,       //极差
     TKNetQuality_Down,
+};
+
+typedef NS_ENUM(NSInteger, TKOperator) {
+    TKOperator_Greater_Than             = 1,
+    TKOperator_Less_Than                = 2,
+    TKOperator_Not_Equal                = 3,
+    TKOperator_Equal                    = 4,
+    TKOperator_Greater_Than_Or_Equal    = 5,
+    TKOperator_Less_Than_Or_Equal       = 6,
 };
 
 typedef NS_ENUM(NSInteger, TKSampleFormat) {
@@ -327,217 +335,147 @@ typedef NS_ENUM(NSInteger, TKSampleFormat) {
     
     TKAVSampleFormat_NB           ///< Number of sample formats. DO NOT USE if linking dynamically
 };
-#
-#pragma mark - TKMediaFileInfo 媒体文件信息
-#
-@interface TKMediaFileInfo : NSObject
-@property (assign, nonatomic) NSInteger duration;
-@property (assign, nonatomic) NSInteger width;
-@property (assign, nonatomic) NSInteger height;
-@property (assign, nonatomic) NSInteger fps;
-@property (assign, nonatomic) BOOL video;
-@property (assign, nonatomic) BOOL audio;
-@end
 
-#
-#pragma mark - TKVideoProfile 视频属性
-#
-@interface TKVideoProfile : NSObject
-@property (nonatomic, assign) NSInteger width;
-@property (nonatomic, assign) NSInteger height;
-@property (nonatomic, assign) NSInteger maxfps;
-@end
+//typedef NS_ENUM(NSInteger, TKAudioRecordType) {
+//    TKAudioRecordType_Only_Mic             = 1, //仅录制麦克风的音频
+//    TKAudioRecordType_MicAndSpeaker        = 2, //录制麦克风、扬声器的音频
+//};
 
-#
-#pragma mark - TKVideoCanvas 视频属性
-#
-@interface TKVideoCanvas : NSObject
+@interface TKRoomConfig : NSObject
+ 
+/// 是否加密，YES：使用https、wss，NO：使用http、ws  默认为YES。
+@property (nonatomic, assign) BOOL tk_use_secure_socket;
+/// 私有地址  默认为global.talk-cloud.net
+@property (nonatomic, copy) NSString *tk_host;
+/// 私有端口  若secure 为YES，默认为443；若为NO，默认为80.
+@property (nonatomic, copy) NSString *tk_port;
 
-@property (strong, nonatomic) UIView *view;// 视频渲染窗口
-@property (assign, nonatomic) TKRenderMode renderMode;//渲染模式
-@property (assign, nonatomic) BOOL isMirror;// 是否是镜像
-@end
+/// 是否支持多流 默认 NO
+@property (nonatomic, assign) BOOL tk_multistream;
+
+/// 是否需要白板通知消息 默认 NO
+@property (nonatomic, assign) BOOL tk_enable_whiteboard_notification;
+
+/// 声音音质 默认： TKRTCAudioQualityDefault
+@property (nonatomic, assign) TKRTCAudioQuality audioQuality;
 
 
-#
-#pragma mark - TKAudioFrame 音频数据
-#
-@interface TKAudioFrame : NSObject
-/**
- number of samples in this frame
- */
-@property (assign, nonatomic) NSInteger samples;
+/// 是否因设备检测，而需要中断checkroom流程 默认 NO
+@property (nonatomic, assign) BOOL isInteruptCheckRoom;
 
-/**
- number of bytes per sample: 2 for PCM16
- */
-@property (assign, nonatomic) NSInteger bytesPerSample;
+/// 是否请求设备授权 默认 YES
+@property (nonatomic, assign) BOOL requestDeviceAccess;
 
-/**
- number of channels (data are interleaved if stereo)
- */
-@property (assign, nonatomic) NSInteger channels;
+/// 有用户发布后自动播放音频
+@property (nonatomic, assign) BOOL autoRecvAudio;
 
-/**
- sampling rate
- */
-@property (assign, nonatomic) NSInteger samplesPerSec;
-
-@property (assign, nonatomic) TKSampleFormat format;
-
-/**
- data buffer
- */
-@property (nonatomic) void *buffer;
-@end
-#
-#pragma mark - TKVideoFrame 视频数据
-#
-@interface TKVideoFrame : NSObject
-
-/**
- width of video frame
- */
-@property (assign, nonatomic) NSInteger width;
-
-/**
- height of video frame
- */
-@property (assign, nonatomic) NSInteger height;
-
-/**
- stride of Y data buffer
- */
-@property (assign, nonatomic) NSInteger yStride;
-
-/**
- stride of U data buffer
- */
-@property (assign, nonatomic) NSInteger uStride;
-
-/**
- stride of V data buffer
- */
-@property (assign, nonatomic) NSInteger vStride;
-
-/**
- Y data buffer
- */
-@property (nonatomic) void *yBuffer;
-
-/**
- U data buffer
- */
-@property (nonatomic) void *uBuffer;
-
-/**
- V data buffer
- */
-@property (nonatomic) void *vBuffer;
-
-/**
- rotation of this frame (0, 90, 180, 270)
- */
-@property (assign, nonatomic) NSInteger rotation;
+- (instancetype)new NS_UNAVAILABLE;
 
 @end
 
-
-#
-#pragma mark - TKAudioStats 音频统计数据
-#
-@interface TKAudioStats : NSObject
+#pragma mark -进房参数
 /**
- 带宽 bps
+ * 进房参数
+ *
+ * 作为 Talk SDK 的进房参数，只有该参数填写正确，才能顺利进入 roomId所指定的音视频房间。
  */
-@property (assign, nonatomic) NSInteger bitsPerSecond;
 
-/**
- 总字节数
- */
-@property (assign, nonatomic) int64_t totalBytes;
-/**
- 丢包数
- */
-@property (assign, nonatomic) NSInteger packetsLost;
+/// SaaS房间参数
+@interface TKRoomParams : NSObject
 
-/**
- 总包数
- */
-@property (assign, nonatomic) NSInteger totalPackets;
+/// 房间号，需要通过在后台创建教室然后获取到房间号，在同一个房间里的用户（userId）可以彼此看到对方并进行音视频通话。
+@property(nonatomic, copy) NSString *roomId;
+/// 房间登录口令
+/// 需要在管理后台获取，可根据roleId，获取相应的口令。若进入需要口令，则必填，否则进入失败。
+@property(nonatomic, copy) NSString *userPwd;
 
-/**
- 延迟 毫秒
- */
-@property (assign, nonatomic) NSInteger currentDelay;
+/// 录制语言
+///
+@property(nonatomic, copy) NSString *recordLang;
 
-/**
- 抖动
- */
-@property (assign, nonatomic) NSInteger jitter;
 
-/**
- 网络质量
- */
-@property (assign, nonatomic) TKNetQuality netLevel;
-@property (assign, nonatomic) NSTimeInterval timeStamp;
+/// 回放时使用
+@property(nonatomic, copy) NSString *recordTitle;
 
+/// 扩展参数
+/// sdk需要扩展参数时可使用
+@property(nonatomic, strong) NSDictionary *extensions;
+
+/// 是否需要录制自己
+/// 默认：NO; NO：录制，YES：不录制
+@property(nonatomic, assign)  BOOL noRecord;
+
+
+- (instancetype)new NS_UNAVAILABLE;
 @end
-//丢包率  packetsLost/totalPackets  0~1%优 1%~3% 3%~5%中等 5~10%差  >10%极差
-//延迟                              80ms  120ms  300ms  800ms  >800ms
+
+/// 即时房间参数
+@interface TKRoomExParams : TKRoomParams
+
+@property(nonatomic, assign) TKRoomTypes roomType;
+
+/// 使用token方式加入房间, 此必填
+/// 关于token生成可查看文档：https://showdoc.talk-cloud.com/web/#/98/1328
+@property(nonatomic, copy) NSString *token;
+
+/// 开始时间
+/// 时间戳，毫秒
+@property(nonatomic, assign)  NSTimeInterval starttime;
+
+/// 结束时间
+/// 时间戳，毫秒
+@property(nonatomic, assign)  NSTimeInterval endtime;
+
+/// 是否rtmp录制推流
+@property(nonatomic, assign)  BOOL isrtmp4record;
+
+
+- (instancetype)new NS_UNAVAILABLE;
+@end
+
+
+@interface TKUserParams : NSObject
+
+/// 用户标识（必填），当前用户的 userId，相当于用户名。
+/// 如果一个用户在您的帐号系统中的 ID 为“Jackson”，则 userId 即可设置为“Jackson”。若为nil，sdk会随机生成一个uid
+/// 【允许】只支持：字母、数字、"_"、"-"
+/// 最大长度 （字符串）64字符
+@property(nonatomic, copy) NSString *userId;
+/// 昵称
+/// 【不允许】包含回车、换行符、制表符，【不允许】只有空格
+/// 最大长度 （字符串）50字符
+@property(nonatomic, copy) NSString *nickName;
+/// 角色
+/// 默认值：TKUserType_Student 学生。
+@property(nonatomic, assign) TKUserRoleType roleId;
+
+/// 扩展参数
+/// sdk需要扩展参数时可使用
+/* SaaS需要添加字段：
+    tk_version
+ */
+@property(nonatomic, strong) NSDictionary *extensions;
+
+- (instancetype)new NS_UNAVAILABLE;
+@end
 #
-#pragma mark - TKVideoStats 视频统计数据
+#pragma mark - TKULiveStreamInfo 云直播流信息
 #
-@interface TKVideoStats : NSObject
-
-/**
- 带宽 bps
- */
-@property (assign, nonatomic) NSInteger bitsPerSecond;
-
-/**
- 总字节数
- */
-@property (assign, nonatomic) int64_t totalBytes;
-
-/**
- 丢包数
- */
-@property (assign, nonatomic) NSInteger packetsLost;
-
-/**
- 总包数
- */
-@property (assign, nonatomic) NSInteger totalPackets;
-
-@property (assign, nonatomic) NSInteger firsCount;
-@property (assign, nonatomic) NSInteger plisCount;
-
-/**
- 延迟
- */
-@property (assign, nonatomic) NSInteger currentDelay;
-
-/**
- 帧率
- */
-@property (assign, nonatomic) NSInteger frameRate;
-
-/**
- 视频宽
- */
-@property (assign, nonatomic) NSInteger frameWidth;
-
-/**
- 视频高
- */
-@property (assign, nonatomic) NSInteger frameHeight;
-/**
- 网络质量
- */
-@property (assign, nonatomic) TKNetQuality netLevel;
-
-@property (assign, nonatomic) NSTimeInterval timeStamp;
+@interface TKULiveStreamInfo : NSObject
+/// 流扩展ID， 组成方式为："用户ID:设备ID:流类型"， 设备ID只在多摄情况下才有值，流类型只有在非video时才有值。如："123:abc"，即表示这个流属于ID为123的用户，采集设备的ID为abc。
+/// 1、用户为非多摄像头时：
+///     1>、streamtype为 @“video” 时，extensionid 与 userid 相同，均为 @“123”
+///     2>、streamtype为非 @“video” 时，extensionid 与 userid 不同，如userid：@“123”，extensionid：userid:streamtype(例如 @“123:media”，表示共享媒体流的扩展ID)
+/// 2、用户为多摄像头时：
+///     1>、streamtype为 @“video” 时, extensionid 与 userid 不同，如userid：@“123”，extensionid：userid:设备ID（如："123:abc"，即表示这个流属于ID为123的用户，采集设备的ID为abc）
+///     2>、streamtype为非 @“video” 时，extensionid 与 userid 不同，如userid：@“123”，extensionid：userid:streamtype(例如 @“123:media”，表示共享媒体流的扩展ID)
+@property (copy, nonatomic) NSString *extensionid;
+/// 发布此流的用户ID
+@property (copy, nonatomic) NSString *userid;
+/// 流类型。可用值包括 "video"（摄像头/麦克风采集的流），"screen"（桌面共享流），"media"（媒体共享流，如Mp4课件），"file"（本地文件流）
+@property (copy, nonatomic) NSString *streamtype;
+/// 推流地址（根据 推流方式不同，可以有多种协议方式的推流url）
+@property (copy, nonatomic) NSDictionary *pullurl;
 @end
 
 
@@ -546,72 +484,72 @@ typedef NS_ENUM(NSInteger, TKSampleFormat) {
 #
 @interface TKRtcStats : NSObject
 /**
- 下行总字节数
+ 上行总字节数
  */
 @property (assign, nonatomic) int64_t outBytes;
 
 /**
- 上行总字节数
+ 下行总字节数
  */
 @property (assign, nonatomic) int64_t inBytes;
 
 /**
- 下行总包数
+ 上行总包数
  */
 @property (assign, nonatomic) NSInteger outPackets;
 
 /**
- 上行总包数
+ 下行总包数
  */
 @property (assign, nonatomic) NSInteger inPackets;
 
 /**
- 下行音频帧率
+ 上行音频码率 bps
  */
 @property (assign, nonatomic) NSInteger outAudioBitRate;
 
 /**
- 上行音频帧率
+ 下行音频码率 bps
  */
 @property (assign, nonatomic) NSInteger inAudioBitRate;
 
 /**
- 下行视频帧率
+ 上行视频码率 bps
  */
 @property (assign, nonatomic) NSInteger outVideoBitRate;
 
 /**
- 上行视频帧率
+ 下行视频码率 bps
  */
 @property (assign, nonatomic) NSInteger inVideoBitRate;
 
 /**
- 下行音频丢包率
+ 上行音频丢包率
  */
 @property (assign, nonatomic) CGFloat outAudioPacketLostRate;
 
 /**
- 上行音频丢包率
+ 下行音频丢包率
  */
 @property (assign, nonatomic) CGFloat inAudioPacketLostRate;
 
 /**
- 下行视频丢包率
+ 上行视频丢包率
  */
 @property (assign, nonatomic) CGFloat outVideoPacketLostRate;
 
 /**
- 上行视频丢包率
+ 下行视频丢包率
  */
 @property (assign, nonatomic) CGFloat inVideoPacketLostRate;
 
 /**
- 下行网络质量
+ 上行网络质量
  */
 @property (assign, nonatomic) TKNetQuality outNetQuality;
 
 /**
- 上行网络质量
+ 下行网络质量
  */
 @property (assign, nonatomic) TKNetQuality inNetQuality;
 
@@ -635,5 +573,25 @@ typedef NS_ENUM(NSInteger, TKSampleFormat) {
  */
 @property (assign, nonatomic) int64_t duration;
 
+/**
+ 当前 App 的 CPU 使用率 (%)
+ */
+@property (assign, nonatomic) CGFloat cpuAppUsage;
+/**
+ 当前系统的 CPU 使用率 (%)
+ */
+@property (assign, nonatomic) CGFloat cpuTotalUsage;
+/**
+ 当前 App 的内存占比 (%)
+ */
+@property (assign, nonatomic) CGFloat memoryAppUsageRatio;
+/**
+ 当前系统的内存占比 (%)
+ */
+@property (assign, nonatomic) CGFloat memoryTotalUsageRatio;
+/**
+ 当前 App 的内存大小 (KB)
+ */
+@property (assign, nonatomic) uint64_t memoryAppUsageInKbytes;
 @end
 

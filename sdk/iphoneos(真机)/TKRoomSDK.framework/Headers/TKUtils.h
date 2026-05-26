@@ -35,5 +35,8 @@
  */
 + (uint64_t)getResidentMemory;
 
++ (uint64_t)totalMemoryUsage;
+
++ (NSString *)generateUserSigWithApiCategory:(NSString *)apiCategory userSigParams:(NSArray<NSString *> *)userSigParams;
 
 @end

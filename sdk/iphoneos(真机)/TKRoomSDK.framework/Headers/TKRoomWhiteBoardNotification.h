@@ -47,6 +47,7 @@ FOUNDATION_EXTERN NSString * const TKWhiteBoardOnRoomConnectedCodeKey;
 FOUNDATION_EXTERN NSString * const TKWhiteBoardOnRoomConnectedRoomMsgKey;
 
 FOUNDATION_EXTERN NSNotificationName const TKWhiteBoardOnRoomConnectedNotification;
+FOUNDATION_EXTERN NSNotificationName const TKWhiteBoardOnRoomConnectLostNotification;
 //断开链接的通知
 FOUNDATION_EXTERN NSNotificationName const TKWhiteBoardOnRoomDisconnectNotification;
 //重连服务器次数的通知

@@ -13,7 +13,7 @@
 @property (copy, nonatomic) NSString *roomid;
 @property (copy, nonatomic) NSString *role;
 @property (copy, nonatomic) NSString *password;
-@property (copy, nonatomic) NSString *name;
+@property (copy, nonatomic) NSString *host;
 
 @property (assign, nonatomic) int audioID;
 @property (strong, nonatomic) UISlider *slider;
@@ -21,6 +21,9 @@
 
 @property (assign, nonatomic) CGFloat seekpos;
 @property (assign, nonatomic) int playID;
+
+@property (assign, nonatomic) BOOL sharescreen;
+@property (assign, nonatomic) BOOL enableDua;
 
 
 @end

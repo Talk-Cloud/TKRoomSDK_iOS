@@ -13,7 +13,7 @@
 #define kWidth [UIScreen mainScreen].bounds.size.width
 #define kheight [UIScreen mainScreen].bounds.size.height
 #define kVideoMax 4
-@interface VideosBlock()
+@interface VideosBlock()<VideoViewClickEvent>
 @property (strong, nonatomic) VideoView *view1;
 @property (strong, nonatomic) VideoView *view2;
 @property (strong, nonatomic) VideoView *view3;
@@ -45,7 +45,8 @@
 {
     VideoView *view = [[VideoView alloc] initWithRoomMgr:self.rmg roomUser:user deviceId:deviceId];
     // 双击手势
-    [self addTapGR:view];
+    [view setEventDelegate:self];
+//    [self addTapGR:view];
     
     NSString *key = user.peerID;
     if (deviceId && deviceId.length > 0) {
@@ -68,9 +69,17 @@
             videoView = [self creatVideoViewWith:user deviceId:deviceId];
         }
 
+        NSString *extesnsionId = user.peerID;
+        NSArray *arr = [extesnsionId componentsSeparatedByString:@":"];
         TKVideoCanvas *canvas = [TKVideoCanvas new];
         canvas.view = videoView;
         canvas.renderMode = TKRenderMode_adaptive;
+        if (arr.count > 1) {
+            if ([arr[1] isEqualToString:@"screen"]) {
+                canvas.renderMode = TKRenderMode_fit;
+            }
+        }
+        
         [self.rmg playVideo:user.peerID canvas:canvas deviceId:deviceId completion:^(NSError *error) {
             if (error) {
                 return ;
@@ -83,8 +92,43 @@
     }
 }
 
+- (void)playVideo:(NSString *)peerId deviceId:(NSString *)deviceId
+{
+    if (!peerId) {
+        return;
+    }
+    VideoView *videoView = [self getVideoViewWithPeerID:peerId deviceId:deviceId];
+    if (![peerId isEqualToString:self.rmg.localUser.peerID]) {
+        if (!videoView) {
+            TKRoomUser *user = [[TKRoomUser alloc] initWithPeerId:peerId];
+            videoView = [self creatVideoViewWith:user deviceId:deviceId];
+        }
+        
+        NSString *extesnsionId = peerId;
+        NSArray *arr = [extesnsionId componentsSeparatedByString:@":"];
+        TKVideoCanvas *canvas = [TKVideoCanvas new];
+        canvas.view = videoView;
+        canvas.renderMode = TKRenderMode_adaptive;
+        if (arr.count > 1) {
+            if ([arr[1] isEqualToString:@"screen"]) {
+                canvas.renderMode = TKRenderMode_fit;
+            }
+        }
+        
+        [self.rmg playVideo:peerId canvas:canvas deviceId:deviceId completion:^(NSError *error) {
+            if (error) {
+                return ;
+            }
+            [self addSubview:videoView];
+            [videoView sendSubviewToBack:videoView.imageView];
+            [self refreshVideo];
+            [videoView setViewsToFront];
+        }];
+    }
+}
 
-- (int)playMeida:(NSString *)file progress:(progress_block)block
+
+- (int)playMeida:(NSString *)file progress:(TKLocalMediaProgress_block)block
 {
     VideoView *videoView = [self getVideoViewWithPeerID:file deviceId:nil];
     if (!videoView) {
@@ -95,7 +139,11 @@
         [self refreshVideo];
         [videoView setViewsToFront]; 
     }
-    return [self.rmg startPlayMediaFile:file window:videoView loop:NO progress:block];
+    TKMediaFileParams *param = [[TKMediaFileParams alloc] init];
+    param.filePath = file;
+    param.window = videoView;
+    param.loop = NO;
+    return [self.rmg startPlayMediaFile:param progress:block];
 }
 - (void)unPlayVideoWithUser:(NSString *)peerID deviceId:(NSString *)deviceId
 {
@@ -183,6 +231,7 @@
 }
 
 - (void)addTapGR:(VideoView *)view {
+    return;
     UITapGestureRecognizer *gr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dTapAction:)];
     gr.numberOfTapsRequired = 2;
     gr.numberOfTouchesRequired = 1;
@@ -210,5 +259,23 @@
     }
     [self.videos removeAllObjects];
     [self setNeedsLayout];
+}
+
+- (void)clickEvent:(VideoView *)videoView deviceId:(NSString *)deviceId select:(BOOL)select
+{
+    TKVideoStreamType type = TKVideoStream_Big;
+    if (!select) {
+        type = TKVideoStream_Small;
+    }
+
+    if (!videoView.roomUser.peerID) {
+        return;
+    }
+    NSDictionary *dic = @{@"type" : @(type)};
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:SwitchDuaStreamNotifiaction
+                                                        object:nil
+                                                      userInfo:dic];
+    [self.rmg setRemoteVideoStreamType:type peerId:videoView.roomUser.peerID deviceId:deviceId];
 }
 @end

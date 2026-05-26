@@ -9,6 +9,21 @@
 #import <Foundation/Foundation.h>
 #import "TKRoomDefines.h"
 
+@class TKRoomUser;
+
+@interface TKRoomUserManager : NSObject
+@property (nonatomic, readonly) NSString *myID;
+/**
+ 本地用户对象
+ */
+@property (nonatomic, strong, readonly) TKRoomUser *localUser;
+
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)new NS_UNAVAILABLE;
+
+- (TKRoomUser *)getUserWithPeerID:(NSString *)peerID;
+@end
+
 @interface TKRoomUser : NSObject
 /**
  用户Id
@@ -77,7 +92,13 @@
 - (TKPublishState)getPublishStateForDeviceId:(NSString *)deviceId;
 
 /**
- 是否开启多码流
+ 用户开启双摄像头时，获取切换前摄像头是主摄像头\辅摄像头
+ @param deviceId 设备ID 
+ */
+- (NSString *)getCameraTypeWithDeviceID:(NSString *)deviceId;
+
+/**
+ 是否开启了多码流
  */
 - (BOOL)enableDualStream;
 

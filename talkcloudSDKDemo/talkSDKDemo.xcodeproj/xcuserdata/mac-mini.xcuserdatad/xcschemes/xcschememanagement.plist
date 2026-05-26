@@ -4,10 +4,57 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>TKReplayKit.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>7</integer>
+		</dict>
+		<key>TKReplayKitSetupUI.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>8</integer>
+		</dict>
+		<key>TKScreenRecord.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>isShown</key>
+			<true/>
+			<key>orderHint</key>
+			<integer>9</integer>
+		</dict>
+		<key>TKScreenRecordSetupUI.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>isShown</key>
+			<true/>
+			<key>orderHint</key>
+			<integer>10</integer>
+		</dict>
+		<key>TKScreenShare.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>8</integer>
+		</dict>
 		<key>talkSDKDemo.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>58903DDB223B83F3008E9F82</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>58903DE6223B83F3008E9F82</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>5E2C933D1F023D26005D4300</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>

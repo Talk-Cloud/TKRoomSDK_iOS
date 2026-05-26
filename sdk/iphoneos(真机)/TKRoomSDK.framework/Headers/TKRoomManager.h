@@ -11,6 +11,14 @@
 #import "TKRoomDefines.h"
 
 @class TKRoomUser;
+@class RPSystemBroadcastPickerView;
+@class TKDeviceManager;
+@class TKRoomUserManager;
+@class TKVideoCanvas;
+@class TKAudioRecordInfo;
+@class TKVideoProfile;
+@class TKMediaFileParams;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface TKRoomManager : NSObject
@@ -21,12 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  本地用户对象
  */
-@property (nonatomic, strong, readonly) TKRoomUser *localUser;
+@property (nonatomic, strong, readonly) TKRoomUser *localUser TK_Deprecated("Will deprecated!!! use TKRoomUserManager‘s localUser");
 
-/**
- 是否在后台
- */
-@property (nonatomic, assign) BOOL inBackground;
 
     ///-----------------------------------
     /// @name Methods
@@ -47,23 +51,20 @@ NS_ASSUME_NONNULL_BEGIN
  设置打印SDK日志等级
  
  @param level 日志等级
- @param logPath 日志需要写入沙盒的路径; 默认路径为：沙盒Libary/Caches/TKSDKLogs。
+ @param logPath 日志需要写入沙盒的路径; 默认路径为：nil。
  @param debug 是否时debug模式，debug模式：控制台打印，release模式：控制台不打印。
  @return 0表示调用成功，非0表示调用失败
  */
-+ (int)setLogLevel:(TKLogLevel)level logPath:(NSString * _Nullable)logPath debugToConsole:(BOOL)debug;
+- (int)setLogLevel:(TKLogLevel)level logPath:(NSString * _Nullable)logPath debugToConsole:(BOOL)debug;
 
 #pragma mark 初始化
 /**
  设置AppID
- 
- @param appKey appID
- @param optional 房间扩展信息  TKRoomDefines.h文件中定义了相关传值key
- @return 0表示调用成功，非0表示调用失败
+ 需要调用此接口初始化房间信息
+ @param appID   企业Key值，请在企业后台中查找key值
+ @param config 房间扩展信息 相关字段详情见：TKRoomDefines.h文件中 房间初始化相关设置
  */
-- (int)initWithAppKey:(NSString *)appKey optional:(NSDictionary * _Nullable)optional;
-
-
+- (int)initWithAppID:(NSString *)appID optional:(TKRoomConfig *)config;
 /**
  更改服务器
  
@@ -72,12 +73,15 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (int)changeCurrentServer:(NSString *)serverName;
 
+- (int)changeCurrentLoaction:(NSString *)locationCode;
+
 /**
  获取服务器列表
  
- @return NSArray<NSDictionary *>* 实例对象
+ @return 0表示调用成功，非0表示调用失败
  */
-- (NSArray * _Nullable)getServerList;
+- (int)getServerList:(void (^)(NSArray *serverList, NSError * _Nullable error))callback;
+
 
 /**
  设置TKRoomManagerDelegate 代理
@@ -94,38 +98,23 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (int)registerMediaDelegate:(id<TKMediaFrameDelegate> _Nullable)mediaDelegate;
 
+/// 设置场景
+/// 默认场景：TKAppScene_Call
+- (int)setRoomScene:(TKAppScene)scene;
+
 #pragma mark 加入/离开房间
 
 /**
- 进入房间
- 
- @param host 服务器地址 默认是https
- @param port 服务器端口 若在初始化“- (int)initWithAppKey:optional:”接口中设置TKRoomSettingOptionalSecureSocket为YES，表示支持https或者wss，所以此端口需要设置为：443(默认)；若初始化接口设置为NO或者不设置，端口为：80(默认).
- @param nickname 本地用户的昵称
- @param roomParams Dic格式，内含进入房间所需的基本参数，比如：NSDictionary类型，key值详情见 TKRoomDefines.h 相关定义
- @param userParams  Dic格式，内含进入房间时用户的初始化的信息。比如 giftNumber（礼物数）
- @return 0表示调用成功，非0表示调用失败
+ 进入房间 
  */
-- (int)joinRoomWithHost:(NSString *)host
-                   port:(int)port
-               nickName:(NSString *)nickname
-             roomParams:(NSDictionary *)roomParams
-             userParams:(NSDictionary * _Nullable)userParams;
 
-/**
- 加入即时房间
- 
- @param roomId 房间ID
- @param nickname 昵称
- @param third_uid 用户ID
- @param userParams 用户信息，可自定义属性
- @return 0表示调用成功，非0表示调用失败
- */
-- (int)joinRoomEx:(NSString *)roomId
-         nickName:(NSString * _Nullable)nickname
-        third_uid:(NSString * _Nullable)third_uid
-       userParams:(NSDictionary * _Nullable)userParams;
+- (int)joinRoom:(TKRoomParams *)param userParams:(TKUserParams *)userParams;
 
+- (int)joinRoomEx:(TKRoomExParams *)param userParams:(TKUserParams *)userParams;
+
+///// 加入分组
+///// @param groupInfo 分组的Info，groupInfo内需要包含“groupId”的key
+- (int)joinGroup:(NSDictionary *)groupInfo completion:(completion_block _Nullable)completion;
 /**
  离开房间 异步退出房间
  
@@ -147,14 +136,31 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  获取房间属性
  */
-- (NSDictionary *)getRoomProperty; 
+- (NSDictionary *)getRoomProperty;
+
+- (NSDictionary *)getCheckRoomInfo;
 /**
  获取房间用户
  @param peerId 用户ID
  @return TKRoomUser
  @return 0表示调用成功，非0表示调用失败
  */
-- (TKRoomUser * _Nullable)getRoomUserWithUId:(NSString *)peerId;
+- (TKRoomUser * _Nullable)getRoomUserWithUId:(NSString *)peerId TK_Deprecated("Will deprecated!!! use TKRoomUserManager - (TKRoomUser *)getUserWithPeerID:(NSString *)peerID;");
+
+/**
+ 获取房间用户列表
+ @param options 可以根据需求参数，获取相应的用户列表
+    options = @{
+             @"start": @(0),                               // 列表中起始坐标，小班课非大房间模式下不支持
+             @"max" : @(200),                         // 最大结果个数，小班课非大房间模式下不支持
+             @"roles" : @[@0, @1, @2],          // 用户角色数组
+             @"nicknameScan" :  @"xxx",        // 用户昵称中的关键字，小班课非大房间模式下不支持
+             @"order" :  @"xxx" ,                      // 排序规则，暂时不可用
+            }
+ @param callback    结果回调
+ @return 0表示调用成功，非0表示调用失败
+ */
+- (int)getUserListWithOptions:(NSDictionary * _Nullable)options callback:(void (^)(NSArray <TKRoomUser *> *_Nullable userList, NSError *_Nullable error))callback;
 
 #pragma mark change用户属性
 /**
@@ -185,6 +191,22 @@ NS_ASSUME_NONNULL_BEGIN
 - (int)changeUserProperty:(NSString *)peerID
                  tellWhom:(NSString *)tellWhom
                      data:(NSDictionary *)data
+               completion:(completion_block _Nullable)completion;
+
+/**
+ 修改某个用户的一个属性
+ 
+ @param peerID 要修改的用户ID
+ @param tellWhom 要将此修改通知给谁。NSString类型，详情见 TKRoomDefines.h 相关定义. 可以是某一用户ID，表示此信令只发送给该用户
+ @param property 更改的属性 NSDictionary
+ @param extensionJson  信令需要的携带扩展信息，可nil
+ @param completion 完成的回调
+ @return 0表示调用成功，非0表示调用失败
+ */
+- (int)changeUserProperty:(NSString *)peerID
+                 tellWhom:(NSString *)tellWhom
+                 property:(NSDictionary *)property
+            extensionJson:(NSDictionary * _Nullable)extensionJson
                completion:(completion_block _Nullable)completion;
 
 
@@ -227,6 +249,9 @@ NS_ASSUME_NONNULL_BEGIN
               toID:(NSString *)toID
      extensionJson:(NSObject * _Nullable)extension;
 
+#pragma mark 音频参数设置
+- (BOOL)enableBuiltInAGC:(BOOL)enable;
+
 #pragma mark 信令消息
 /**
  发布自定义消息
@@ -257,6 +282,17 @@ associatedUserID:(NSString * _Nullable)associatedUserID
       expires:(NSTimeInterval)expires
    completion:(completion_block _Nullable)completion;
 
+- (int)pubMsg:(NSString *)msgName
+        msgID:(NSString *)msgID
+         toID:(NSString *)toID
+         data:(NSObject *)data
+         save:(BOOL)save
+associatedMsgID:(NSString * _Nullable)associatedMsgID
+associatedUserID:(NSString * _Nullable)associatedUserID
+      expires:(NSTimeInterval)expires
+extensionJson:(NSDictionary * _Nullable)extensionJson
+   completion:(completion_block _Nullable)completion;
+
     //expendData:拓展数据，与msgName同级
 - (int)pubMsg:(NSString *)msgName
         msgID:(NSString *)msgID
@@ -281,6 +317,12 @@ extensionData:(NSDictionary * _Nullable)extensionData
          data:(NSObject * _Nullable)data
    completion:(completion_block _Nullable)completion;
 
+- (int)delMsg:(NSString *)msgName
+        msgID:(NSString *)msgID
+         toID:(NSString *)toID
+         data:(NSObject * _Nullable)data
+extensionJson:(NSDictionary * _Nullable)extensionJson
+   completion:(completion_block _Nullable)completion;
 #pragma mark 播放音视频
 /**
  该方法设置本地视频镜像
@@ -289,6 +331,30 @@ extensionData:(NSDictionary * _Nullable)extensionData
  @return 0表示调用成功，非0表示调用失败
  */
 - (int)setLocalVideoMirrorMode:(TKVideoMirrorMode)mode;
+/**
+ 设置编码器输出的画面镜像模式
+ 该接口不改变本地摄像头的预览画面，但会改变另一端用户看的画面效果
+ @param mirror 是否开启远端镜像，YES: 远端画面镜像；NO：远端画面非镜像。默认值：NO；
+ @return 0表示调用成功，非0表示调用失败
+ */
+- (int)setVideoEncoderMirror:(BOOL)mirror;
+
+/**
+ 开始预览本地视频， 可以调用多次此函数。当传入的view和上次传入的一致时，函数不执行任何操作，当传入的view和上次传入的不一致时，换用新的view播放该用户的视频
+ 须在主线程调用。
+ @param canvas 视频窗口
+ @param completion 设置用于播放视频的view的block
+ @return 0表示调用成功，非0表示调用失败
+ */
+- (int)previewLocalVideo:(TKVideoCanvas *)canvas completion:(void (^)(NSError *error))completion;
+
+/**
+ 取消预览本地视频
+ 须在主线程调用。
+ @param completion 设置用于播放视频的view的block
+ @return 0表示调用成功，非0表示调用失败
+ */
+- (int)cancelPreviewLocalVideo:(void (^)(NSError *error))completion;
 
 /**
  对同一个用户，可以调用多次此函数。当传入的view和上次传入的一致时，函数不执行任何操作，直接返回成功；当传入的view和上次传入的不一致时，换用新的view播放该用户的视频
@@ -354,6 +420,14 @@ extensionData:(NSDictionary * _Nullable)extensionData
  */
 - (int)unPlayAudio:(NSString *)peerID completion:(completion_block _Nullable)completion;
 
+/**
+ * 暂停/恢复播放所有远端用户的音频流
+ *
+ * 当您静音所有用户的远端音频时，SDK 会停止播放所有来自远端的音频流，同时也会停止拉取所有用户的音频数据。
+ * @param mute YES：静音；NO：取消静音。
+ * @note 在进入房间（joinRoom）之前或之后调用本接口均生效，静音状态在退出房间（leaveRoom）之后会被重置为 NO。
+ */
+- (int)muteAllRemoteAudio:(BOOL)mute;
 #pragma mark - 是否禁用音视频设备
 /**
  设置启用/禁用摄像头
@@ -417,7 +491,7 @@ extensionData:(NSDictionary * _Nullable)extensionData
  */
 - (int)unPlayMediaFile:(NSString *)peerId completion:(completion_block _Nullable)completion;
 /**
- 暂停媒体流
+ 暂停媒体流（自己共享的流媒体）
  
  @param pause 暂停
  @return 0表示调用成功，非0表示调用失败
@@ -435,7 +509,7 @@ extensionData:(NSDictionary * _Nullable)extensionData
 /**
  设置用户音量
  
- @param volume 音量 0.0 - 1.0
+ @param volume 音量 0.0 - 10.0
  @param peerId 用户ID
  @param type 视频类型 （包括摄像头采集的视频、共享的多媒体视频）
  @return 0表示调用成功，非0表示调用失败
@@ -463,6 +537,8 @@ extensionData:(NSDictionary * _Nullable)extensionData
  */
 - (int)unPlayScreen:(NSString *)peerID completion:(completion_block _Nullable)completion;
 
+- (NSDictionary *)getShareScreenAttributeWithPeerID:(NSString *)peerID;
+
 /**
  播放电影
  须在主线程调用。
@@ -486,34 +562,44 @@ extensionData:(NSDictionary * _Nullable)extensionData
 
 #pragma mark 服务器录制
 /**
- 开始服务器录制
- 
- @param recordType 录制类型
- @param convert 录制件数据格式，只有在recordtype = 0与1的情况下起作用。
- 0: 表示不转换(mkv格式）
- 1：表示webm(recordtype其他值时，固定状态)
- 2：表示 mp4
- @param layout 只有在recordtype = 3的情况下起作用。 0：横屏，1：竖屏
- @param expiresabs expiresabs 录制时长
- @param expires expires 结束录制时的时间戳
- @return 0表示调用成功，非0表示调用失败
- */
-- (int)startServerRecord:(TKRecordType)recordType convert:(NSInteger)convert layout:(NSInteger)layout expiresabs:(NSInteger)expiresabs expires:(NSInteger)expires;
-
-/**
 开始服务器录制
-
 @param spec 录制参数
  「
- 1、@"recordType" : 录制类型  默认0
- 2、@"convert" :  录制件数据格式， 默认0
- 只有在recordtype = 0与1的情况下起作用。
-    0: 表示不转换(mkv格式）
-    1：表示webm(recordtype其他值时，固定状态)
-    2：表示 mp4
- 3、@"layout" : 只有在recordtype = 3的情况下起作用。 0：横屏，1：竖屏 ， 默认0；
- 4、其他布局参数（视频布局设置）
+    ---------------------------------standard模式---------------------------
+    standard模式标准常规录制，为默认模式
+    NSDictionary *spec = @{@"recordMode" : @"standard"};
+ 
+    ---------------------------------mix模式----------------------------------
+    mix模式自定义混流录制，需要传入以下参数
+    可以针对用户对象进行自定义布局样式
+     NSDictionary *userVideoLayout = @{
+         @{@"uid": @"1131223463fff",    // 用户 ID，若为桌面共享的视频，此 ID 为'用户ID:screen'
+           @"x_coord": @(0.1),  // 窗口x坐标，取值为相对于整个视频宽度百分比
+           @"y_coord": @(0.1),  // 窗口y坐标，取值为相对于整个视频高度百分比
+           @"width": @(0.18),    // 窗口宽，取值为相对于整个视频宽度百分比
+           @"height": @(0.24),   // 窗口高，取值为相对于整个视频高度百分比
+           @"alpha": @(1),  // 窗口透明度
+           @"play_video" : @(YES),  //缺省值 YES；YES:显示视频窗口，NO:不显示视频窗口
+           @"play_audio" : @(YES),  //缺省值 YES；YES:播放音频，NO:不播放音频
+         }
+     };
+ 
+     NSMutableArray *videoLayoutList = [NSMutableArray array];
+     [videoLayoutList addObject:userVideoLayout];
+     NSDictionary *customConfigParams = @{
+         @"noStreamTimeout_s" : @(30),   //开始混流后，房间中没有以下指定用户的流，30秒后停止混流
+         @"backgroundColor" : @"#0d69fb",   //为兼容，若指定，则优先级高于外层背景色配置
+         @"videoLayout" : videoLayoutList
+     };
+     NSDictionary *spec = @{@"recordMode" : @"mix",
+                            @"mixStreamParams" : @{
+                                @"template": @2,     // 必选，混流布局模板ID，0表示等分布局; 1表示画中画布局; 2表示自定义布局
+                                @"backgroundColor": @"#0d69fb",     // 颜色值
+                                @"customConfig": customConfigParams
+                            }   // 若 template 为2，则自定义布局时生效，包括布局参数和其他附加参数；template 为2以外的其他值，此参数无效，可不填
+     };
  」
+    ⚠️ 注：spec 为 nil，默认standard模式
 @param expiresabs expiresabs 录制时长
 @param expires expires 结束录制时的时间戳
 @return 0表示调用成功，非0表示调用失败
@@ -528,6 +614,11 @@ extensionData:(NSDictionary * _Nullable)extensionData
  */
 - (int)stopServerRecord;
 
+- (int)pauseServerRecord;
+- (int)resumeServerRecord; 
+
+- (TKRecordState)getServerRecordState;
+
 /**
  开始本地录制音频
  
@@ -536,9 +627,15 @@ extensionData:(NSDictionary * _Nullable)extensionData
  1、保存音频文件为MP3格式；
  2、如果两次传入的路径相同，录制数据会覆盖；
  3、文件路径必须是有效路径，否则录制失败。例如：路径不存在或者不是文件路径（而是文件夹路径），则录制失败。
+ @param recordInfo   默认参数 Default: sample_rate = 16000,  number_of_channels = 1,  fromat = TKSampleFormat_S16,  type = TKAudioRecordType_Only_Mic
+    1、若recordInfo NULL时，采用默认参数。
+    2、TKAudioRecordType_Only_Mic  ：仅录制麦克风的音频 ，TKAudioRecordType_MicAndSpeaker ：录制麦克风、扬声器的音频
+ 
  @return 0 设置成功, 非0 失败
  */
-- (int)startAudioRecord:(NSString *)sandboxPath;
+- (int)startAudioRecord:(NSString *)sandboxPath recordInfo:(TKAudioRecordInfo *)recordInfo;
+
+- (int)startAudioRecord:(NSString *)sandboxPath TK_Deprecated("Did deprecated. Use - (int)startAudioRecord:type:  ");
 
 /**
  暂停录制音频
@@ -609,6 +706,14 @@ extensionData:(NSDictionary * _Nullable)extensionData
 - (int)useLoudSpeaker:(BOOL)use;
 
 /**
+ 设置所有音频静音
+ 
+ @param enable  YES：静音， NO：非静音
+ @return 0表示调用成功，非0表示调用失败
+ */
+- (int)setPlayOutMute:(BOOL)enable;
+
+/**
  设置视频方向
  
  @param orientation 设备取向
@@ -659,7 +764,7 @@ extensionData:(NSDictionary * _Nullable)extensionData
  @return 返回播放音频标识, 若返回-1:表示播放失败.
  */
 
-- (int)startPlayAudioFile:(NSString *)filePath loop:(BOOL)loop progress:(progress_block _Nullable)progress;
+- (int)startPlayAudioFile:(NSString *)filePath loop:(BOOL)loop progress:(TKLocalMediaProgress_block _Nullable)progress;
 
 /**
  停止播放
@@ -699,13 +804,17 @@ extensionData:(NSDictionary * _Nullable)extensionData
 /**
  开始播放媒体音视频
 
- @param filePath 文件路径
- @param window 视频view
- @param loop 是否循环播放
- @param progress 播放进度
+ @param params 播放参数
+ @param startBlock 开始播放block
+ @param progressBlock 播放进度
+ @param completeBlock 播放完成block
  @return 返回一个播放ID, 如果播放失败返回-1.
  */
-- (int)startPlayMediaFile:(NSString *)filePath window:(UIView * _Nullable)window loop:(BOOL)loop progress:(progress_block _Nullable)progress;
+- (int)startPlayMediaFile:(TKMediaFileParams *)params
+                  onStart:(TKLocalMediaState_block _Nullable)startBlock
+               onProgress:(TKLocalMediaProgress_block _Nullable)progressBlock
+               onComplete:(TKLocalMediaState_block _Nullable)completeBlock;
+- (int)startPlayMediaFile:(TKMediaFileParams *)params progress:(TKLocalMediaProgress_block _Nullable)progress;
 
 /**
  停止播放媒体音视频
@@ -744,17 +853,13 @@ extensionData:(NSDictionary * _Nullable)extensionData
  @return 0 设置成功, -1 失败
  */
 - (int)setPlayMedia:(int)playID volume:(CGFloat)volume;
+ 
+/// 获取用户的上行音视频统计信息数据
+/// @param peerId 用户ID
+/// @param allStreams 是否获取房间中所有流的统计信息。若allStreams = NO，表示获取ID 为peerId的用户发布的所有音视频流的统计信息。若allStreams = YES，则获取房间中所有音视频流的统计信息
+/// @param callback 回调
+- (int)getStreamStats:(NSString *)peerId allStreams:(BOOL)allStreams callback:(void (^)(NSDictionary <NSString *, NSDictionary *>* stats, NSError * _Nullable error))callback;
 
-#pragma mark 网络测速
-/**
- 开始测速
- */
-- (void)startNetworkTest;
-
-/**
- 停止测速
- */
-- (void)stopNetworkTest;
 
 #pragma mark 大规模房间相关接口
     //************************************************************************************************//
@@ -794,7 +899,7 @@ extensionData:(NSDictionary * _Nullable)extensionData
                   maxNumber:(NSInteger)max
                      search:(NSString * _Nullable)search
                       order:(NSDictionary * _Nullable)order
-                   callback:(void (^)(NSArray <TKRoomUser *>* _Nonnull users , NSError *error) )callback;
+                   callback:(void (^)(NSArray <TKRoomUser *>* _Nonnull users , NSError * _Nullable error) )callback;
 
 /**
  批量改变指定了用户ID的用户属性（适用于高并发房间）
@@ -824,9 +929,88 @@ extensionData:(NSDictionary * _Nullable)extensionData
                        property:(NSDictionary *)properties
                      completion:(completion_block _Nullable)completion;
 
+/**
+ 批量改变指定了用户ID的用户属性（适用于高并发房间）
+ 
+ @param peerIDs 指定了用户ID的用户ID数组
+ @param tellWhom 要将此修改通知给谁。NSString类型，详情见 TKRoomDefines.h 相关定义. 可以是某一用户ID，表示此信令只发送给该用户
+ @param properties 要修改的属性
+ @param extensionJson 信令需要的携带扩展信息，可nil
+ @param completion 完成的回调
+ @return 0表示调用成功，非0表示调用失败
+ */
+- (int)batchChangeUserPropertyByIds:(NSArray<NSString *> *)peerIDs
+                           tellWhom:(NSString *)tellWhom
+                           property:(NSDictionary *)properties
+                      extensionJson:(NSDictionary * _Nullable)extensionJson
+                         completion:(completion_block _Nullable)completion;
+/**
+ 改变指定了角色的用户属性（适用于高并发房间）
+ 
+ @param roles 指定的用户角色的数组
+ @param tellWhom 要将此修改通知给谁。NSString类型，详情见 TKRoomDefines.h 相关定义. 可以是某一用户ID，表示此信令只发送给该用户
+ @param properties 要修改的属性
+ @param extensionJson 信令需要的携带扩展信息，可nil
+ @param completion 完成的回调
+ @return 0表示调用成功，非0表示调用失败
+ */
+- (int)changeUserPropertyByRole:(NSArray *)roles
+                       tellWhom:(NSString *)tellWhom
+                       property:(NSDictionary *)properties
+                  extensionJson:(NSDictionary * _Nullable)extensionJson
+                     completion:(completion_block _Nullable)completion;
 
+/// 根据用户属性获取用户
+/// properties  用户属性，必须包含的字段有：key（属性名称）
+///                           operator（详情 TKRoomDefines.h 中枚举定义 TKOperator）
+///                           value（属性名称对应的值），
+/// 可选字段有：start, max 等。
+/// 例如：@{@"key" : @"publishstate", @"operator" : @“1”, @"value" : @”0“}
+/// callback 回调
+- (int)getUsersByProperty:(NSDictionary *)properties callback:(void (^)(NSArray<TKRoomUser *> *list, NSError * _Nullable error))callback;
+
+
+#pragma mark - 屏幕录制
+/**
+ 初始化系统RPSystemBroadcastPickerView，创建开启屏幕直播界面
+
+ @param frame RPSystemBroadcastPickerView的frame
+ @param preferredExtension RPSystemBroadcastPickerView需关联的扩展程序target 的Bundle Identifier
+ @return RPSystemBroadcastPickerView对象
+ */
+- (RPSystemBroadcastPickerView *)createRPSystemBroadcastPickerViewWithFrame:(CGRect)frame preferredExtension:(NSString *)preferredExtension API_AVAILABLE(ios(12.0));
+
+/**
+ 开始屏幕直播 （须在屏幕直播开启后调用）
+
+ @param appGroup appGroup, 需要添加appGroup
+ @return 0 设置成功, 非0 失败
+ */
+- (int)startScreenShare:(NSString *)appGroup;
+
+/**
+ 停止屏幕直播
+
+ @return 0 设置成功, 非0 失败
+ */
+- (int)stopScreenShare;
+
+#pragma mark - 获取设备类
+- (TKDeviceManager *)getDeviceManager;
+#pragma mark - 用户管理类
+- (TKRoomUserManager *)getUserManager;
+ 
 #pragma mark deprecated
-#warning "deprecated"
+/**
+ 开始测速
+ */
+- (void)startNetworkTest TK_Deprecated("Did deprecated!!!");
+
+/**
+ 停止测速
+ */
+- (void)stopNetworkTest TK_Deprecated("Did deprecated!!!");
+
 /**
  设置发布音视频 属性
  
@@ -869,6 +1053,15 @@ extensionData:(NSDictionary * _Nullable)extensionData
  */
 - (BOOL)isAudioEnabled TK_Deprecated("Will deprecated!!!");
 
+/**
+ 禁用音频设备
+ */
+//- (int)disableAudioDevice:(BOOL) isDisable;
+
+/**
+ 禁用视频设备
+ */
+- (int)disableVideoDevice:(BOOL) isDisable;
 
 @end
 NS_ASSUME_NONNULL_END

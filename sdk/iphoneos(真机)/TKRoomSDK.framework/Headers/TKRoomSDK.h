@@ -14,16 +14,15 @@ FOUNDATION_EXPORT const unsigned char TKRoomSDKVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <TKRoomSDK/PublicHeader.h>
 
-#import "TKRoomManager.h"
-#import "TKRoomDelegate.h"
-#import "TKPlaybackDelegate.h"
-#import "TKPlaybackManager.h"
-#import "TKRoomUser.h"
-#import "TKAudioMixer.h"
-#import "TKRoomDefines.h"
-#import "TKUtils.h"
-#import "TKRoomWhiteBoardNotification.h"
-#import "TKServersLog.h"
-
+#import <TKRoomSDK/TKRoomManager.h>
+#import <TKRoomSDK/TKRoomDelegate.h>
+#import <TKRoomSDK/TKPlaybackDelegate.h>
+#import <TKRoomSDK/TKPlaybackManager.h>
+#import <TKRoomSDK/TKRoomUser.h>
+#import <TKRoomSDK/TKAudioUtils.h>
+#import <TKRoomSDK/TKRoomDefines.h>
+#import <TKRoomSDK/TKUtils.h>
+#import <TKRoomSDK/TKRoomWhiteBoardNotification.h>
+#import <TKRoomSDK/TKVideoUtils.h>
 
 
