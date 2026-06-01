@@ -18,7 +18,9 @@ Pod::Spec.new do |s|
   s.name         = "TKRoomSDK"
   s.version      = "5.1.7"
   s.summary      = "A Framework for audio and video ."
-  s.module_name  = "TKRoomSDK"
+  # s.module_name  = "TKRoomSDK"
+  s.description  = <<-DESC
+                 A Framework for audio and video .
 
   s.homepage     = "https://github.com/Talk-Cloud/TKRoomSDK_iOS"
 
